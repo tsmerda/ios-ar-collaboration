@@ -12,7 +12,6 @@ import CoreML
 
 class CollaborationViewModel: ObservableObject {
     @Published var mlModel: VNCoreMLModel?
-    @Published var textData = "Ahoj"
     @Published var isLoading = false
     @Published var selectedDataset: String = ""
     @Published var datasetList: [Dataset] = [
@@ -35,7 +34,18 @@ class CollaborationViewModel: ObservableObject {
                 print("Is already downloaded")
                 do {
                     let compiledUrl = try MLModel.compileModel(at: savedURL)
-                    self.mlModel = try VNCoreMLModel(for: MLModel(contentsOf: compiledUrl))
+                    let result = Result {
+                        try VNCoreMLModel(for: MLModel(contentsOf: compiledUrl))
+                        
+                    }
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let model):
+                            self.mlModel = model
+                        case .failure(let error):
+                            print(error)
+                        }
+                    }
                 } catch {
                     print(error)
                 }
@@ -58,7 +68,7 @@ class CollaborationViewModel: ObservableObject {
                         print(error)
                     }
                     DispatchQueue.main.async {
-                    self.selectedDataset = url.lastPathComponent
+                        self.selectedDataset = url.lastPathComponent
                         self.isLoading = false
                         print("Downloading end")
                     }

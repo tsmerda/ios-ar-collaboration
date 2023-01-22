@@ -34,8 +34,6 @@ struct DatasetListView: View {
                                     .foregroundColor(.green)
                             } else {
                                 Button(action: {
-                                    viewModel.textData = "Jdwadwadwa"
-                                    viewModel.isLoading = true
                                     viewModel.download(dataset.url)
                                 }) {
                                     Image(systemName: "arrow.down.to.line")

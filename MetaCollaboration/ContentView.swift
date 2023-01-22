@@ -18,13 +18,14 @@ struct ContentView: View {
                     .scaleEffect(1.5)
                     .zIndex(2)
             }
+            
             TabView {
                 DatasetListView()
                     .environmentObject(viewModel)
                     .tabItem {
                         Label("Menu", systemImage: "list.dash")
                     }
-                CollaborationView(mlModel: viewModel.textData)
+                CollaborationView(mlModel: viewModel.mlModel)
                     .environmentObject(viewModel)
                     .tabItem {
                         Label("Collaboration", systemImage: "viewfinder")

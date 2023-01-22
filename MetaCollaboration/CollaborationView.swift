@@ -114,8 +114,7 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
 }
 
 struct CollaborationView: UIViewRepresentable {
-//    @ObservedObject var viewModel: CollaborationViewModel
-    var mlModel = String()
+    var mlModel: VNCoreMLModel?
     
     let uiView = UIAVCollaborationView()
     
@@ -127,9 +126,9 @@ struct CollaborationView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIAVCollaborationView, context: Context) {
-//            uiView.mlModel = mlModel
+        uiView.mlModel = mlModel
         print("===============")
-        print("\(String(describing: uiView.mlModel))")
+        print("\(uiView.mlModel) ---- \(mlModel)")
         }
         
     typealias UIViewType = UIAVCollaborationView

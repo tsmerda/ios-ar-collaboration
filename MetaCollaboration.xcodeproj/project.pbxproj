@@ -11,6 +11,11 @@
 		B5576CEA297D94960069758E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CE9297D94960069758E /* ContentView.swift */; };
 		B5576CEC297D94970069758E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5576CEB297D94970069758E /* Assets.xcassets */; };
 		B5576CEF297D94970069758E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5576CEE297D94970069758E /* Preview Assets.xcassets */; };
+		B5576CF6297D94FC0069758E /* DatasetListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CF5297D94FC0069758E /* DatasetListView.swift */; };
+		B5576CF8297D95040069758E /* CollaborationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CF7297D95040069758E /* CollaborationViewModel.swift */; };
+		B5576CFA297D950A0069758E /* CollaborationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CF9297D950A0069758E /* CollaborationView.swift */; };
+		B5576CFC297D95110069758E /* MobileNetV2.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = B5576CFB297D95110069758E /* MobileNetV2.mlmodel */; };
+		B5576CFE297D95240069758E /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CFD297D95240069758E /* InfoView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +24,11 @@
 		B5576CE9297D94960069758E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B5576CEB297D94970069758E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B5576CEE297D94970069758E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B5576CF5297D94FC0069758E /* DatasetListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DatasetListView.swift; path = ../../../DIPLOMKA_APP/MetaCollaboration/MetaCollaboration/DatasetListView.swift; sourceTree = "<group>"; };
+		B5576CF7297D95040069758E /* CollaborationViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CollaborationViewModel.swift; path = ../../../DIPLOMKA_APP/MetaCollaboration/MetaCollaboration/CollaborationViewModel.swift; sourceTree = "<group>"; };
+		B5576CF9297D950A0069758E /* CollaborationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CollaborationView.swift; path = ../../../DIPLOMKA_APP/MetaCollaboration/MetaCollaboration/CollaborationView.swift; sourceTree = "<group>"; };
+		B5576CFB297D95110069758E /* MobileNetV2.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = MobileNetV2.mlmodel; path = ../../../Diplomka/iOSNewObjectRecognition/NewObjectRecognition/coreMLModels/MobileNetV2.mlmodel; sourceTree = "<group>"; };
+		B5576CFD297D95240069758E /* InfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InfoView.swift; path = ../../../DIPLOMKA_APP/MetaCollaboration/MetaCollaboration/InfoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +62,12 @@
 			isa = PBXGroup;
 			children = (
 				B5576CE7297D94960069758E /* MetaCollaborationApp.swift */,
+				B5576CF5297D94FC0069758E /* DatasetListView.swift */,
+				B5576CF7297D95040069758E /* CollaborationViewModel.swift */,
+				B5576CF9297D950A0069758E /* CollaborationView.swift */,
 				B5576CE9297D94960069758E /* ContentView.swift */,
+				B5576CFD297D95240069758E /* InfoView.swift */,
+				B5576CFB297D95110069758E /* MobileNetV2.mlmodel */,
 				B5576CEB297D94970069758E /* Assets.xcassets */,
 				B5576CED297D94970069758E /* Preview Content */,
 			);
@@ -137,8 +152,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5576CFC297D95110069758E /* MobileNetV2.mlmodel in Sources */,
+				B5576CF8297D95040069758E /* CollaborationViewModel.swift in Sources */,
 				B5576CEA297D94960069758E /* ContentView.swift in Sources */,
+				B5576CF6297D94FC0069758E /* DatasetListView.swift in Sources */,
+				B5576CFA297D950A0069758E /* CollaborationView.swift in Sources */,
 				B5576CE8297D94960069758E /* MetaCollaborationApp.swift in Sources */,
+				B5576CFE297D95240069758E /* InfoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

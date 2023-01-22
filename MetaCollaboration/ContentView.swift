@@ -8,14 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var viewModel = CollaborationViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        ZStack {
+            if viewModel.isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: Color.red))
+                    .scaleEffect(1.5)
+                    .zIndex(2)
+            }
+            TabView {
+                DatasetListView()
+                    .environmentObject(viewModel)
+                    .tabItem {
+                        Label("Menu", systemImage: "list.dash")
+                    }
+                CollaborationView(mlModel: viewModel.textData)
+                    .environmentObject(viewModel)
+                    .tabItem {
+                        Label("Collaboration", systemImage: "viewfinder")
+                    }
+                InfoView()
+                    .environmentObject(viewModel)
+                    .tabItem {
+                        Label("Info", systemImage: "info.circle")
+                    }
+            }
         }
-        .padding()
     }
 }
 

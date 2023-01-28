@@ -23,7 +23,7 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
     var onARResultsChanged: ((String?) -> Void)?
     
     var ARResults: String?
-        
+    
     func setupSession() {
         captureSession = AVCaptureSession()
         captureSession.beginConfiguration()
@@ -51,7 +51,10 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
         previewLayer.frame = self.frame
         
         self.layer.addSublayer(previewLayer)
-        self.captureSession.startRunning()
+        
+        DispatchQueue.global().async {
+            self.captureSession.startRunning()
+        }
     }
     
     // captureOutput will be called for each frame was written
@@ -102,10 +105,10 @@ struct CollaborationView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> UIAVCollaborationView {
         if (viewModel.mlModel != nil) {
-            print("=== Set model ===")
+            //            print("=== Set model ===")
             uiView.mlModel = viewModel.mlModel
         } else {
-            print("=== Nothing selected ===")
+            //            print("=== Nothing selected ===")
             // Show that nothing is selected
         }
         

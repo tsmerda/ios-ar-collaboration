@@ -23,8 +23,8 @@ class CollaborationViewModel: ObservableObject {
     
     // Download selected Dataset
     func download(_ modelUrl: String) {
-        print(ARResults)
-        print("Downloading start")
+//        print(ARResults)
+//        print("Downloading start")
         isLoading = true
         
         let url = URL(string: modelUrl)!
@@ -34,7 +34,7 @@ class CollaborationViewModel: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             if FileManager.default.fileExists(atPath: savedURL.path) {
                 // model is already downloaded
-                print("Is already downloaded")
+//                print("Is already downloaded")
                 do {
                     let compiledUrl = try MLModel.compileModel(at: savedURL)
                     let result = Result {
@@ -55,7 +55,7 @@ class CollaborationViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.selectedDataset = url.lastPathComponent
                     self.isLoading = false
-                    print("Already downloaded end")
+//                    print("Already downloaded end")
                 }
             } else {
                 // model is not downloaded, download it
@@ -73,7 +73,7 @@ class CollaborationViewModel: ObservableObject {
                     DispatchQueue.main.async {
                         self.selectedDataset = url.lastPathComponent
                         self.isLoading = false
-                        print("Downloading end")
+//                        print("Downloading end")
                     }
                 }.resume()
             }

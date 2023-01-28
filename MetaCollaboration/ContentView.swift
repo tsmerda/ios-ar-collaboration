@@ -31,10 +31,13 @@ struct ContentView: View {
                         .environmentObject(viewModel)
                         .zIndex(1)
                     
+                    //                    ARViewContainer()
+                    
                     VStack {
                         Text(viewModel.ARResults)
                             .frame(width: UIScreen.main.bounds.width - 15, height: 80)
-                            .background(Color.white)
+                            .background(.white)
+                            .foregroundColor(.black)
                             .padding(.top, 30)
                         
                         Spacer()

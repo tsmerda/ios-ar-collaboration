@@ -23,7 +23,6 @@ struct DatasetListView: View {
                                 Text("\(dataset.desc)")
                                     .font(.subheadline)
                                     .foregroundColor(Color.gray)
-                                
                             }
                             
                             Spacer()

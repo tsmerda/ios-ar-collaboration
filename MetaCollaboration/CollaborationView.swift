@@ -20,16 +20,11 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
     
     var captureSession: AVCaptureSession!
     
+    var onARResultsChanged: ((String?) -> Void)?
+    
+    var ARResults: String?
+    
     var resultLabel: UILabel!
-    
-    var permanentURL = URL(string: "")
-    
-    var data: String = "Co"
-    
-    func setModel(_ model: VNCoreMLModel?) {
-        //        mlModel = model
-        mlModel = try? VNCoreMLModel(for: MobileNetV2().model)
-    }
     
     func setupSession() {
         captureSession = AVCaptureSession()
@@ -51,7 +46,8 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
     }
     
     func setupPreview() {
-        self.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        //    TODO: -- Fix available frame
+        self.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 240)
         
         let previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
         previewLayer.frame = self.frame
@@ -59,8 +55,8 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
         self.layer.addSublayer(previewLayer)
         
         resultLabel = UILabel()
-        resultLabel.text = ""
-        resultLabel.frame = CGRect(x: 0, y: UIScreen.main.bounds.height - 200, width: UIScreen.main.bounds.width, height: 80)
+        resultLabel.text = ARResults
+        resultLabel.frame = CGRect(x: 0, y: UIScreen.main.bounds.height - 240, width: UIScreen.main.bounds.width, height: 80)
         resultLabel.textColor = UIColor.black
         resultLabel.textAlignment = NSTextAlignment.center
         resultLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
@@ -96,15 +92,15 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
             guard let results = request.results as? [VNClassificationObservation] else { return }
             
             // top 5 results
-            var displayText = ""
+            self.ARResults = ""
             for result in results.prefix(5) {
-                displayText += "\(Int(result.confidence * 100))%" + result.identifier + "\n"
+                self.ARResults! += "\(Int(result.confidence * 100))%" + result.identifier + "\n"
             }
             
-            print(displayText)
             // Execute it in the main thread
             DispatchQueue.main.async {
-                self.resultLabel.text = displayText
+                self.onARResultsChanged?(self.ARResults)
+                self.resultLabel.text = self.ARResults
             }
         }
         
@@ -114,23 +110,36 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
 }
 
 struct CollaborationView: UIViewRepresentable {
-    var mlModel: VNCoreMLModel?
+    @EnvironmentObject var viewModel: CollaborationViewModel
     
     let uiView = UIAVCollaborationView()
     
     func makeUIView(context: Context) -> UIAVCollaborationView {
-        uiView.setModel(nil)
+        if (viewModel.mlModel != nil) {
+            print("=== Set model ===")
+            uiView.mlModel = viewModel.mlModel
+        } else {
+            print("=== Nothing selected ===")
+            // Show that nothing is selected
+        }
+        
+        uiView.ARResults = viewModel.ARResults
+        
+        uiView.onARResultsChanged = { result in
+            DispatchQueue.main.async {
+                viewModel.ARResults = result ?? ""
+            }
+        }
+        
         uiView.setupSession()
         uiView.setupPreview()
         return uiView
     }
     
     func updateUIView(_ uiView: UIAVCollaborationView, context: Context) {
-        uiView.mlModel = mlModel
-        print("===============")
-        print("\(uiView.mlModel) ---- \(mlModel)")
-        }
-        
+        uiView.mlModel = viewModel.mlModel
+    }
+    
     typealias UIViewType = UIAVCollaborationView
 }
 

@@ -25,11 +25,18 @@ struct ContentView: View {
                     .tabItem {
                         Label("Menu", systemImage: "list.dash")
                     }
-                CollaborationView(mlModel: viewModel.mlModel)
-                    .environmentObject(viewModel)
-                    .tabItem {
-                        Label("Collaboration", systemImage: "viewfinder")
-                    }
+                ZStack {
+                    CollaborationView()
+                        .environmentObject(viewModel)
+                        .zIndex(1)
+//                    Rectangle()
+//                        .fill(Color.white)
+//                        .frame(width: UIScreen.main.bounds.width, height: 30)
+//                        .zIndex(2)
+                }
+                .tabItem {
+                    Label("Collaboration", systemImage: "viewfinder")
+                }
                 InfoView()
                     .environmentObject(viewModel)
                     .tabItem {

@@ -9,18 +9,22 @@ import Foundation
 import AVFoundation
 import Vision
 import CoreML
+import UIKit
 
 class CollaborationViewModel: ObservableObject {
     @Published var mlModel: VNCoreMLModel?
+    @Published var ARResults: String = "Currently no model available"
     @Published var isLoading = false
+    @Published var isDatalistSheetSelected: Bool = false
     @Published var selectedDataset: String = ""
     @Published var datasetList: [Dataset] = [
-        Dataset(title: "SqueezeNet", desc: "Lorem ipsum", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/SqueezeNet/SqueezeNet.mlmodel"),
-        Dataset(title: "Resnet50", desc: "Lorem ipsum", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/Resnet50/Resnet50.mlmodel")
+        Dataset(title: "SqueezeNet", desc: "Image Classification", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/SqueezeNet/SqueezeNet.mlmodel"),
+        Dataset(title: "Resnet50", desc: "Image Classification", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/Resnet50/Resnet50.mlmodel")
     ]
     
     // Download selected Dataset
     func download(_ modelUrl: String) {
+        print(ARResults)
         print("Downloading start")
         isLoading = true
         

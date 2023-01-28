@@ -15,11 +15,10 @@ class CollaborationViewModel: ObservableObject {
     @Published var mlModel: VNCoreMLModel?
     @Published var ARResults: String = "Currently no model available"
     @Published var isLoading = false
-    @Published var isDatalistSheetSelected: Bool = false
     @Published var selectedDataset: String = ""
     @Published var datasetList: [Dataset] = [
-        Dataset(title: "SqueezeNet", desc: "Image Classification", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/SqueezeNet/SqueezeNet.mlmodel"),
-        Dataset(title: "Resnet50", desc: "Image Classification", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/Resnet50/Resnet50.mlmodel")
+        Dataset(title: "SqueezeNet", desc: "Image Classification", image: "squeeze-net", info: "A small Deep Neural Network architecture that classifies the dominant object in a camera frame or image.", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/SqueezeNet/SqueezeNet.mlmodel"),
+        Dataset(title: "Resnet50", desc: "Image Classification", image: "resnet-50", info: "A Residual Neural Network that will classify the dominant object in a camera frame or image.", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/Resnet50/Resnet50.mlmodel")
     ]
     
     // Download selected Dataset
@@ -86,5 +85,7 @@ struct Dataset: Identifiable, Equatable, Hashable {
     let id = UUID()
     var title: String
     var desc: String
+    var image: String
+    var info: String
     var url: String
 }

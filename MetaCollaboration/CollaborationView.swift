@@ -23,9 +23,7 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
     var onARResultsChanged: ((String?) -> Void)?
     
     var ARResults: String?
-    
-    var resultLabel: UILabel!
-    
+        
     func setupSession() {
         captureSession = AVCaptureSession()
         captureSession.beginConfiguration()
@@ -47,23 +45,12 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
     
     func setupPreview() {
         //    TODO: -- Fix available frame
-        self.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 240)
+        self.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 120)
         
         let previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
         previewLayer.frame = self.frame
         
         self.layer.addSublayer(previewLayer)
-        
-        resultLabel = UILabel()
-        resultLabel.text = ARResults
-        resultLabel.frame = CGRect(x: 0, y: UIScreen.main.bounds.height - 240, width: UIScreen.main.bounds.width, height: 80)
-        resultLabel.textColor = UIColor.black
-        resultLabel.textAlignment = NSTextAlignment.center
-        resultLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
-        resultLabel.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.7)
-        
-        self.addSubview(resultLabel)
-        
         self.captureSession.startRunning()
     }
     
@@ -100,7 +87,6 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
             // Execute it in the main thread
             DispatchQueue.main.async {
                 self.onARResultsChanged?(self.ARResults)
-                self.resultLabel.text = self.ARResults
             }
         }
         

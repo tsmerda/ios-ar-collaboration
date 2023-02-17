@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var viewModel = CollaborationViewModel()
+    @EnvironmentObject var viewModel: CollaborationViewModel
     
     var body: some View {
         ZStack {
@@ -20,11 +20,13 @@ struct ContentView: View {
             }
             
             TabView {
-                DatasetListView()
-                    .environmentObject(viewModel)
-                    .tabItem {
-                        Label("Menu", systemImage: "list.dash")
-                    }
+                if UserDefaults.standard.string(forKey: "appMode") != "onlineMode" {
+                    DatasetListView()
+                        .environmentObject(viewModel)
+                        .tabItem {
+                            Label("Menu", systemImage: "list.dash")
+                        }
+                }
                 
                 ZStack(alignment: .center) {
 //                    CollaborationView()

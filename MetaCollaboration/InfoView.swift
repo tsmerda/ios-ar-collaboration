@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct InfoView: View {
+    @EnvironmentObject var viewModel: CollaborationViewModel
+    
     var body: some View {
         NavigationView {
             List {
@@ -16,6 +18,23 @@ struct InfoView: View {
                     Text("Czech")
                 } header: {
                     Text("Language")
+                }
+                
+                Section {
+                    HStack {
+                        Text("Change app mode")
+                        Spacer()
+                        Button(action: {
+                            viewModel.appMode = .none
+                            UserDefaults.standard.set("none", forKey: "appMode")
+                        }) {
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 24))
+                                .foregroundColor(.green)
+                        }
+                    }
+                } header: {
+                    Text("Mode")
                 }
                 
                 Section {

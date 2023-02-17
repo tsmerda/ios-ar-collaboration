@@ -2,15 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>This application synchronises with other iOS devices on the same network.</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_helper-test._tcp</string>
 		<string>_helper-test._udp</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>This app requires camera access to allow AR experience</string>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>

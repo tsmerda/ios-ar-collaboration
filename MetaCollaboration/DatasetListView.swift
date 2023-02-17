@@ -53,7 +53,7 @@ struct DatasetListView: View {
                                     }) {
                                         Image(systemName: "arrow.down.to.line")
                                             .font(.system(size: 24))
-                                            .foregroundColor(.teal)
+                                            .foregroundColor(.green)
                                     }
                                 }
                             }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B505025C299FDBF700121A5A /* ChooseModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B505025B299FDBF700121A5A /* ChooseModeView.swift */; };
 		B5576CE8297D94960069758E /* MetaCollaborationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CE7297D94960069758E /* MetaCollaborationApp.swift */; };
 		B5576CEA297D94960069758E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CE9297D94960069758E /* ContentView.swift */; };
 		B5576CEC297D94970069758E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5576CEB297D94970069758E /* Assets.xcassets */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B505025B299FDBF700121A5A /* ChooseModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseModeView.swift; sourceTree = "<group>"; };
 		B5576CE4297D94960069758E /* MetaCollaboration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaCollaboration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5576CE7297D94960069758E /* MetaCollaborationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaCollaborationApp.swift; sourceTree = "<group>"; };
 		B5576CE9297D94960069758E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				B5576CE7297D94960069758E /* MetaCollaborationApp.swift */,
+				B505025B299FDBF700121A5A /* ChooseModeView.swift */,
 				B5576CE9297D94960069758E /* ContentView.swift */,
 				B5576CFF297D9CC50069758E /* DatasetListView.swift */,
 				B5576D05297D9D270069758E /* InfoView.swift */,
@@ -170,6 +173,7 @@
 			files = (
 				B5576D06297D9D270069758E /* InfoView.swift in Sources */,
 				B5D4D9522985AD940087489B /* ARViewContainer.swift in Sources */,
+				B505025C299FDBF700121A5A /* ChooseModeView.swift in Sources */,
 				B5D4D9562985AE520087489B /* RealityViewController+Gestures.swift in Sources */,
 				B5576CEA297D94960069758E /* ContentView.swift in Sources */,
 				B5576D02297D9CE40069758E /* CollaborationViewModel.swift in Sources */,
@@ -309,8 +313,11 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MetaCollaboration/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires camera access to allow AR experience";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This application synchronises with other iOS devices on the same network.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -339,8 +346,11 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MetaCollaboration/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires camera access to allow AR experience";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This application synchronises with other iOS devices on the same network.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;

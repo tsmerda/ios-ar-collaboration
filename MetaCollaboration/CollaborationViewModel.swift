@@ -11,7 +11,12 @@ import Vision
 import CoreML
 import UIKit
 
+enum activeAppMode {
+    case none, onlineMode, offlineMode
+}
+
 class CollaborationViewModel: ObservableObject {
+    @Published var appMode: activeAppMode = .none
     @Published var mlModel: VNCoreMLModel?
     @Published var ARResults: String = "Currently no model available"
     @Published var isLoading = false
@@ -21,10 +26,26 @@ class CollaborationViewModel: ObservableObject {
         Dataset(title: "Resnet50", desc: "Image Classification", image: "resnet-50", info: "A Residual Neural Network that will classify the dominant object in a camera frame or image.", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/Resnet50/Resnet50.mlmodel")
     ]
     
+    init() {
+        guard let storedAppMode = UserDefaults.standard.string(forKey: "appMode") else {
+            return
+        }
+         
+        if storedAppMode == "none" {
+            appMode = activeAppMode.none
+        }
+        if storedAppMode == "onlineMode" {
+            appMode = activeAppMode.onlineMode
+        }
+        if storedAppMode == "offlineMode" {
+            appMode = activeAppMode.offlineMode
+        }
+    }
+    
     // Download selected Dataset
     func download(_ modelUrl: String) {
-//        print(ARResults)
-//        print("Downloading start")
+        //        print(ARResults)
+        //        print("Downloading start")
         isLoading = true
         
         let url = URL(string: modelUrl)!
@@ -34,7 +55,7 @@ class CollaborationViewModel: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             if FileManager.default.fileExists(atPath: savedURL.path) {
                 // model is already downloaded
-//                print("Is already downloaded")
+                //                print("Is already downloaded")
                 do {
                     let compiledUrl = try MLModel.compileModel(at: savedURL)
                     let result = Result {
@@ -55,7 +76,7 @@ class CollaborationViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.selectedDataset = url.lastPathComponent
                     self.isLoading = false
-//                    print("Already downloaded end")
+                    //                    print("Already downloaded end")
                 }
             } else {
                 // model is not downloaded, download it
@@ -73,7 +94,7 @@ class CollaborationViewModel: ObservableObject {
                     DispatchQueue.main.async {
                         self.selectedDataset = url.lastPathComponent
                         self.isLoading = false
-//                        print("Downloading end")
+                        //                        print("Downloading end")
                     }
                 }.resume()
             }

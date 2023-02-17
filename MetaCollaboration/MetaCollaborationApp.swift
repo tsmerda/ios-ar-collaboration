@@ -9,9 +9,18 @@ import SwiftUI
 
 @main
 struct MetaCollaborationApp: App {
+    @StateObject var viewModel = CollaborationViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if viewModel.appMode == activeAppMode.none {
+                ChooseModeView()
+                    .environmentObject(viewModel)
+            }
+            else {
+                ContentView()
+                    .environmentObject(viewModel)
+            }
         }
     }
 }

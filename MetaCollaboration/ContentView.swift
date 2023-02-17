@@ -27,11 +27,11 @@ struct ContentView: View {
                     }
                 
                 ZStack(alignment: .center) {
-                    CollaborationView()
-                        .environmentObject(viewModel)
+//                    CollaborationView()
+//                        .environmentObject(viewModel)
+//
+                    ARViewContainer()
                         .zIndex(1)
-                    
-                    //                    ARViewContainer()
                     
                     VStack {
                         Text(viewModel.ARResults)

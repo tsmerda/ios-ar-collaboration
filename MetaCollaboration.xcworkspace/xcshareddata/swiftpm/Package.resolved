@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "multipeerhelper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/maxxfrazer/MultipeerHelper.git",
+      "state" : {
+        "revision" : "ea73ccdcbc34f967a5b7df10674eae7ea52aa803",
+        "version" : "1.4.0"
+      }
+    }
+  ],
+  "version" : 2
+}

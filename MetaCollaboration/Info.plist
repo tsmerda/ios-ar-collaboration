@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_helper-test._tcp</string>
@@ -11,10 +9,8 @@
 	</array>
 	<key>UILaunchScreen</key>
 	<dict>
-		<key>UIColorName</key>
-		<string>launch-screen-background</string>
-		<key>UIImageName</key>
-		<string>launch-screen-image</string>
+		<key>UILaunchScreen</key>
+		<string></string>
 	</dict>
 </dict>
 </plist>

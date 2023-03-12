@@ -12,25 +12,37 @@ import CoreML
 import UIKit
 
 enum activeAppMode {
-    case none, onlineMode, offlineMode
+    case none
+    case onlineMode
+    case offlineMode
 }
 
 class CollaborationViewModel: ObservableObject {
+    // MARK: - Properties
+    
     @Published var appMode: activeAppMode = .none
     @Published var mlModel: VNCoreMLModel?
     @Published var ARResults: String = "Currently no model available"
     @Published var isLoading = false
     @Published var selectedDataset: String = ""
-    @Published var datasetList: [Dataset] = [
-        Dataset(title: "SqueezeNet", desc: "Image Classification", image: "squeeze-net", info: "A small Deep Neural Network architecture that classifies the dominant object in a camera frame or image.", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/SqueezeNet/SqueezeNet.mlmodel"),
-        Dataset(title: "Resnet50", desc: "Image Classification", image: "resnet-50", info: "A Residual Neural Network that will classify the dominant object in a camera frame or image.", url: "https://ml-assets.apple.com/coreml/models/Image/ImageClassification/Resnet50/Resnet50.mlmodel")
-    ]
+    @Published var datasetList: [Dataset] = MockDatasetList
+    @Published var guideList: [Guide]?
+    @Published var currentGuide: Guide?
     
-    init() {
+    private var networkService: NetworkService
+    
+    // MARK: - Initialization
+    
+    convenience init() {
+        self.init(networkService: NetworkService())
+    }
+    
+    init(networkService: NetworkService) {
+        self.networkService = networkService
         guard let storedAppMode = UserDefaults.standard.string(forKey: "appMode") else {
             return
         }
-         
+        
         if storedAppMode == "none" {
             appMode = activeAppMode.none
         }
@@ -40,12 +52,18 @@ class CollaborationViewModel: ObservableObject {
         if storedAppMode == "offlineMode" {
             appMode = activeAppMode.offlineMode
         }
+        
+        //    TODO: -- implementation
+        //        if appMode == .offlineMode {
+        //            getAllMLModels()
+        //            getAllGuides()
+        //        }
     }
+    
+    // MARK: - Public Methods
     
     // Download selected Dataset
     func download(_ modelUrl: String) {
-        //        print(ARResults)
-        //        print("Downloading start")
         isLoading = true
         
         let url = URL(string: modelUrl)!
@@ -55,7 +73,6 @@ class CollaborationViewModel: ObservableObject {
         DispatchQueue.global(qos: .userInitiated).async {
             if FileManager.default.fileExists(atPath: savedURL.path) {
                 // model is already downloaded
-                //                print("Is already downloaded")
                 do {
                     let compiledUrl = try MLModel.compileModel(at: savedURL)
                     let result = Result {
@@ -76,7 +93,6 @@ class CollaborationViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.selectedDataset = url.lastPathComponent
                     self.isLoading = false
-                    //                    print("Already downloaded end")
                 }
             } else {
                 // model is not downloaded, download it
@@ -94,21 +110,50 @@ class CollaborationViewModel: ObservableObject {
                     DispatchQueue.main.async {
                         self.selectedDataset = url.lastPathComponent
                         self.isLoading = false
-                        //                        print("Downloading end")
                     }
                 }.resume()
             }
         }
     }
     
+    // MARK: - Network methods
     
-}
-
-struct Dataset: Identifiable, Equatable, Hashable {
-    let id = UUID()
-    var title: String
-    var desc: String
-    var image: String
-    var info: String
-    var url: String
+    // ========
+    // In offline mode, client download all the ML models and guides to be able to use an AR experience
+    // In online mode, is not necessary to download all at once instead there is ongoing communication with the backend all the time.
+    // ========
+    
+    // Send photo to BE and get array of results.
+    func getResultsByImage(image: String) {
+        //        byteArray
+    }
+    
+    // Get all ML models
+    func getAllMLModels() {}
+    
+    // Get list of all guides
+    func getAllGuides() {
+        self.networkService.getAllGuides() { result in
+            switch result {
+            case .success(let value):
+                print(value)
+                self.guideList = value
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    // Get guide by ID
+    func getGuideById(id: String) {
+        self.networkService.getGuideById(guideId: id) { result in
+            switch result {
+            case .success(let value):
+                print(value)
+                self.currentGuide = value
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
 }

@@ -42,7 +42,6 @@ struct DatasetListView: View {
                                 
                                 Spacer()
                                 
-                                // TODO: -- Check if dataset is already downloaded
                                 if viewModel.selectedDataset == URL(string: dataset.url)!.lastPathComponent {
                                     Image(systemName: "checkmark.circle")
                                         .font(.system(size: 24))
@@ -63,13 +62,13 @@ struct DatasetListView: View {
             }
             .navigationTitle("Dataset list")
             .sheet(isPresented: $showingSheet) {
-                SheetView(dataset: $selectedDataset)
+                DatasetDetailView(dataset: $selectedDataset)
             }
         }
     }
 }
 
-struct SheetView: View {
+struct DatasetDetailView: View {
     @Binding var dataset: Dataset?
     @Environment(\.presentationMode) var presentationMode
     

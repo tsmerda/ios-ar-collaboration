@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: CollaborationViewModel
+    @State private var showingSheet = false
     
     var body: some View {
         ZStack {
@@ -29,18 +30,27 @@ struct ContentView: View {
                 }
                 
                 ZStack(alignment: .center) {
-//                    CollaborationView()
-//                        .environmentObject(viewModel)
-//
-                    ARViewContainer()
+                    CollaborationView()
+                        .environmentObject(viewModel)
                         .zIndex(1)
+                        .sheet(isPresented: $showingSheet) {
+                            GuideView(guide: $viewModel.currentGuide)
+                        }
+                    
+                    //                     ARViewContainer()
+                    //                        .environmentObject(viewModel)
+                    //                        .zIndex(1)
                     
                     VStack {
-                        Text(viewModel.ARResults)
-                            .frame(width: UIScreen.main.bounds.width - 15, height: 80)
-                            .background(.white)
-                            .foregroundColor(.black)
-                            .padding(.top, 30)
+                        Button(action: {
+                            self.showingSheet = true
+                        }) {
+                            Text(viewModel.ARResults)
+                                .frame(width: UIScreen.main.bounds.width - 15, height: 80)
+                                .background(.white)
+                                .foregroundColor(.black)
+                                .padding(.top, 30)
+                        }
                         
                         Spacer()
                     }
@@ -56,6 +66,9 @@ struct ContentView: View {
                         Label("Info", systemImage: "info.circle")
                     }
             }
+        }
+        .onAppear() {
+            viewModel.getGuideById(id: "640b700f16cde6145a3bfc19")
         }
     }
 }

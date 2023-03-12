@@ -1,0 +1,6 @@
+framework module Pods_MetaCollaboration {
+  umbrella header "Pods-MetaCollaboration-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -54,7 +54,7 @@ extension RealityViewController: UIGestureRecognizerDelegate {
         }
     }
     
-    //     TODO: -- Fix this function
+    //     TODO: -- Fix this function ???
     //    / Add a new anchor to the session
     //    / - Parameter transform: position in world space where the new anchor should be
     func addNewAnchor(transform: simd_float4x4) {

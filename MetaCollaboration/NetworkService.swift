@@ -10,6 +10,9 @@ import Foundation
 protocol NetworkServiceProtocol {
     func getAllGuides(completion: @escaping (Result<[Guide], Error>) -> Void)
     func getGuideById(guideId: String, completion: @escaping (Result<Guide, Error>) -> Void)
+    func getAllAssets(completion: @escaping (Result<[Asset], Error>) -> Void)
+    func getAssetByName(assetName: String, completion: @escaping (Result<Void, Error>) -> Void)
+    
 }
 
 class NetworkService: NetworkServiceProtocol {
@@ -81,6 +84,94 @@ class NetworkService: NetworkServiceProtocol {
                 } else {
                     completion(.failure(NetworkError.invalidResponse))
                 }
+            }
+        }
+        task.resume()
+    }
+    
+    func getAllAssets(completion: @escaping (Result<[Asset], Error>) -> Void) {
+        let urlString = Shared.shared.baseUrl.absoluteString + "/assets"
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NetworkError.invalidURL))
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+            }
+            
+            guard let response = response as? HTTPURLResponse else {
+                completion(.failure(NetworkError.invalidResponse))
+                return
+            }
+            
+            if response.statusCode == 200 {
+                if let data = data {
+                    DispatchQueue.main.async {
+                        do {
+                            let assets = try JSONDecoder().decode([Asset].self, from: data)
+                            completion(.success(assets))
+                        } catch let error {
+                            print("Error decoding: ", error)
+                            completion(.failure(NetworkError.invalidResponse))
+                        }
+                    }
+                } else {
+                    completion(.failure(NetworkError.invalidResponse))
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    func getAssetByName(assetName: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        // TODO: -- HERE SHOULD BE AN IMPLEMENTATION OF DOWNLOADING PROGRESS
+        //        let entity = try? Entity.load(contentsOf: fileUrl)
+        
+        let urlString = Shared.shared.baseUrl.absoluteString + "/assets/" + assetName + "/download"
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NetworkError.invalidURL))
+            return
+        }
+        
+        let task = URLSession.shared.downloadTask(with: url) { localURL, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(NetworkError.invalidResponse))
+                return
+            }
+            
+            switch httpResponse.statusCode {
+            case 200..<300:
+                if let localURL = localURL {
+                    do {
+                        let documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                        let fileURL = documentsURL.appendingPathComponent(response?.suggestedFilename ?? "no-assetname")
+                        
+                        // Check if file is already downloaded
+                        if FileManager.default.fileExists(atPath: fileURL.path) {
+                            print("Asset already downloaded")
+                            completion(.success(()))
+                            return
+                        }
+                        
+                        try FileManager.default.moveItem(at: localURL, to: fileURL)
+                        //                            self.modelURL = fileURL
+                        print("Asset saved to \(fileURL)")
+                        completion(.success(()))
+                    } catch {
+                        print("Error saving asset: \(error)")
+                        completion(.failure(NetworkError.invalidResponse))
+                    }
+                }
+            default:
+                print("Error - \(httpResponse.statusCode)")
+                completion(.failure(NetworkError.invalidURL))
             }
         }
         task.resume()

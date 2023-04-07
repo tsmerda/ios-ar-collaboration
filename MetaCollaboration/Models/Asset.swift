@@ -9,19 +9,22 @@ import Foundation
 
 
 
-public struct Asset: Codable {
-
-    public var assetName: Data?
-    public var _description: String?
-
-    public init(assetName: Data? = nil, _description: String? = nil) {
+public struct Asset: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public var assetName: String?
+    public var description: String?
+    
+    public init(assetName: String? = nil, description: String? = nil) {
         self.assetName = assetName
-        self._description = _description
+        self.description = description
     }
-
-    public enum CodingKeys: String, CodingKey { 
+    
+    public enum CodingKeys: String, CodingKey {
         case assetName
-        case _description = "description"
+        case description = "description"
     }
-
+    
 }
+
+
+var MockAssetList: [Asset] = [Asset(assetName: Optional("sneaker_airforce.usdz"), description: Optional("Sneaker Airforce description")), Asset(assetName: Optional("Resnet50.mlmodel"), description: Optional("Resnet50 ML model description"))]

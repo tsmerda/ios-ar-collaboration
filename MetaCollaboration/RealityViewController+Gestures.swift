@@ -58,23 +58,23 @@ extension RealityViewController: UIGestureRecognizerDelegate {
     //    / Add a new anchor to the session
     //    / - Parameter transform: position in world space where the new anchor should be
     func addNewAnchor(transform: simd_float4x4) {
-        let arAnchor = ARAnchor(name: "Cube Anchor", transform: transform)
-        let newAnchor = AnchorEntity(anchor: arAnchor)
-        
-        let cubeModel = ModelEntity(
-            mesh: .generateBox(size: 0.1),
-            materials: [SimpleMaterial(color: .red, isMetallic: false)]
-        )
-        cubeModel.generateCollisionShapes(recursive: false)
-        arView.installGestures([.all], for: cubeModel)
-        
-        newAnchor.addChild(cubeModel)
-        
-        newAnchor.synchronization?.ownershipTransferMode = .autoAccept
-        
-        newAnchor.anchoring = AnchoringComponent(arAnchor)
-        arView.scene.addAnchor(newAnchor)
-        arView.session.add(anchor: arAnchor)
+//        let arAnchor = ARAnchor(name: "Cube Anchor", transform: transform)
+//        let newAnchor = AnchorEntity(anchor: arAnchor)
+//        
+//        let cubeModel = ModelEntity(
+//            mesh: .generateBox(size: 0.1),
+//            materials: [SimpleMaterial(color: .red, isMetallic: false)]
+//        )
+//        cubeModel.generateCollisionShapes(recursive: false)
+//        arView.installGestures([.all], for: cubeModel)
+//        
+//        newAnchor.addChild(cubeModel)
+//        
+//        newAnchor.synchronization?.ownershipTransferMode = .autoAccept
+//        
+//        newAnchor.anchoring = AnchoringComponent(arAnchor)
+//        arView.scene.addAnchor(newAnchor)
+//        arView.session.add(anchor: arAnchor)
         
     }
 }

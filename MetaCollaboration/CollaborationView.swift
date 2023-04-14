@@ -83,7 +83,7 @@ class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegat
             
             // top 5 results
             self.ARResults = ""
-            for result in results.prefix(5) {
+            for result in results.prefix(2) {
                 self.ARResults! += "\(Int(result.confidence * 100))%" + result.identifier + "\n"
             }
             
@@ -105,11 +105,7 @@ struct CollaborationView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> UIAVCollaborationView {
         if (viewModel.mlModel != nil) {
-            //            print("=== Set model ===")
             uiView.mlModel = viewModel.mlModel
-        } else {
-            //            print("=== Nothing selected ===")
-            // Show that nothing is selected
         }
         
         uiView.ARResults = viewModel.ARResults

@@ -58,24 +58,51 @@ extension RealityViewController: UIGestureRecognizerDelegate {
     //    / Add a new anchor to the session
     //    / - Parameter transform: position in world space where the new anchor should be
     func addNewAnchor(transform: simd_float4x4) {
-//        let arAnchor = ARAnchor(name: "Cube Anchor", transform: transform)
-//        let newAnchor = AnchorEntity(anchor: arAnchor)
-//        
-//        let cubeModel = ModelEntity(
-//            mesh: .generateBox(size: 0.1),
-//            materials: [SimpleMaterial(color: .red, isMetallic: false)]
-//        )
-//        cubeModel.generateCollisionShapes(recursive: false)
-//        arView.installGestures([.all], for: cubeModel)
-//        
-//        newAnchor.addChild(cubeModel)
-//        
-//        newAnchor.synchronization?.ownershipTransferMode = .autoAccept
-//        
-//        newAnchor.anchoring = AnchoringComponent(arAnchor)
-//        arView.scene.addAnchor(newAnchor)
-//        arView.session.add(anchor: arAnchor)
+        guard let usdzModel = self.usdzModel else {
+            print("Error: No model URL provided")
+            return
+        }
         
+        do {
+            //            let arAnchor = ARAnchor(name: "Cube Anchor", transform: transform)
+            //            let newAnchor = AnchorEntity(anchor: arAnchor)
+            //
+            //            let cubeModel = ModelEntity(
+            //                mesh: .generateBox(size: 0.1),
+            //                materials: [SimpleMaterial(color: .red, isMetallic: false)]
+            //            )
+            //            cubeModel.generateCollisionShapes(recursive: false)
+            //            arView.installGestures([.all], for: cubeModel)
+            //            
+            //            newAnchor.addChild(cubeModel)
+            //
+            //            newAnchor.synchronization?.ownershipTransferMode = .autoAccept
+            //
+            //            newAnchor.anchoring = AnchoringComponent(arAnchor)
+            //            arView.scene.addAnchor(newAnchor)
+            //            arView.session.add(anchor: arAnchor)
+            
+            let entity = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
+            entity.generateCollisionShapes(recursive: true)
+            entity.transform.scale = simd_float3(0.01, 0.01, 0.01)
+            
+            for anim in entity.availableAnimations {
+                entity.playAnimation(anim.repeat(duration: .infinity), transitionDuration: 1.25, startsPaused: false)
+            }
+            
+            let arAnchor = ARAnchor(name: "Entity Anchor", transform: transform)
+            let anchorEntity = AnchorEntity(anchor: arAnchor)
+            anchorEntity.addChild(entity)
+            
+            arView.installGestures([.all], for: entity)
+            anchorEntity.synchronization?.ownershipTransferMode = .autoAccept
+            anchorEntity.anchoring = AnchoringComponent(arAnchor)
+            
+            arView.scene.addAnchor(anchorEntity)
+            arView.session.add(anchor: arAnchor)
+        } catch {
+            print("Error: Failed to load entity from URL \(usdzModel): \(error)")
+        }
     }
 }
 

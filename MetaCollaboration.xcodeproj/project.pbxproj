@@ -33,13 +33,9 @@
 		B5E1ACB029A7E7D400E7ACC6 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1ACAF29A7E7D400E7ACC6 /* NetworkService.swift */; };
 		B5E1ACB229A7E7FE00E7ACC6 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1ACB129A7E7FE00E7ACC6 /* Shared.swift */; };
 		B5F7C78129B0DB3100E4A71A /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F7C78029B0DB3100E4A71A /* GuideView.swift */; };
-		C239C7A5C4169D93355452DD /* Pods_MetaCollaboration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2CFD9B2BE88501D363AED0 /* Pods_MetaCollaboration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1EFC94B9559847FF41DFBE32 /* Pods-MetaCollaboration.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaCollaboration.debug.xcconfig"; path = "Target Support Files/Pods-MetaCollaboration/Pods-MetaCollaboration.debug.xcconfig"; sourceTree = "<group>"; };
-		1F2CFD9B2BE88501D363AED0 /* Pods_MetaCollaboration.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetaCollaboration.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2E5FF310F84D0121CDF2CB69 /* Pods-MetaCollaboration.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaCollaboration.release.xcconfig"; path = "Target Support Files/Pods-MetaCollaboration/Pods-MetaCollaboration.release.xcconfig"; sourceTree = "<group>"; };
 		B505025B299FDBF700121A5A /* ChooseModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseModeView.swift; sourceTree = "<group>"; };
 		B5576CE4297D94960069758E /* MetaCollaboration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaCollaboration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5576CE7297D94960069758E /* MetaCollaborationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaCollaborationApp.swift; sourceTree = "<group>"; };
@@ -75,7 +71,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5D4D94F2985A8D80087489B /* MultipeerHelper in Frameworks */,
-				C239C7A5C4169D93355452DD /* Pods_MetaCollaboration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,8 +82,6 @@
 			children = (
 				B5576CE6297D94960069758E /* MetaCollaboration */,
 				B5576CE5297D94960069758E /* Products */,
-				D683881E0DF1F40ADFE059CD /* Pods */,
-				F603201C253B777EB7ECE5F0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -149,23 +142,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		D683881E0DF1F40ADFE059CD /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				1EFC94B9559847FF41DFBE32 /* Pods-MetaCollaboration.debug.xcconfig */,
-				2E5FF310F84D0121CDF2CB69 /* Pods-MetaCollaboration.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		F603201C253B777EB7ECE5F0 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				1F2CFD9B2BE88501D363AED0 /* Pods_MetaCollaboration.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -173,7 +149,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B5576CF2297D94970069758E /* Build configuration list for PBXNativeTarget "MetaCollaboration" */;
 			buildPhases = (
-				5BA7E83E980E3C54D48F9856 /* [CP] Check Pods Manifest.lock */,
 				B5576CE0297D94960069758E /* Sources */,
 				B5576CE1297D94960069758E /* Frameworks */,
 				B5576CE2297D94960069758E /* Resources */,
@@ -238,31 +213,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		5BA7E83E980E3C54D48F9856 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MetaCollaboration-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B5576CE0297D94960069758E /* Sources */ = {
@@ -413,7 +363,6 @@
 		};
 		B5576CF3297D94970069758E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1EFC94B9559847FF41DFBE32 /* Pods-MetaCollaboration.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -449,7 +398,6 @@
 		};
 		B5576CF4297D94970069758E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E5FF310F84D0121CDF2CB69 /* Pods-MetaCollaboration.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

@@ -17,20 +17,27 @@ enum activeAppMode {
     case offlineMode
 }
 
+enum activeARMode {
+    case recognitionMode
+    case collaborationMode
+}
+
 class CollaborationViewModel: ObservableObject {
     // MARK: - Properties
     
     @Published var appMode: activeAppMode = .none
+    @Published var arMode: activeARMode = .recognitionMode
     @Published var mlModel: VNCoreMLModel?
+    @Published var usdzModel: URL?
     @Published var ARResults: String = "Currently no model available"
     @Published var isLoading = false
     //    @Published var selectedDataset: String = "" // not necessary
     //    @Published var datasetList: [Dataset] = MockDatasetList // not necessary
     @Published var downloadedAssets: [String] = []
+    @Published var selectedAssets: [String] = []
     @Published var guideList: [Guide]? = MockGuideList
     @Published var assetList: [Asset]? = MockAssetList
     @Published var currentGuide: Guide?
-    @Published var selectedAssets: [String] = []
     
     private var networkService: NetworkService
     
@@ -56,15 +63,20 @@ class CollaborationViewModel: ObservableObject {
             appMode = activeAppMode.offlineMode
         }
         
+        if let selectedAssets = UserDefaults.standard.array(forKey: "selectedAssets") as? [String] {
+            self.selectedAssets = selectedAssets
+            
+            for asset in selectedAssets {
+                selectModel(assetName: asset, initial: true)
+            }
+        }
+        
         //    TODO: -- implementation
         if appMode == .offlineMode {
-            //            getAllMLModels()
-            //            getGuideById(id: "640b700f16cde6145a3bfc19")
-            //            getAssetByName(assetName: "sneaker_airforce")
             getAllGuides()
             getAllAssets()
             assetAlreadyDownloaded()
-            //            removeModelsFromLocalStorage()
+            //            getGuideById(id: "640b700f16cde6145a3bfc19")
         }
     }
     
@@ -78,7 +90,7 @@ class CollaborationViewModel: ObservableObject {
         }
     }
     
-    func selectMLModel(assetName: String) {
+    func selectModel(assetName: String, initial: Bool) {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         do {
             let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
@@ -86,11 +98,16 @@ class CollaborationViewModel: ObservableObject {
                                                                        options: .skipsHiddenFiles)
             for fileURL in fileURLs {
                 if fileURL.lastPathComponent == assetName {
+                    
+                    let assetExtension = URL(fileURLWithPath: assetName).pathExtension
+                    
                     do {
-                        let compiledUrl = try MLModel.compileModel(at: fileURL)
-                        self.mlModel = try VNCoreMLModel(for: MLModel(contentsOf: compiledUrl))
-                        
-                        let assetExtension = URL(fileURLWithPath: assetName).pathExtension
+                        if assetExtension == "usdz" {
+                            self.usdzModel = fileURL
+                        } else {
+                            let compiledUrl = try MLModel.compileModel(at: fileURL)
+                            self.mlModel = try VNCoreMLModel(for: MLModel(contentsOf: compiledUrl))
+                        }
                         
                         if let index = selectedAssets.firstIndex(where: { $0.hasSuffix(".\(assetExtension)") }) {
                             selectedAssets.remove(at: index)
@@ -98,12 +115,21 @@ class CollaborationViewModel: ObservableObject {
                         
                         self.selectedAssets.append(assetName)
                         
+                        if !initial {
+                            saveSelectedAssets()
+                        }
+                        
                     } catch {
                         print(error)
                     }
                 }
             }
         } catch { print(error) }
+    }
+    
+    func saveSelectedAssets() {
+        let defaults = UserDefaults.standard
+        defaults.set(selectedAssets, forKey: "selectedAssets")
     }
     
     

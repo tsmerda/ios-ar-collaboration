@@ -127,7 +127,6 @@ class NetworkService: NetworkServiceProtocol {
     
     func getAssetByName(assetName: String, completion: @escaping (Result<Void, Error>) -> Void) {
         // TODO: -- HERE SHOULD BE AN IMPLEMENTATION OF DOWNLOADING PROGRESS
-        //        let entity = try? Entity.load(contentsOf: fileUrl)
         
         let urlString = Shared.shared.baseUrl.absoluteString + "/assets/" + assetName + "/download"
         guard let url = URL(string: urlString) else {
@@ -161,7 +160,6 @@ class NetworkService: NetworkServiceProtocol {
                         }
                         
                         try FileManager.default.moveItem(at: localURL, to: fileURL)
-                        //                            self.modelURL = fileURL
                         print("Asset saved to \(fileURL)")
                         completion(.success(()))
                     } catch {

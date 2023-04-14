@@ -13,6 +13,7 @@ import MultipeerHelper
 class RealityViewController: UIViewController, ARSessionDelegate {
     let arView = ARView(frame: .zero)
     //  let focusSquare = FESquare()
+    var usdzModel: URL?
     var multipeerHelp: MultipeerHelper!
     required init() {
         super.init(nibName: nil, bundle: nil)
@@ -41,6 +42,13 @@ class RealityViewController: UIViewController, ARSessionDelegate {
     
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func resetSession() {
+        usdzModel = nil
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = .horizontal
+        arView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
 }
 

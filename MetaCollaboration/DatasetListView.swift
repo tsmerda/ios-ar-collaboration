@@ -134,7 +134,7 @@ struct AssetRow: View {
                 
                 if viewModel.downloadedAssets.contains(asset.assetName!) && !viewModel.selectedAssets.contains(asset.assetName!) {
                     Button(action: {
-                        viewModel.selectMLModel(assetName: asset.assetName!)
+                        viewModel.selectModel(assetName: asset.assetName!, initial: false)
                     }) {
                         Image(systemName: "circle")
                             .font(.system(size: 18))
@@ -192,20 +192,6 @@ struct GuideRow: View {
                 }
                 
                 Spacer()
-                
-                //                if viewModel.downloadedAssets.contains(asset.assetName!) {
-                //                    Image(systemName: "checkmark.circle")
-                //                        .font(.system(size: 24))
-                //                        .foregroundColor(.green)
-                //                } else {
-                //                    Button(action: {
-                //                        viewModel.getAssetByName(assetName: asset.assetName!)
-                //                    }) {
-                //                        Image(systemName: "arrow.down.to.line")
-                //                            .font(.system(size: 24))
-                //                            .foregroundColor(.green)
-                //                    }
-                //                }
             }
         }
     }

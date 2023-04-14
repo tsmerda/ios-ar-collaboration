@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import ARKit
+import RealityKit
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: CollaborationViewModel
@@ -30,31 +32,71 @@ struct ContentView: View {
                 }
                 
                 ZStack(alignment: .center) {
-                    CollaborationView()
-                        .environmentObject(viewModel)
-                        .zIndex(1)
-                        .sheet(isPresented: $showingSheet) {
-                            GuideView(guide: $viewModel.currentGuide)
-                        }
-                    
-                    //                     ARViewContainer()
-                    //                        .environmentObject(viewModel)
-                    //                        .zIndex(1)
-                    
-                    VStack {
-                        Button(action: {
-                            self.showingSheet = true
-                        }) {
-                            Text(viewModel.ARResults)
-                                .frame(width: UIScreen.main.bounds.width - 15, height: 80)
-                                .background(.white)
-                                .foregroundColor(.black)
-                                .padding(.top, 30)
-                        }
-                        
-                        Spacer()
+                    if viewModel.arMode == activeARMode.recognitionMode {
+                        CollaborationView()
+                            .environmentObject(viewModel)
+                            .zIndex(1)
+                            .sheet(isPresented: $showingSheet) {
+                                GuideView(guide: $viewModel.currentGuide)
+                                    .environmentObject(viewModel)
+                            }
+                    } else {
+                        ARViewContainer()
+                            .environmentObject(viewModel)
+                            .zIndex(1)
+                            .sheet(isPresented: $showingSheet) {
+                                GuideView(guide: $viewModel.currentGuide)
+                                    .environmentObject(viewModel)
+                            }
                     }
-                    .zIndex(2)
+                    
+                    if viewModel.arMode == activeARMode.recognitionMode {
+                        VStack {
+                            Button(action: {
+                                self.showingSheet = true
+                            }) {
+                                HStack {
+                                    Text(viewModel.ARResults)
+                                        .font(.title3)
+                                        .multilineTextAlignment(.leading)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.black)
+                                    
+                                    Spacer ()
+                                }
+                                .padding(.leading, 30)
+                            }
+                            .frame(width: UIScreen.main.bounds.width - 15, height: 70)
+                            .background(.white)
+                            .padding(.top, 30)
+                            
+                            Spacer()
+                        }
+                        .zIndex(2)
+                    } else {
+                        VStack {
+                            HStack {
+                                Spacer()
+                                
+                                Button(action: {
+                                    viewModel.arMode = activeARMode.recognitionMode
+                                }) {
+                                    RoundedRectangle(cornerRadius: 10)
+                                            .foregroundColor(Color.white)
+                                            .frame(width: 50, height: 50)
+                                            .overlay(
+                                                Image(systemName: "xmark")
+                                                    .foregroundColor(.black)
+                                            )
+                                }
+                                .padding(.top, 15)
+                                .padding(.trailing, 15)
+                            }
+                            
+                            Spacer()
+                        }
+                        .zIndex(2)
+                    }
                 }
                 .tabItem {
                     Label("Collaboration", systemImage: "viewfinder")

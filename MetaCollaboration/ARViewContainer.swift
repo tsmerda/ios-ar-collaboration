@@ -9,23 +9,17 @@ import ARKit
 import RealityKit
 import SwiftUI
 
-struct ARViewContainer: UIViewControllerRepresentable {
+struct ARViewContainer: UIViewRepresentable {
     @EnvironmentObject var viewModel: CollaborationViewModel
     
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ARViewContainer>) -> RealityViewController {
-        let viewController = RealityViewController()
-        
-        if let usdzModel = viewModel.usdzModel {
-            viewController.usdzModel = usdzModel
-        }
-        
-        return viewController
+    typealias UIViewType = ARView
+
+    func makeUIView(context: Context) -> ARView {
+        viewModel.initializeARViewContainer()
+        viewModel.arView.session.delegate = context.coordinator
+        return viewModel.arView
     }
 
-    func updateUIViewController(_ viewController: RealityViewController, context: UIViewControllerRepresentableContext<ARViewContainer>) {
-        if let usdzModel = viewModel.usdzModel {
-//            viewController.resetSession() // Reset configuration and remove models
-            viewController.usdzModel = usdzModel
-        }
+    func updateUIView(_ uiView: ARView, context: Context) {
     }
 }

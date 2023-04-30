@@ -25,13 +25,11 @@
 		B56CE57B29BCC928007D092F /* Instruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE57329BCC928007D092F /* Instruction.swift */; };
 		B56CE57C29BCC928007D092F /* ExtendedGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE57429BCC928007D092F /* ExtendedGuide.swift */; };
 		B56CE59929BDB37B007D092F /* Dataset.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE59829BDB37B007D092F /* Dataset.swift */; };
-		B5D4D94F2985A8D80087489B /* MultipeerHelper in Frameworks */ = {isa = PBXBuildFile; productRef = B5D4D94E2985A8D80087489B /* MultipeerHelper */; };
 		B5D4D9522985AD940087489B /* ARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D4D9512985AD940087489B /* ARViewContainer.swift */; };
-		B5D4D9542985AE0A0087489B /* RealityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D4D9532985AE0A0087489B /* RealityViewController.swift */; };
-		B5D4D9562985AE520087489B /* RealityViewController+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D4D9552985AE520087489B /* RealityViewController+Gestures.swift */; };
 		B5E1ACAE29A7D72E00E7ACC6 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5E1ACAD29A7D72E00E7ACC6 /* Launch Screen.storyboard */; };
 		B5E1ACB029A7E7D400E7ACC6 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1ACAF29A7E7D400E7ACC6 /* NetworkService.swift */; };
 		B5E1ACB229A7E7FE00E7ACC6 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1ACB129A7E7FE00E7ACC6 /* Shared.swift */; };
+		B5E680E229F6F53D00E98737 /* MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E680E129F6F53D00E98737 /* MultipeerSession.swift */; };
 		B5F7C78129B0DB3100E4A71A /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F7C78029B0DB3100E4A71A /* GuideView.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,11 +55,10 @@
 		B56CE57429BCC928007D092F /* ExtendedGuide.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedGuide.swift; sourceTree = "<group>"; };
 		B56CE59829BDB37B007D092F /* Dataset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dataset.swift; sourceTree = "<group>"; };
 		B5D4D9512985AD940087489B /* ARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewContainer.swift; sourceTree = "<group>"; };
-		B5D4D9532985AE0A0087489B /* RealityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealityViewController.swift; sourceTree = "<group>"; };
-		B5D4D9552985AE520087489B /* RealityViewController+Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RealityViewController+Gestures.swift"; sourceTree = "<group>"; };
 		B5E1ACAD29A7D72E00E7ACC6 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		B5E1ACAF29A7E7D400E7ACC6 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B5E1ACB129A7E7FE00E7ACC6 /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
+		B5E680E129F6F53D00E98737 /* MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerSession.swift; sourceTree = "<group>"; };
 		B5F7C78029B0DB3100E4A71A /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -70,7 +67,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5D4D94F2985A8D80087489B /* MultipeerHelper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,10 +102,9 @@
 				B5576D03297D9D070069758E /* CollaborationView.swift */,
 				B5576D01297D9CE40069758E /* CollaborationViewModel.swift */,
 				B5D4D9512985AD940087489B /* ARViewContainer.swift */,
-				B5D4D9532985AE0A0087489B /* RealityViewController.swift */,
 				B5E1ACAF29A7E7D400E7ACC6 /* NetworkService.swift */,
+				B5E680E129F6F53D00E98737 /* MultipeerSession.swift */,
 				B5E1ACB129A7E7FE00E7ACC6 /* Shared.swift */,
-				B5D4D9552985AE520087489B /* RealityViewController+Gestures.swift */,
 				B5630D3229846A35005BC686 /* Info.plist */,
 				B5576CEB297D94970069758E /* Assets.xcassets */,
 				B5576CED297D94970069758E /* Preview Content */,
@@ -159,7 +154,6 @@
 			);
 			name = MetaCollaboration;
 			packageProductDependencies = (
-				B5D4D94E2985A8D80087489B /* MultipeerHelper */,
 			);
 			productName = MetaCollaboration;
 			productReference = B5576CE4297D94960069758E /* MetaCollaboration.app */;
@@ -190,7 +184,6 @@
 			);
 			mainGroup = B5576CDB297D94960069758E;
 			packageReferences = (
-				B5D4D94D2985A8D80087489B /* XCRemoteSwiftPackageReference "MultipeerHelper" */,
 			);
 			productRefGroup = B5576CE5297D94960069758E /* Products */;
 			projectDirPath = "";
@@ -224,18 +217,17 @@
 				B56CE57A29BCC928007D092F /* Guide.swift in Sources */,
 				B5D4D9522985AD940087489B /* ARViewContainer.swift in Sources */,
 				B505025C299FDBF700121A5A /* ChooseModeView.swift in Sources */,
-				B5D4D9562985AE520087489B /* RealityViewController+Gestures.swift in Sources */,
 				B5F7C78129B0DB3100E4A71A /* GuideView.swift in Sources */,
 				B56CE57729BCC928007D092F /* Confirmation.swift in Sources */,
 				B56CE57529BCC928007D092F /* ObjectStep.swift in Sources */,
 				B5576CEA297D94960069758E /* ContentView.swift in Sources */,
 				B5E1ACB229A7E7FE00E7ACC6 /* Shared.swift in Sources */,
+				B5E680E229F6F53D00E98737 /* MultipeerSession.swift in Sources */,
 				B5576D02297D9CE40069758E /* CollaborationViewModel.swift in Sources */,
 				B56CE57929BCC928007D092F /* Step.swift in Sources */,
 				B5576D00297D9CC50069758E /* DatasetListView.swift in Sources */,
 				B5576CE8297D94960069758E /* MetaCollaborationApp.swift in Sources */,
 				B56CE57629BCC928007D092F /* Asset.swift in Sources */,
-				B5D4D9542985AE0A0087489B /* RealityViewController.swift in Sources */,
 				B56CE57829BCC928007D092F /* Content.swift in Sources */,
 				B56CE59929BDB37B007D092F /* Dataset.swift in Sources */,
 				B56CE57B29BCC928007D092F /* Instruction.swift in Sources */,
@@ -369,7 +361,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MetaCollaboration/Preview Content\"";
-				DEVELOPMENT_TEAM = 925K52UM4K;
+				DEVELOPMENT_TEAM = C3K7LCG786;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MetaCollaboration/Info.plist;
@@ -378,6 +370,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = "armv7 arkit";
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -413,6 +406,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = "armv7 arkit";
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -453,25 +447,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		B5D4D94D2985A8D80087489B /* XCRemoteSwiftPackageReference "MultipeerHelper" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/maxxfrazer/MultipeerHelper.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		B5D4D94E2985A8D80087489B /* MultipeerHelper */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B5D4D94D2985A8D80087489B /* XCRemoteSwiftPackageReference "MultipeerHelper" */;
-			productName = MultipeerHelper;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B5576CDC297D94960069758E /* Project object */;
 }

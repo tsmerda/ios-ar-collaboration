@@ -4,8 +4,8 @@
 <dict>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_helper-test._tcp</string>
-		<string>_helper-test._udp</string>
+		<string>_ar-collab._tcp</string>
+		<string>_ar-collab._udp</string>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict>

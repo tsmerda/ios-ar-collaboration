@@ -33,7 +33,7 @@ struct ContentView: View {
                 
                 ZStack(alignment: .center) {
                     if viewModel.arMode == activeARMode.recognitionMode {
-                        CollaborationView()
+                        CollaborationView(showingSheet: $showingSheet)
                             .environmentObject(viewModel)
                             .zIndex(1)
                             .sheet(isPresented: $showingSheet) {
@@ -52,20 +52,16 @@ struct ContentView: View {
                     
                     if viewModel.arMode == activeARMode.recognitionMode {
                         VStack {
-                            Button(action: {
-                                self.showingSheet = true
-                            }) {
-                                HStack {
-                                    Text(viewModel.ARResults)
-                                        .font(.title3)
-                                        .multilineTextAlignment(.leading)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(.black)
-                                    
-                                    Spacer ()
-                                }
-                                .padding(.leading, 30)
+                            HStack {
+                                Text(viewModel.ARResults)
+                                    .font(.title3)
+                                    .multilineTextAlignment(.leading)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.black)
+                                
+                                Spacer ()
                             }
+                            .padding(.leading, 30)
                             .frame(width: UIScreen.main.bounds.width - 15, height: 70)
                             .background(.white)
                             .padding(.top, 30)

@@ -6,104 +6,153 @@
 //
 
 import SwiftUI
+import UIKit
 import AVFoundation
 import Vision
-import RealityKit
-import ARKit
+//import RealityKit
+//import ARKit
 
-class UIAVCollaborationView: UIView, AVCaptureVideoDataOutputSampleBufferDelegate {
-    // AVCaptureVideoDataOutputSampleBufferDelegate
-    // when you want to handle the video input every second, you will add the delegate
+class UIAVCollaborationViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+    var mlModel: VNCoreMLModel?
+    var onARResultsChanged: ((String?) -> Void)?
+    var ARResults: String?
     var recognitionInterval = 0 //Interval for object recognition
     
-    var mlModel: VNCoreMLModel?
+    private var permissionGranted = false // Flag for permission
+    private let captureSession = AVCaptureSession()
+    private let sessionQueue = DispatchQueue(label: "sessionQueue")
+    private var previewLayer = AVCaptureVideoPreviewLayer()
+    var screenRect: CGRect! = nil // For view dimensions
     
-    var captureSession: AVCaptureSession!
+    // Detector
+    private var videoOutput = AVCaptureVideoDataOutput()
+    var requests = [VNRequest]()
+    var detectionLayer: CALayer! = nil
     
-    var onARResultsChanged: ((String?) -> Void)?
+    @Binding var showingSheet: Bool
     
-    var ARResults: String?
-    
-    func setupSession() {
-        captureSession = AVCaptureSession()
-        captureSession.beginConfiguration()
-        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
-        
-        guard let videoInput = try? AVCaptureDeviceInput(device: videoCaptureDevice) else { return }
-        guard captureSession.canAddInput(videoInput) else { return }
-        captureSession.addInput(videoInput)
-        
-        // Output settings
-        let output = AVCaptureVideoDataOutput()
-        output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "VideoQueue")) // set delegate to receive the data every frame
-        if captureSession.canAddOutput(output) {
-            captureSession.addOutput(output)
-        }
-        
-        captureSession.commitConfiguration()
+    init(showingSheet: Binding<Bool>) {
+        _showingSheet = showingSheet
+        super.init(nibName: nil, bundle: nil)
     }
     
-    func setupPreview() {
-        //    TODO: -- Fix available frame
-        self.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 120)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        checkPermission()
         
-        let previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-        previewLayer.frame = self.frame
-        
-        self.layer.addSublayer(previewLayer)
-        
-        DispatchQueue.global().async {
+        sessionQueue.async { [unowned self] in
+            guard permissionGranted else { return }
+            self.setupCaptureSession()
+            
+            self.setupLayers()
+            self.setupDetector()
+            
             self.captureSession.startRunning()
         }
     }
     
-    // captureOutput will be called for each frame was written
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        screenRect = UIScreen.main.bounds
+        self.previewLayer.frame = CGRect(x: 0, y: -120, width: screenRect.size.width, height: screenRect.size.height)
         
-        // Recognise the object every 20 frames
-        if recognitionInterval < 20 {
-            recognitionInterval += 1
-            return
-        }
-        recognitionInterval = 0
-        
-        // Convert CMSampleBuffer(an object holding media data) to CMSampleBufferGetImageBuffer
-        guard
-            let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),
-            let model = mlModel // Unwrap the mlModel
-        else { return }
-        
-        // Create image process request, pass model and result
-        let request = VNCoreMLRequest(model: model) { //An image analysis request that uses a Core ML model to process images.
+        switch UIDevice.current.orientation {
+            // Home button on top
+        case UIDeviceOrientation.portraitUpsideDown:
+            self.previewLayer.connection?.videoOrientation = .portraitUpsideDown
             
-            (request: VNRequest, error: Error?) in
+            // Home button on right
+        case UIDeviceOrientation.landscapeLeft:
+            self.previewLayer.connection?.videoOrientation = .landscapeRight
             
-            // Get results as VNClassificationObservation array
-            guard let results = request.results as? [VNClassificationObservation] else { return }
+            // Home button on left
+        case UIDeviceOrientation.landscapeRight:
+            self.previewLayer.connection?.videoOrientation = .landscapeLeft
             
-            // top 5 results
-            self.ARResults = ""
-            for result in results.prefix(2) {
-                self.ARResults! += "\(Int(result.confidence * 100))%" + result.identifier + "\n"
-            }
+            // Home button at bottom
+        case UIDeviceOrientation.portrait:
+            self.previewLayer.connection?.videoOrientation = .portrait
             
-            // Execute it in the main thread
-            DispatchQueue.main.async {
-                self.onARResultsChanged?(self.ARResults)
-            }
+        default:
+            break
         }
         
-        // Execute the request
-        try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request])
+        // Detector
+        updateLayers()
+    }
+    
+    func checkPermission() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+            // Permission has been granted before
+        case .authorized:
+            permissionGranted = true
+            
+            // Permission has not been requested yet
+        case .notDetermined:
+            requestPermission()
+            
+        default:
+            permissionGranted = false
+        }
+    }
+    
+    func requestPermission() {
+        sessionQueue.suspend()
+        AVCaptureDevice.requestAccess(for: .video) { [unowned self] granted in
+            self.permissionGranted = granted
+            self.sessionQueue.resume()
+        }
+    }
+    
+    func setupCaptureSession() {
+        // Camera input
+        guard let videoDevice = AVCaptureDevice.default(for: .video) else { return }
+        guard let videoDeviceInput = try? AVCaptureDeviceInput(device: videoDevice) else { return }
+        
+        guard captureSession.canAddInput(videoDeviceInput) else { return }
+        captureSession.addInput(videoDeviceInput)
+        
+        // Preview layer
+        screenRect = UIScreen.main.bounds
+        
+        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        previewLayer.frame = CGRect(x: 0, y: -120, width: screenRect.size.width, height: screenRect.size.height)
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill // Fill screen
+        previewLayer.connection?.videoOrientation = .portrait
+        
+        // Detector
+        videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sampleBufferQueue"))
+        captureSession.addOutput(videoOutput)
+        
+        videoOutput.connection(with: .video)?.videoOrientation = .portrait
+        
+        // Updates to UI must be on main queue
+        DispatchQueue.main.async { [weak self] in
+            self!.view.layer.addSublayer(self!.previewLayer)
+        }
+    }
+    
+    // Function to handle tap gesture
+    @objc func handleTapGesture(_ gesture: UITapGestureRecognizer) {
+        guard let boundingBoxView = gesture.view else { return }
+        
+        // Retrieve the recognized value from the associated object
+        if let recognizedValue = objc_getAssociatedObject(boundingBoxView, UnsafeRawPointer(bitPattern: "recognizedValue".hashValue)!) as? String {
+            print(recognizedValue)
+            showingSheet = true
+        }
     }
 }
 
-struct CollaborationView: UIViewRepresentable {
+struct CollaborationView: UIViewControllerRepresentable {
     @EnvironmentObject var viewModel: CollaborationViewModel
+    @Binding var showingSheet: Bool
     
-    let uiView = UIAVCollaborationView()
-    
-    func makeUIView(context: Context) -> UIAVCollaborationView {
+    func makeUIViewController(context: Context) -> UIAVCollaborationViewController {
+        let uiView = UIAVCollaborationViewController(showingSheet: $showingSheet)
+        
         if (viewModel.mlModel != nil) {
             uiView.mlModel = viewModel.mlModel
         }
@@ -116,20 +165,17 @@ struct CollaborationView: UIViewRepresentable {
             }
         }
         
-        uiView.setupSession()
-        uiView.setupPreview()
+        uiView.showingSheet = showingSheet
+        
+        //        uiView.setupSession()
+        //        uiView.setupPreview()
         return uiView
     }
     
-    func updateUIView(_ uiView: UIAVCollaborationView, context: Context) {
-        uiView.mlModel = viewModel.mlModel
+    func updateUIViewController(_ uiViewController: UIAVCollaborationViewController, context: Context) {
+        uiViewController.mlModel = viewModel.mlModel
+        uiViewController.showingSheet = showingSheet
     }
     
-    typealias UIViewType = UIAVCollaborationView
+    typealias UIViewType = UIAVCollaborationViewController
 }
-
-//struct CollaborationView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CollaborationView()
-//    }
-//}

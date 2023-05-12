@@ -25,6 +25,8 @@
 		B56CE57B29BCC928007D092F /* Instruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE57329BCC928007D092F /* Instruction.swift */; };
 		B56CE57C29BCC928007D092F /* ExtendedGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE57429BCC928007D092F /* ExtendedGuide.swift */; };
 		B56CE59929BDB37B007D092F /* Dataset.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE59829BDB37B007D092F /* Dataset.swift */; };
+		B5B04D6A29FE8BD400368150 /* ObjectDetector.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = B5B04D6929FE8BD400368150 /* ObjectDetector.mlmodel */; };
+		B5B04D6E29FFAA2300368150 /* Detector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B04D6D29FFAA2200368150 /* Detector.swift */; };
 		B5D4D9522985AD940087489B /* ARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D4D9512985AD940087489B /* ARViewContainer.swift */; };
 		B5E1ACAE29A7D72E00E7ACC6 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5E1ACAD29A7D72E00E7ACC6 /* Launch Screen.storyboard */; };
 		B5E1ACB029A7E7D400E7ACC6 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1ACAF29A7E7D400E7ACC6 /* NetworkService.swift */; };
@@ -54,6 +56,8 @@
 		B56CE57329BCC928007D092F /* Instruction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Instruction.swift; sourceTree = "<group>"; };
 		B56CE57429BCC928007D092F /* ExtendedGuide.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedGuide.swift; sourceTree = "<group>"; };
 		B56CE59829BDB37B007D092F /* Dataset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dataset.swift; sourceTree = "<group>"; };
+		B5B04D6929FE8BD400368150 /* ObjectDetector.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ObjectDetector.mlmodel; sourceTree = "<group>"; };
+		B5B04D6D29FFAA2200368150 /* Detector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detector.swift; sourceTree = "<group>"; };
 		B5D4D9512985AD940087489B /* ARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewContainer.swift; sourceTree = "<group>"; };
 		B5E1ACAD29A7D72E00E7ACC6 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		B5E1ACAF29A7E7D400E7ACC6 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -92,6 +96,7 @@
 		B5576CE6297D94960069758E /* MetaCollaboration */ = {
 			isa = PBXGroup;
 			children = (
+				B5B04D6929FE8BD400368150 /* ObjectDetector.mlmodel */,
 				B56CE56C29BCC913007D092F /* Models */,
 				B5576CE7297D94960069758E /* MetaCollaborationApp.swift */,
 				B5F7C78029B0DB3100E4A71A /* GuideView.swift */,
@@ -104,6 +109,7 @@
 				B5D4D9512985AD940087489B /* ARViewContainer.swift */,
 				B5E1ACAF29A7E7D400E7ACC6 /* NetworkService.swift */,
 				B5E680E129F6F53D00E98737 /* MultipeerSession.swift */,
+				B5B04D6D29FFAA2200368150 /* Detector.swift */,
 				B5E1ACB129A7E7FE00E7ACC6 /* Shared.swift */,
 				B5630D3229846A35005BC686 /* Info.plist */,
 				B5576CEB297D94970069758E /* Assets.xcassets */,
@@ -223,12 +229,14 @@
 				B5576CEA297D94960069758E /* ContentView.swift in Sources */,
 				B5E1ACB229A7E7FE00E7ACC6 /* Shared.swift in Sources */,
 				B5E680E229F6F53D00E98737 /* MultipeerSession.swift in Sources */,
+				B5B04D6E29FFAA2300368150 /* Detector.swift in Sources */,
 				B5576D02297D9CE40069758E /* CollaborationViewModel.swift in Sources */,
 				B56CE57929BCC928007D092F /* Step.swift in Sources */,
 				B5576D00297D9CC50069758E /* DatasetListView.swift in Sources */,
 				B5576CE8297D94960069758E /* MetaCollaborationApp.swift in Sources */,
 				B56CE57629BCC928007D092F /* Asset.swift in Sources */,
 				B56CE57829BCC928007D092F /* Content.swift in Sources */,
+				B5B04D6A29FE8BD400368150 /* ObjectDetector.mlmodel in Sources */,
 				B56CE59929BDB37B007D092F /* Dataset.swift in Sources */,
 				B56CE57B29BCC928007D092F /* Instruction.swift in Sources */,
 				B5576D04297D9D070069758E /* CollaborationView.swift in Sources */,

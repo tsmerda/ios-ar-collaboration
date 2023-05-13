@@ -9,7 +9,7 @@ import Foundation
 
 
 
-public struct ExtendedGuide: Codable {
+public struct ExtendedGuide: Identifiable, Codable {
 
     public enum GuideType: String, Codable { 
         case manual = "manual"
@@ -17,7 +17,7 @@ public struct ExtendedGuide: Codable {
         case wizard = "wizard"
         case witch = "witch"
     }
-    public var _id: String?
+    public var id: String?
     public var name: String
     public var _description: String?
     public var imageUrl: String?
@@ -25,7 +25,7 @@ public struct ExtendedGuide: Codable {
     public var objectSteps: [ObjectStep]?
 
     public init(_id: String? = nil, name: String, _description: String? = nil, imageUrl: String? = nil, guideType: GuideType, objectSteps: [ObjectStep]? = nil) {
-        self._id = _id
+        self.id = _id
         self.name = name
         self._description = _description
         self.imageUrl = imageUrl
@@ -34,7 +34,7 @@ public struct ExtendedGuide: Codable {
     }
 
     public enum CodingKeys: String, CodingKey { 
-        case _id = "id"
+        case id = "id"
         case name
         case _description = "description"
         case imageUrl

@@ -18,29 +18,9 @@ struct DatasetListView: View {
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("USDZ models")) {
-                    ForEach(viewModel.assetList?.filter { $0.assetName?.hasSuffix(".usdz") ?? false } ?? []) { asset in
-                        AssetRow(asset: asset, showDatasetDetailViewAction: {
-                            self.showingSheet = true
-                            self.selectedAsset = asset
-                        })
-                        .environmentObject(viewModel)
-                    }
-                }
-                
-                Section(header: Text("ML models")) {
-                    ForEach(viewModel.assetList?.filter { $0.assetName?.hasSuffix(".mlmodel") ?? false } ?? []) { asset in
-                        AssetRow(asset: asset, showDatasetDetailViewAction: {
-                            self.showingSheet = true
-                            self.selectedAsset = asset
-                        })
-                        .environmentObject(viewModel)
-                    }
-                }
-                
                 Section(header: Text("Guides")) {
                     ForEach(viewModel.guideList ?? []) { guide in
-                        GuideRow(guide: guide, showGuideDetailViewAction: {
+                        GuideRow(guide: guide, isLoading: $viewModel.assetsDownloadingCount, showGuideDetailViewAction: {
                             self.showingSheet = true
                             self.selectedGuide = guide
                         })
@@ -51,9 +31,9 @@ struct DatasetListView: View {
                 HStack {
                     Spacer()
                     Button(action: {
-                        viewModel.removeModelsFromLocalStorage()
+                        viewModel.removeDatasetFromLocalStorage()
                     }) {
-                        Text("REMOVE ALL ASSETS FROM DEVICE")
+                        Text("REMOVE ALL DATASETS FROM DEVICE")
                             .foregroundColor(.red)
                             .font(.caption)
                             .fontWeight(.bold)
@@ -66,15 +46,18 @@ struct DatasetListView: View {
                 selectedAsset = nil
                 selectedGuide = nil
             }) {
-                DatasetDetailView(asset: $selectedAsset, guide: $selectedGuide)
+                DatasetDetailView(guide: $selectedGuide, currentGuide: $viewModel.currentGuide, downloadedAssets: $viewModel.downloadedAssets, selectedAssets: $viewModel.selectedAssets, isLoading: $viewModel.assetsDownloadingCount)
             }
         }
     }
 }
 
 struct DatasetDetailView: View {
-    @Binding var asset: Asset?
     @Binding var guide: Guide?
+    @Binding var currentGuide: ExtendedGuide?
+    @Binding var downloadedAssets: [String]
+    @Binding var selectedAssets: [String]
+    @Binding var isLoading: Int
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -90,14 +73,86 @@ struct DatasetDetailView: View {
                 }
             }
             
-            Text((asset != nil) ? asset?.assetName ?? "" : (guide != nil) ? guide?.name ?? "" : "")
+            Text(guide?.name ?? "")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding(.bottom, 10)
             
-            Text((asset != nil) ? asset?.description ?? "" : (guide != nil) ? guide?._description ?? "" : "")
+            Text(guide?._description ?? "")
                 .font(.callout)
                 .padding(.bottom, 10)
+            
+            HStack {
+                Text(guide?.guideType.rawValue ?? "")
+                    .font(.caption)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(.green, lineWidth: 1)
+                    )
+                    .padding(.trailing, 8)
+                
+                if currentGuide?.objectSteps != nil {
+                    Text("Steps: \(currentGuide?.objectSteps?.count ?? 0)")
+                        .font(.caption)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(.green, lineWidth: 1)
+                        )
+                }
+                
+                Spacer()
+            }
+            .padding(.bottom, 10)
+            
+            
+            Divider()
+            
+            VStack {
+                if downloadedAssets != [] {
+                    Text("DOWNLOADED ASSETS")
+                        .font(.callout.bold())
+                        .padding(.bottom, 6)
+                    
+                    ForEach(downloadedAssets, id: \.self) { asset in
+                        HStack {
+                            Text(asset)
+                                .font(.callout)
+                                .padding(.bottom, 10)
+                            Spacer()
+                            
+                            if selectedAssets.contains(asset) {
+                                Text("SELECTED")
+                                    .font(.system(.caption2).weight(.bold))
+                                    .foregroundColor(.green)
+                                    .padding(.trailing, 2)
+                                
+                                Image(systemName: "checkmark.circle")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(.green)
+                                    .padding(.trailing)
+                            }
+                        }
+                    }
+                }
+                
+                if isLoading > 0 {
+                    VStack {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color.green))
+                            .zIndex(2)
+                        
+                        Text("Loading models...")
+                            .font(.system(.caption).weight(.bold))
+                            .foregroundColor(.green)
+                            .padding(.top, 4)
+                    }
+                }
+            }
+            .padding(.top, 8)
             
             Spacer()
         }
@@ -105,70 +160,10 @@ struct DatasetDetailView: View {
     }
 }
 
-struct AssetRow: View {
-    @EnvironmentObject var viewModel: CollaborationViewModel
-    let asset: Asset
-    let showDatasetDetailViewAction: () -> Void
-    
-    var body: some View {
-        Button(action: {}) {
-            HStack {
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 8) {
-                        Button(action: {
-                            showDatasetDetailViewAction()
-                        }) {
-                            Text("\(asset.assetName ?? "")")
-                                .font(.title3)
-                                .foregroundColor(.black)
-                                .fontWeight(.semibold)
-                        }
-                    }
-                    
-                    Text("\(asset.description ?? "")")
-                        .font(.subheadline)
-                        .foregroundColor(Color.gray)
-                }
-                
-                Spacer()
-                
-                if viewModel.downloadedAssets.contains(asset.assetName!) && !viewModel.selectedAssets.contains(asset.assetName!) {
-                    Button(action: {
-                        viewModel.selectModel(assetName: asset.assetName!, initial: false)
-                    }) {
-                        Image(systemName: "circle")
-                            .font(.system(size: 18))
-                            .foregroundColor(.cyan)
-                            .padding(.trailing)
-                    }
-                } else if viewModel.downloadedAssets.contains(asset.assetName!) && viewModel.selectedAssets.contains(asset.assetName!) {
-                    Image(systemName: "circle.fill")
-                        .font(.system(size: 18))
-                        .foregroundColor(.cyan)
-                        .padding(.trailing)
-                }
-                
-                if viewModel.downloadedAssets.contains(asset.assetName!) {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 18))
-                        .foregroundColor(.green)
-                } else {
-                    Button(action: {
-                        viewModel.getAssetByName(assetName: asset.assetName!)
-                    }) {
-                        Image(systemName: "arrow.down.to.line")
-                            .font(.system(size: 18))
-                            .foregroundColor(.green)
-                    }
-                }
-            }
-        }
-    }
-}
-
 struct GuideRow: View {
     @EnvironmentObject var viewModel: CollaborationViewModel
     let guide: Guide
+    @Binding var isLoading: Int
     let showGuideDetailViewAction: () -> Void
     
     var body: some View {
@@ -192,6 +187,27 @@ struct GuideRow: View {
                 }
                 
                 Spacer()
+                
+                if isLoading > 0 {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: Color.green))
+                        .zIndex(2)
+                        .padding(.trailing, 2)
+                }
+                
+                if viewModel.currentGuide?.name == guide.name {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 18))
+                        .foregroundColor(.green)
+                } else {
+                    Button(action: {
+                        viewModel.getGuideById(id: guide.id!)
+                    }) {
+                        Image(systemName: "arrow.down.to.line")
+                            .font(.system(size: 18))
+                            .foregroundColor(.green)
+                    }
+                }
             }
         }
     }

@@ -9,9 +9,9 @@ import Foundation
 
 protocol NetworkServiceProtocol {
     func getAllGuides(completion: @escaping (Result<[Guide], Error>) -> Void)
-    func getGuideById(guideId: String, completion: @escaping (Result<Guide, Error>) -> Void)
+    func getGuideById(guideId: String, completion: @escaping (Result<ExtendedGuide, Error>) -> Void)
     func getAllAssets(completion: @escaping (Result<[Asset], Error>) -> Void)
-    func getAssetByName(assetName: String, completion: @escaping (Result<Void, Error>) -> Void)
+    func getAssetByName(assetName: String, loadingCallback: @escaping (Bool) -> Void, completion: @escaping (Result<String, Error>) -> Void)
     
 }
 
@@ -53,7 +53,7 @@ class NetworkService: NetworkServiceProtocol {
         task.resume()
     }
     
-    func getGuideById(guideId: String, completion: @escaping (Result<Guide, Error>) -> Void) {
+    func getGuideById(guideId: String, completion: @escaping (Result<ExtendedGuide, Error>) -> Void) {
         let urlString = Shared.shared.baseUrl.absoluteString + "/guides/" + guideId
         guard let url = URL(string: urlString) else {
             completion(.failure(NetworkError.invalidURL))
@@ -74,7 +74,7 @@ class NetworkService: NetworkServiceProtocol {
                 if let data = data {
                     DispatchQueue.main.async {
                         do {
-                            let guide = try JSONDecoder().decode(Guide.self, from: data)
+                            let guide = try JSONDecoder().decode(ExtendedGuide.self, from: data)
                             completion(.success(guide))
                         } catch let error {
                             print("Error decoding: ", error)
@@ -125,22 +125,25 @@ class NetworkService: NetworkServiceProtocol {
         task.resume()
     }
     
-    func getAssetByName(assetName: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        // TODO: -- HERE SHOULD BE AN IMPLEMENTATION OF DOWNLOADING PROGRESS
-        
+    func getAssetByName(assetName: String, loadingCallback: @escaping (Bool) -> Void, completion: @escaping (Result<String, Error>) -> Void) {
+        loadingCallback(true)
+
         let urlString = Shared.shared.baseUrl.absoluteString + "/assets/" + assetName + "/download"
         guard let url = URL(string: urlString) else {
+            loadingCallback(false)
             completion(.failure(NetworkError.invalidURL))
             return
         }
         
         let task = URLSession.shared.downloadTask(with: url) { localURL, response, error in
             if let error = error {
+                loadingCallback(false)
                 completion(.failure(error))
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse else {
+                loadingCallback(false)
                 completion(.failure(NetworkError.invalidResponse))
                 return
             }
@@ -154,21 +157,24 @@ class NetworkService: NetworkServiceProtocol {
                         
                         // Check if file is already downloaded
                         if FileManager.default.fileExists(atPath: fileURL.path) {
-                            print("Asset already downloaded")
-                            completion(.success(()))
+//                            print("Asset already downloaded \(fileURL.lastPathComponent)")
+                            completion(.success(fileURL.lastPathComponent))
                             return
                         }
                         
                         try FileManager.default.moveItem(at: localURL, to: fileURL)
                         print("Asset saved to \(fileURL)")
-                        completion(.success(()))
+                        loadingCallback(false)
+                        completion(.success(fileURL.lastPathComponent))
                     } catch {
                         print("Error saving asset: \(error)")
+                        loadingCallback(false)
                         completion(.failure(NetworkError.invalidResponse))
                     }
                 }
             default:
                 print("Error - \(httpResponse.statusCode)")
+                loadingCallback(false)
                 completion(.failure(NetworkError.invalidURL))
             }
         }

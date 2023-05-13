@@ -9,21 +9,32 @@ import Foundation
 
 
 
-public struct ObjectStep: Codable {
-
+public struct ObjectStep: Identifiable, Codable {
+    
+    public var id: UUID?
     public var modelId: Int?
     public var objectName: String?
     public var steps: [Step]?
     public var instruction: Instruction?
     public var order: Decimal?
-
-    public init(modelId: Int? = nil, objectName: String? = nil, steps: [Step]? = nil, instruction: Instruction? = nil, order: Decimal? = nil) {
+    
+    public init(id: UUID? = UUID(), modelId: Int? = nil, objectName: String? = nil, steps: [Step]? = nil, instruction: Instruction? = nil, order: Decimal? = nil) {
+        self.id = id
         self.modelId = modelId
         self.objectName = objectName
         self.steps = steps
         self.instruction = instruction
         self.order = order
     }
-
-
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+        modelId = try container.decodeIfPresent(Int.self, forKey: .modelId)
+        objectName = try container.decodeIfPresent(String.self, forKey: .objectName)
+        steps = try container.decodeIfPresent([Step].self, forKey: .steps)
+        instruction = try container.decodeIfPresent(Instruction.self, forKey: .instruction)
+        order = try container.decodeIfPresent(Decimal.self, forKey: .order)
+    }
+    
 }

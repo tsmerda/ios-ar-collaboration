@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GuideView: View {
-    @Binding var guide: Guide?
+    @Binding var guide: ExtendedGuide?
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var viewModel: CollaborationViewModel
     
@@ -75,7 +75,7 @@ struct GuideView: View {
 
 struct GuideView_Previews: PreviewProvider {
     static var previews: some View {
-        let guide = Guide(_id: "640b700f16cde6145a3bfc19", name: "Upgrading old Prusa MK2s.", _description: "How to upgrade the old MK2s to MK2s+ featuring the cool magnetic heatbed.", imageUrl: "/images/guides/10/34.png", guideType: .manual)
+        let guide = ExtendedGuide(_id: "640b700f16cde6145a3bfc19", name: "Upgrading old Prusa MK2s.", _description: "How to upgrade the old MK2s to MK2s+ featuring the cool magnetic heatbed.", imageUrl: "/images/guides/10/34.png", guideType: .manual)
         GuideView(guide: .constant(guide)) // pass a Binding of Guide instead of Guide instance
     }
 }

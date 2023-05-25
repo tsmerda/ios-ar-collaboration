@@ -11,7 +11,7 @@ class Shared {
     static let shared = Shared()
     
     var baseUrl: URL {
-        guard let url = URL(string: "http://192.168.1.9:8080/api/v3") else { fatalError("No base URL") }
+        guard let url = URL(string: "http://192.168.1.10:8080/api/v3") else { fatalError("No base URL") }
         return url
     }
 }

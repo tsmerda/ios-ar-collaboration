@@ -9,142 +9,123 @@ import SwiftUI
 import UIKit
 import AVFoundation
 import Vision
-//import RealityKit
-//import ARKit
 
-class UIAVCollaborationViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+class UIAVCollaborationViewController: UIViewController {
+    @Binding var showingSheet: Bool
     var mlModel: VNCoreMLModel?
     var onARResultsChanged: ((String?) -> Void)?
     var ARResults: String?
-    var recognitionInterval = 0 //Interval for object recognition
+    var objectRecognizer = ObjectRecognizer()
     
-    private var permissionGranted = false // Flag for permission
-    private let captureSession = AVCaptureSession()
-    private let sessionQueue = DispatchQueue(label: "sessionQueue")
-    private var previewLayer = AVCaptureVideoPreviewLayer()
-    var screenRect: CGRect! = nil // For view dimensions
+    var cameraView:UIView
+    var imageView:UIImageView
+    var isRecognizing = false
+    var objectsLayer:CALayer = CALayer()
     
-    // Detector
-    private var videoOutput = AVCaptureVideoDataOutput()
-    var requests = [VNRequest]()
-    var detectionLayer: CALayer! = nil
-    
-    @Binding var showingSheet: Bool
-    
-    init(showingSheet: Binding<Bool>) {
+    required init(showingSheet: Binding<Bool>) {
         _showingSheet = showingSheet
+        self.cameraView = UIView()
+        self.imageView = UIImageView()
+        self.queue = DispatchQueue(label: "LiveCameraViewController")
         super.init(nibName: nil, bundle: nil)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
-        checkPermission()
+        super.viewDidLoad()
+        objectRecognizer = ObjectRecognizer(mlModel: mlModel)
+        cameraView.frame = CGRect(x:0,
+                                  y:0,
+                                  width:view.frame.size.width,
+                                  height: view.frame.size.height / 2) //self.view.frame
+        cameraView.frame = self.view.frame
+        view.addSubview(cameraView)
+        imageView.frame = CGRect(x: 0,
+                                 y: cameraView.frame.size.height,
+                                 width: view.frame.size.width,
+                                 height: view.frame.size.height / 2 )
+        //view.addSubview(imageView)
+        configureSession()
+        configurePreview()
+        session?.startRunning()
         
-        sessionQueue.async { [unowned self] in
-            guard permissionGranted else { return }
-            self.setupCaptureSession()
-            
-            self.setupLayers()
-            self.setupDetector()
-            
-            self.captureSession.startRunning()
+        // Add tap gesture recognizer
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
+        cameraView.addGestureRecognizer(tapGesture)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        cameraView.frame = view.frame
+        previewLayer?.frame = cameraView.layer.bounds
+        previewLayer?.connection?.videoOrientation = OrientationUtils.videoOrientationForCurrentOrientation()
+    }
+    
+    // MARK: - Private
+    
+    private var previewLayer:AVCaptureVideoPreviewLayer?
+    private var queue:DispatchQueue
+    private var session:AVCaptureSession?
+    private var videoSize:CGSize = .zero
+    
+    /// Configure the preview layer
+    /// the layer is added to the cameraView
+    private func configurePreview() {
+        guard let session = session else {return}
+        if self.previewLayer == nil {
+            let previewLayer = AVCaptureVideoPreviewLayer(session: session)
+            previewLayer.frame = cameraView.layer.bounds
+            previewLayer.videoGravity = .resizeAspectFill
+            cameraView.layer.addSublayer(previewLayer)
+            self.previewLayer = previewLayer
         }
     }
     
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        screenRect = UIScreen.main.bounds
-        self.previewLayer.frame = CGRect(x: 0, y: -120, width: screenRect.size.width, height: screenRect.size.height)
+    private func configureSession() {
+        let session = AVCaptureSession()
         
-        switch UIDevice.current.orientation {
-            // Home button on top
-        case UIDeviceOrientation.portraitUpsideDown:
-            self.previewLayer.connection?.videoOrientation = .portraitUpsideDown
-            
-            // Home button on right
-        case UIDeviceOrientation.landscapeLeft:
-            self.previewLayer.connection?.videoOrientation = .landscapeRight
-            
-            // Home button on left
-        case UIDeviceOrientation.landscapeRight:
-            self.previewLayer.connection?.videoOrientation = .landscapeLeft
-            
-            // Home button at bottom
-        case UIDeviceOrientation.portrait:
-            self.previewLayer.connection?.videoOrientation = .portrait
-            
-        default:
-            break
-        }
+        let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes:[.builtInWideAngleCamera, .builtInTelephotoCamera],
+                                                                      mediaType: AVMediaType.video,
+                                                                      position: .unspecified)
         
-        // Detector
-        updateLayers()
+        guard let captureDevice = deviceDiscoverySession.devices.first,
+              let videoDeviceInput = try? AVCaptureDeviceInput(device: captureDevice),
+              session.canAddInput(videoDeviceInput)
+        else { return }
+        session.addInput(videoDeviceInput)
+        
+        let videoOutput = AVCaptureVideoDataOutput()
+        videoOutput.alwaysDiscardsLateVideoFrames = true
+        videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+        videoOutput.setSampleBufferDelegate(self, queue: queue)
+        
+        session.addOutput(videoOutput)
+        session.sessionPreset = .vga640x480
+        
+        let captureConnection = videoOutput.connection(with: .video)
+        captureConnection?.isEnabled = true
+        
+        let dimensions  = CMVideoFormatDescriptionGetDimensions((captureDevice.activeFormat.formatDescription))
+        videoSize.width = CGFloat(dimensions.width)
+        videoSize.height = CGFloat(dimensions.height)
+        
+        self.session = session
     }
     
-    func checkPermission() {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-            // Permission has been granted before
-        case .authorized:
-            permissionGranted = true
-            
-            // Permission has not been requested yet
-        case .notDetermined:
-            requestPermission()
-            
-        default:
-            permissionGranted = false
-        }
+    func drawRecognizedObjects(_ objects:[RecognizedObject]) {
+        guard let previewLayer = previewLayer else { return }
+        
+        objectsLayer = GeometryUtils.createLayer(forRecognizedObjects: objects,
+                                                 inFrame: previewLayer.frame)
+        
+        previewLayer.addSublayer(objectsLayer)
+        previewLayer.setNeedsDisplay()
     }
     
-    func requestPermission() {
-        sessionQueue.suspend()
-        AVCaptureDevice.requestAccess(for: .video) { [unowned self] granted in
-            self.permissionGranted = granted
-            self.sessionQueue.resume()
-        }
-    }
-    
-    func setupCaptureSession() {
-        // Camera input
-        guard let videoDevice = AVCaptureDevice.default(for: .video) else { return }
-        guard let videoDeviceInput = try? AVCaptureDeviceInput(device: videoDevice) else { return }
-        
-        guard captureSession.canAddInput(videoDeviceInput) else { return }
-        captureSession.addInput(videoDeviceInput)
-        
-        // Preview layer
-        screenRect = UIScreen.main.bounds
-        
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.frame = CGRect(x: 0, y: -120, width: screenRect.size.width, height: screenRect.size.height)
-        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill // Fill screen
-        previewLayer.connection?.videoOrientation = .portrait
-        
-        // Detector
-        videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sampleBufferQueue"))
-        captureSession.addOutput(videoOutput)
-        
-        videoOutput.connection(with: .video)?.videoOrientation = .portrait
-        
-        // Updates to UI must be on main queue
-        DispatchQueue.main.async { [weak self] in
-            self!.view.layer.addSublayer(self!.previewLayer)
-        }
-    }
-    
-    // Function to handle tap gesture
-    @objc func handleTapGesture(_ gesture: UITapGestureRecognizer) {
-        guard let boundingBoxView = gesture.view else { return }
-        
-        // Retrieve the recognized value from the associated object
-        if let recognizedValue = objc_getAssociatedObject(boundingBoxView, UnsafeRawPointer(bitPattern: "recognizedValue".hashValue)!) as? String {
-            print(recognizedValue)
-            showingSheet = true
-        }
-    }
 }
+
 
 struct CollaborationView: UIViewControllerRepresentable {
     @EnvironmentObject var viewModel: CollaborationViewModel
@@ -153,22 +134,19 @@ struct CollaborationView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIAVCollaborationViewController {
         let uiView = UIAVCollaborationViewController(showingSheet: $showingSheet)
         
-        if (viewModel.mlModel != nil) {
+        if viewModel.mlModel != nil {
             uiView.mlModel = viewModel.mlModel
+            uiView.objectRecognizer = ObjectRecognizer(mlModel: viewModel.mlModel)
         }
         
         uiView.ARResults = viewModel.ARResults
-        
         uiView.onARResultsChanged = { result in
             DispatchQueue.main.async {
                 viewModel.ARResults = result ?? ""
             }
         }
-        
         uiView.showingSheet = showingSheet
         
-        //        uiView.setupSession()
-        //        uiView.setupPreview()
         return uiView
     }
     

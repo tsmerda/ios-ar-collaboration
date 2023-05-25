@@ -11,7 +11,6 @@
 		B5537B682A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */; };
 		B5537B6A2A0FABB7006F8102 /* ARView+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */; };
 		B5537B6C2A0FAC97006F8102 /* ARViewContainer+Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */; };
-		B5537B6E2A0FAD14006F8102 /* UIAVCollaborationViewController+Detector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B6D2A0FAD14006F8102 /* UIAVCollaborationViewController+Detector.swift */; };
 		B5576CE8297D94960069758E /* MetaCollaborationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CE7297D94960069758E /* MetaCollaborationApp.swift */; };
 		B5576CEA297D94960069758E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CE9297D94960069758E /* ContentView.swift */; };
 		B5576CEC297D94970069758E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5576CEB297D94970069758E /* Assets.xcassets */; };
@@ -20,6 +19,9 @@
 		B5576D02297D9CE40069758E /* CollaborationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576D01297D9CE40069758E /* CollaborationViewModel.swift */; };
 		B5576D04297D9D070069758E /* CollaborationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576D03297D9D070069758E /* CollaborationView.swift */; };
 		B5576D06297D9D270069758E /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576D05297D9D270069758E /* InfoView.swift */; };
+		B5673D102A1525B100EEA43D /* GeometryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5673D0F2A1525B100EEA43D /* GeometryUtils.swift */; };
+		B5673D122A1525BD00EEA43D /* OrientationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5673D112A1525BD00EEA43D /* OrientationUtils.swift */; };
+		B5673D142A1525F300EEA43D /* ObjectRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5673D132A1525F300EEA43D /* ObjectRecognizer.swift */; };
 		B56CE57529BCC928007D092F /* ObjectStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE56D29BCC928007D092F /* ObjectStep.swift */; };
 		B56CE57629BCC928007D092F /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE56E29BCC928007D092F /* Asset.swift */; };
 		B56CE57729BCC928007D092F /* Confirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE56F29BCC928007D092F /* Confirmation.swift */; };
@@ -34,6 +36,7 @@
 		B5E1ACB029A7E7D400E7ACC6 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1ACAF29A7E7D400E7ACC6 /* NetworkService.swift */; };
 		B5E1ACB229A7E7FE00E7ACC6 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1ACB129A7E7FE00E7ACC6 /* Shared.swift */; };
 		B5E680E229F6F53D00E98737 /* MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E680E129F6F53D00E98737 /* MultipeerSession.swift */; };
+		B5EB9B0F2A1E584C00BE3266 /* UIAVCollaborationViewController+HandleDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EB9B0E2A1E584C00BE3266 /* UIAVCollaborationViewController+HandleDetection.swift */; };
 		B5F7C78129B0DB3100E4A71A /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F7C78029B0DB3100E4A71A /* GuideView.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,7 +45,6 @@
 		B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollaborationViewModel+MultipeerSession.swift"; sourceTree = "<group>"; };
 		B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARView+Gestures.swift"; sourceTree = "<group>"; };
 		B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARViewContainer+Session.swift"; sourceTree = "<group>"; };
-		B5537B6D2A0FAD14006F8102 /* UIAVCollaborationViewController+Detector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAVCollaborationViewController+Detector.swift"; sourceTree = "<group>"; };
 		B5576CE4297D94960069758E /* MetaCollaboration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaCollaboration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5576CE7297D94960069758E /* MetaCollaborationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaCollaborationApp.swift; sourceTree = "<group>"; };
 		B5576CE9297D94960069758E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +55,9 @@
 		B5576D03297D9D070069758E /* CollaborationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollaborationView.swift; sourceTree = "<group>"; };
 		B5576D05297D9D270069758E /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		B5630D3229846A35005BC686 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B5673D0F2A1525B100EEA43D /* GeometryUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryUtils.swift; sourceTree = "<group>"; };
+		B5673D112A1525BD00EEA43D /* OrientationUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationUtils.swift; sourceTree = "<group>"; };
+		B5673D132A1525F300EEA43D /* ObjectRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectRecognizer.swift; sourceTree = "<group>"; };
 		B56CE56D29BCC928007D092F /* ObjectStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectStep.swift; sourceTree = "<group>"; };
 		B56CE56E29BCC928007D092F /* Asset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Asset.swift; sourceTree = "<group>"; };
 		B56CE56F29BCC928007D092F /* Confirmation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Confirmation.swift; sourceTree = "<group>"; };
@@ -67,6 +72,7 @@
 		B5E1ACAF29A7E7D400E7ACC6 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B5E1ACB129A7E7FE00E7ACC6 /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		B5E680E129F6F53D00E98737 /* MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerSession.swift; sourceTree = "<group>"; };
+		B5EB9B0E2A1E584C00BE3266 /* UIAVCollaborationViewController+HandleDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAVCollaborationViewController+HandleDetection.swift"; sourceTree = "<group>"; };
 		B5F7C78029B0DB3100E4A71A /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -84,10 +90,10 @@
 		B5537B662A0F9E8B006F8102 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */,
-				B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */,
 				B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */,
-				B5537B6D2A0FAD14006F8102 /* UIAVCollaborationViewController+Detector.swift */,
+				B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */,
+				B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */,
+				B5EB9B0E2A1E584C00BE3266 /* UIAVCollaborationViewController+HandleDetection.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -111,6 +117,7 @@
 		B5576CE6297D94960069758E /* MetaCollaboration */ = {
 			isa = PBXGroup;
 			children = (
+				B5673D0E2A15259B00EEA43D /* Utils */,
 				B5537B662A0F9E8B006F8102 /* Extensions */,
 				B56CE56C29BCC913007D092F /* Models */,
 				B5576CE7297D94960069758E /* MetaCollaborationApp.swift */,
@@ -125,6 +132,7 @@
 				B5E1ACAF29A7E7D400E7ACC6 /* NetworkService.swift */,
 				B5E680E129F6F53D00E98737 /* MultipeerSession.swift */,
 				B5E1ACB129A7E7FE00E7ACC6 /* Shared.swift */,
+				B5673D132A1525F300EEA43D /* ObjectRecognizer.swift */,
 				B5630D3229846A35005BC686 /* Info.plist */,
 				B5576CEB297D94970069758E /* Assets.xcassets */,
 				B5576CED297D94970069758E /* Preview Content */,
@@ -139,6 +147,15 @@
 				B5576CEE297D94970069758E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B5673D0E2A15259B00EEA43D /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				B5673D0F2A1525B100EEA43D /* GeometryUtils.swift */,
+				B5673D112A1525BD00EEA43D /* OrientationUtils.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		B56CE56C29BCC913007D092F /* Models */ = {
@@ -241,8 +258,10 @@
 				B56CE57729BCC928007D092F /* Confirmation.swift in Sources */,
 				B56CE57529BCC928007D092F /* ObjectStep.swift in Sources */,
 				B5576CEA297D94960069758E /* ContentView.swift in Sources */,
+				B5EB9B0F2A1E584C00BE3266 /* UIAVCollaborationViewController+HandleDetection.swift in Sources */,
+				B5673D102A1525B100EEA43D /* GeometryUtils.swift in Sources */,
+				B5673D122A1525BD00EEA43D /* OrientationUtils.swift in Sources */,
 				B5537B6A2A0FABB7006F8102 /* ARView+Gestures.swift in Sources */,
-				B5537B6E2A0FAD14006F8102 /* UIAVCollaborationViewController+Detector.swift in Sources */,
 				B5E1ACB229A7E7FE00E7ACC6 /* Shared.swift in Sources */,
 				B5E680E229F6F53D00E98737 /* MultipeerSession.swift in Sources */,
 				B5537B6C2A0FAC97006F8102 /* ARViewContainer+Session.swift in Sources */,
@@ -250,6 +269,7 @@
 				B5576D02297D9CE40069758E /* CollaborationViewModel.swift in Sources */,
 				B56CE57929BCC928007D092F /* Step.swift in Sources */,
 				B5576D00297D9CC50069758E /* DatasetListView.swift in Sources */,
+				B5673D142A1525F300EEA43D /* ObjectRecognizer.swift in Sources */,
 				B5576CE8297D94960069758E /* MetaCollaborationApp.swift in Sources */,
 				B56CE57629BCC928007D092F /* Asset.swift in Sources */,
 				B56CE57829BCC928007D092F /* Content.swift in Sources */,

@@ -27,40 +27,25 @@ struct ContentView: View {
                         CollaborationView(showingSheet: $showingSheet)
                             .environmentObject(viewModel)
                             .zIndex(1)
+                            .id(viewModel.uniqueID)
                             .sheet(isPresented: $showingSheet) {
-                                GuideView(guide: $viewModel.currentGuide)
+                                GuideView()
                                     .environmentObject(viewModel)
+                            }
+                            .onAppear {
+                                viewModel.refreshCollaborationView()
                             }
                     } else {
                         ARViewContainer()
                             .environmentObject(viewModel)
                             .zIndex(1)
                             .sheet(isPresented: $showingSheet) {
-                                GuideView(guide: $viewModel.currentGuide)
+                                GuideView()
                                     .environmentObject(viewModel)
                             }
                     }
                     
-                    if viewModel.arMode == activeARMode.recognitionMode {
-                        VStack {
-                            HStack {
-                                Text(viewModel.ARResults)
-                                    .font(.title3)
-                                    .multilineTextAlignment(.leading)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.black)
-                                
-                                Spacer ()
-                            }
-                            .padding(.leading, 30)
-                            .frame(width: UIScreen.main.bounds.width - 15, height: 70)
-                            .background(.white)
-                            .padding(.top, 30)
-                            
-                            Spacer()
-                        }
-                        .zIndex(2)
-                    } else {
+                    if viewModel.arMode == activeARMode.collaborationMode {
                         VStack {
                             HStack {
                                 VStack {

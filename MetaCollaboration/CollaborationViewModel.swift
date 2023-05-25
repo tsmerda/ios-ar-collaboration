@@ -33,13 +33,15 @@ class CollaborationViewModel: ObservableObject {
     @Published var arMode: activeARMode = .recognitionMode
     @Published var mlModel: VNCoreMLModel?
     @Published var usdzModel: URL?
-    @Published var ARResults: String = "Currently no model available"
+    @Published var ARResults: String = "Currently no object recognized"
     @Published var assetsDownloadingCount = 0
     @Published var downloadedAssets: [String] = []
     @Published var selectedAssets: [String] = []
     @Published var guideList: [Guide]? /// = MockGuideList
     @Published var assetList: [Asset]? /// = MockAssetList
     @Published var currentGuide: ExtendedGuide?
+    @Published var uniqueID = UUID()
+    //    @Published var currentStep: Int = 0
     
     private var networkService: NetworkService
     
@@ -154,6 +156,10 @@ class CollaborationViewModel: ObservableObject {
         defaults.set(selectedAssets, forKey: "selectedAssets")
     }
     
+    func refreshCollaborationView() {
+        self.uniqueID = UUID()
+    }
+    
     
     // MARK: - Network methods
     
@@ -191,7 +197,7 @@ class CollaborationViewModel: ObservableObject {
                 self.currentGuide = value
                 
                 // TODO: -- NA BACKENDU SE MUSI NASTAVIT CAMELCASE!!!! (objectName misto object_name atd...) + pridat parametr pro detector model
-                self.getAssetByName(assetName: "ObjectDetector")
+                self.getAssetByName(assetName: "YOLOv3")
                 
                 if let objectSteps = value.objectSteps {
                     for objectStep in objectSteps {

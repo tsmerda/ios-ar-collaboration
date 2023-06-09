@@ -24,7 +24,10 @@ class NetworkService: NetworkServiceProtocol {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.waitsForConnectivity = true
+        
+        let task = URLSession(configuration: sessionConfig).dataTask(with: URLRequest(url: url)) { data, response, error in
             if let error = error {
                 completion(.failure(error))
             }
@@ -33,7 +36,7 @@ class NetworkService: NetworkServiceProtocol {
                 completion(.failure(NetworkError.invalidResponse))
                 return
             }
-            
+                        
             if response.statusCode == 200 {
                 if let data = data {
                     DispatchQueue.main.async {

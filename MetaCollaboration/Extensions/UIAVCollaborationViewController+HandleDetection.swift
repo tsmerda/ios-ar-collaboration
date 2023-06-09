@@ -9,6 +9,8 @@ import SwiftUI
 import UIKit
 import AVFoundation
 import Vision
+import RealityKit
+import ARKit
 
 extension UIAVCollaborationViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
@@ -21,16 +23,6 @@ extension UIAVCollaborationViewController: AVCaptureVideoDataOutputSampleBufferD
         
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
-        }
-        
-        if let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
-            let ciImage = CIImage(cvPixelBuffer: imageBuffer)
-            let context = CIContext(options: nil)
-            let cgImage = context.createCGImage(ciImage, from: ciImage.extent)!
-            let image = UIImage(cgImage: cgImage)
-            DispatchQueue.main.async {
-                self.imageView.image = image
-            }
         }
         
         objectsLayer.removeFromSuperlayer()
@@ -63,7 +55,7 @@ extension UIAVCollaborationViewController: AVCaptureVideoDataOutputSampleBufferD
         DispatchQueue.main.async {
             self.onARResultsChanged?(tappedText.string)
         }
-        print(tappedText.string)
+        print("Tappded: \(tappedText.string)")
         showingSheet = true
     }
     

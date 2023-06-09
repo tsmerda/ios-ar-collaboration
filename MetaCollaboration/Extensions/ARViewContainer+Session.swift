@@ -35,6 +35,10 @@ extension ARViewContainer {
                     anchorEntity.addChild(coloredSphere)
                     
                     self.parent.viewModel.arView.scene.addAnchor(anchorEntity)
+                } else if let objectAnchor = anchor as? ARObjectAnchor {
+                    print("Detected object anchor")
+                    
+                    self.parent.viewModel.arView.placeSceneObject(for: objectAnchor, self.parent.viewModel)
                 } else {
                     // Kontrola, zda má anchor požadovaný název modelu
                     //                    if let anchorName = anchor.name, anchorName == "cake" {

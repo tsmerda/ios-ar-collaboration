@@ -28,6 +28,12 @@ extension CollaborationViewModel {
         // Enable a collaborative session.
         config.isCollaborationEnabled = true
         
+        // Object detection - set up reference on objects (.arobject) that should be detected in a scene
+        guard let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "FlowerObject", bundle: nil) else {
+            fatalError("Missing expected asset catalog resources.")
+        }
+        config.detectionObjects = referenceObjects
+        
         if ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh) {
             config.sceneReconstruction = .mesh
         }

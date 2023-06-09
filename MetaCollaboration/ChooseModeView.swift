@@ -25,8 +25,8 @@ struct ChooseModeView: View {
                 .frame(maxWidth: 260)
             
             Button(action: {
-                UserDefaults.standard.set("onlineMode", forKey: "appMode")
-                viewModel.appMode = activeAppMode.onlineMode
+//                UserDefaults.standard.set("onlineMode", forKey: "appMode")
+//                viewModel.appMode = activeAppMode.onlineMode
             }) {
                 SquareView(icon: "icloud.and.arrow.down", text: "Online")
             }
@@ -51,10 +51,16 @@ struct SquareView: View {
         VStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.system(size: 48).weight(.thin))
-                .foregroundColor(.green)
+                .foregroundColor(text == "Online" ? .gray : .green)
             Text(text)
                 .font(.system(.headline).weight(.light))
-                .foregroundColor(.green)
+                .foregroundColor(text == "Online" ? .gray : .green)
+            if text == "Online" {
+                Text("NOT IMPLEMENTED")
+                    .font(.system(.caption2).weight(.bold))
+                    .foregroundColor(.gray)
+                    .padding(.trailing, 2)
+            }
         }
         .frame(width: 150, height: 150)
         .background(.white)

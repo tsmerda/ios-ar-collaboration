@@ -21,7 +21,7 @@ struct InfoView: View {
                 }
                 
                 Section {
-                    HStack {
+                    HStack() {
                         Text("Change app mode")
                         Spacer()
                         Button(action: {

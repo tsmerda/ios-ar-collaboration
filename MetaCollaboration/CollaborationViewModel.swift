@@ -11,6 +11,7 @@ import Vision
 import CoreML
 import UIKit
 
+import ARKit
 import SwiftUI
 import RealityKit
 import MultipeerConnectivity
@@ -21,16 +22,16 @@ enum activeAppMode {
     case offlineMode
 }
 
-enum activeARMode {
-    case recognitionMode
-    case collaborationMode
-}
+//enum activeARMode {
+//    case recognitionMode
+//    case collaborationMode
+//}
 
 class CollaborationViewModel: ObservableObject {
     // MARK: - Properties
     
-    @Published var appMode: activeAppMode = .none
-    @Published var arMode: activeARMode = .recognitionMode
+    @Published var appMode: activeAppMode = activeAppMode.none
+    //    @Published var arMode: activeARMode = activeARMode.recognitionMode
     @Published var mlModel: VNCoreMLModel?
     @Published var usdzModel: URL?
     @Published var ARResults: String = "Currently no object recognized"
@@ -63,28 +64,19 @@ class CollaborationViewModel: ObservableObject {
     
     init(networkService: NetworkService) {
         self.networkService = networkService
-        guard let storedAppMode = UserDefaults.standard.string(forKey: "appMode") else {
-            return
+        if let storedAppMode = UserDefaults.standard.string(forKey: "appMode") {
+            if storedAppMode == "onlineMode" {
+                appMode = activeAppMode.onlineMode
+            }
+            if storedAppMode == "offlineMode" {
+                appMode = activeAppMode.offlineMode
+            }
         }
         
-        if storedAppMode == "none" {
-            appMode = activeAppMode.none
-        }
-        if storedAppMode == "onlineMode" {
-            appMode = activeAppMode.onlineMode
-        }
-        if storedAppMode == "offlineMode" {
-            appMode = activeAppMode.offlineMode
-        }
-        
-        if appMode == .offlineMode {
-            getAllGuides()
-            // Check downloaded and assets saved in device local storage and add into downloadedAssets array
-            guideAlreadyDownloaded()
-            // Check downloaded and assets saved in device local storage and add into downloadedAssets array
-            assetAlreadyDownloaded()
-            // getAllAssets()
-        }
+        // Check downloaded and assets saved in device local storage and add into downloadedAssets array
+        guideAlreadyDownloaded()
+        // Check downloaded and assets saved in device local storage and add into downloadedAssets array
+        assetAlreadyDownloaded()
     }
     
     // MARK: - Public Methods
@@ -168,14 +160,6 @@ class CollaborationViewModel: ObservableObject {
     // In online mode, is not necessary to download all assets at once instead there is ongoing communication with the backend all the time.
     // ========
     
-    // Send photo to BE and get array of results.
-    func getResultsByImage(image: String) {
-        //        byteArray
-    }
-    
-    // Get all ML models
-    func getAllMLModels() {}
-    
     // Get list of all guides
     func getAllGuides() {
         self.networkService.getAllGuides() { result in
@@ -213,18 +197,6 @@ class CollaborationViewModel: ObservableObject {
                 if let encodedGuide = try? JSONEncoder().encode(value) {
                     defaults.set(encodedGuide, forKey: "downloadedGuide")
                 }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-    // Get all assets
-    func getAllAssets() {
-        self.networkService.getAllAssets() { result in
-            switch result {
-            case .success(let value):
-                self.assetList = value
             case .failure(let error):
                 print(error)
             }

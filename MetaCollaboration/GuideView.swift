@@ -37,6 +37,7 @@ struct GuideView: View {
                 .padding(.bottom, 10)
             
             HStack(alignment: .top) {
+//            TODO: -- change image
                 AsyncImage(url: URL(string: viewModel.currentGuide?.imageUrl ?? "https://3dwithus.com/wp-content/uploads/2017/02/Prusa-i3-MK2-Before-Upgrade-to-MK2.5S.jpg")) { image in image.resizable().aspectRatio(contentMode: .fill) } placeholder: { Color.gray } .frame(width: 128, height: 128) .clipShape(RoundedRectangle(cornerRadius: 16))
                 
                 Text(viewModel.currentGuide?._description ?? "How to upgrade the old MK2s to MK2s+ featuring the cool magnetic heatbed.")
@@ -102,30 +103,30 @@ struct GuideView: View {
                             .font(.system(.footnote).weight(.regular))
                             .foregroundColor(.black)
                         
-                        HStack {
-                            Button(action: {
-                                viewModel.arMode = activeARMode.collaborationMode
-                                presentationMode.wrappedValue.dismiss()
-                            }) {
-                                HStack {
-                                    Image(systemName: "arkit")
-                                        .imageScale(.large)
-                                        .foregroundColor(Color(.black))
-                                    
-                                    Text("SHOW MODEL")
-                                        .font(.caption.bold())
-                                }
-                                .padding(6)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                        .stroke(Color(.black).opacity(0.5), lineWidth: 1)
-                                )
-                            }
-                            
-                            Text("Begin collaborative session")
-                                .font(.system(.caption2).weight(.light))
-                                .foregroundColor(.gray)
-                        }
+                        //                        HStack {
+                        //                            Button(action: {
+                        //                                viewModel.arMode = activeARMode.collaborationMode
+                        //                                presentationMode.wrappedValue.dismiss()
+                        //                            }) {
+                        //                                HStack {
+                        //                                    Image(systemName: "arkit")
+                        //                                        .imageScale(.large)
+                        //                                        .foregroundColor(Color(.black))
+                        //
+                        //                                    Text("SHOW MODEL")
+                        //                                        .font(.caption.bold())
+                        //                                }
+                        //                                .padding(6)
+                        //                                .overlay(
+                        //                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        //                                        .stroke(Color(.black).opacity(0.5), lineWidth: 1)
+                        //                                )
+                        //                            }
+                        //
+                        //                            Text("Begin collaborative session")
+                        //                                .font(.system(.caption2).weight(.light))
+                        //                                .foregroundColor(.gray)
+                        //                        }
                     }
                 }
                 

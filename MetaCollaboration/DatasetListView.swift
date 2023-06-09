@@ -19,12 +19,24 @@ struct DatasetListView: View {
         NavigationView {
             List {
                 Section(header: Text("Guides")) {
-                    ForEach(viewModel.guideList ?? []) { guide in
-                        GuideRow(guide: guide, isLoading: $viewModel.assetsDownloadingCount, showGuideDetailViewAction: {
-                            self.showingSheet = true
-                            self.selectedGuide = guide
-                        })
-                        .environmentObject(viewModel)
+                    if let guideList = viewModel.guideList, !guideList.isEmpty {
+                        // array is not empty
+                        ForEach(guideList) { guide in
+                            GuideRow(guide: guide, isLoading: $viewModel.assetsDownloadingCount, showGuideDetailViewAction: {
+                                self.showingSheet = true
+                                self.selectedGuide = guide
+                            })
+                            .environmentObject(viewModel)
+                        }
+                    } else {
+                        // array is empty or nil
+                        HStack {
+                            Spacer()
+                            Text("No dataset available")
+                                .foregroundColor(.black)
+                                .font(.callout)
+                            Spacer()
+                        }
                     }
                 }
                 
@@ -42,6 +54,17 @@ struct DatasetListView: View {
                 }
             }
             .navigationTitle("Dataset list")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        // Refresh guides
+                        viewModel.getAllGuides()
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                            .foregroundColor(.green)
+                    }
+                }
+            }
             .sheet(isPresented: $showingSheet, onDismiss: {
                 selectedAsset = nil
                 selectedGuide = nil

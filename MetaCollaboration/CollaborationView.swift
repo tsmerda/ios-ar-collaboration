@@ -9,6 +9,7 @@ import SwiftUI
 import UIKit
 import AVFoundation
 import Vision
+import ARKit
 
 class UIAVCollaborationViewController: UIViewController {
     @Binding var showingSheet: Bool
@@ -17,15 +18,13 @@ class UIAVCollaborationViewController: UIViewController {
     var ARResults: String?
     var objectRecognizer = ObjectRecognizer()
     
-    var cameraView:UIView
-    var imageView:UIImageView
+    var cameraView: UIView
     var isRecognizing = false
-    var objectsLayer:CALayer = CALayer()
+    var objectsLayer: CALayer = CALayer()
     
     required init(showingSheet: Binding<Bool>) {
         _showingSheet = showingSheet
         self.cameraView = UIView()
-        self.imageView = UIImageView()
         self.queue = DispatchQueue(label: "LiveCameraViewController")
         super.init(nibName: nil, bundle: nil)
     }
@@ -40,14 +39,10 @@ class UIAVCollaborationViewController: UIViewController {
         cameraView.frame = CGRect(x:0,
                                   y:0,
                                   width:view.frame.size.width,
-                                  height: view.frame.size.height / 2) //self.view.frame
+                                  height: view.frame.size.height / 2)
         cameraView.frame = self.view.frame
         view.addSubview(cameraView)
-        imageView.frame = CGRect(x: 0,
-                                 y: cameraView.frame.size.height,
-                                 width: view.frame.size.width,
-                                 height: view.frame.size.height / 2 )
-        //view.addSubview(imageView)
+        
         configureSession()
         configurePreview()
         session?.startRunning()
@@ -65,10 +60,10 @@ class UIAVCollaborationViewController: UIViewController {
     
     // MARK: - Private
     
-    private var previewLayer:AVCaptureVideoPreviewLayer?
-    private var queue:DispatchQueue
-    private var session:AVCaptureSession?
-    private var videoSize:CGSize = .zero
+    private var previewLayer: AVCaptureVideoPreviewLayer?
+    private var queue: DispatchQueue
+    private var session: AVCaptureSession?
+    private var videoSize: CGSize = .zero
     
     /// Configure the preview layer
     /// the layer is added to the cameraView
@@ -145,6 +140,7 @@ struct CollaborationView: UIViewControllerRepresentable {
                 viewModel.ARResults = result ?? ""
             }
         }
+        
         uiView.showingSheet = showingSheet
         
         return uiView

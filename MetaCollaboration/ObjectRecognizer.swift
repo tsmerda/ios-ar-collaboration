@@ -85,7 +85,7 @@ class ObjectRecognizer {
                 continue
             }
             // print detected objects
-            print("detected \(label.identifier) confidence \(label.confidence)")
+//            print("detected \(label.identifier) confidence \(label.confidence)")
             if label.confidence > confidenceThreshold {
                 recognizedObjects.append(RecognizedObject(bounds: vnResult.boundingBox, label: label.identifier, confidence: label.confidence))
             }

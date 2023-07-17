@@ -145,6 +145,9 @@ struct DatasetDetailView: View {
                             Text(asset)
                                 .font(.callout)
                                 .padding(.bottom, 10)
+                            
+                            // TODO: -- Add asset description
+                            
                             Spacer()
                             
                             if selectedAssets.contains(asset) {

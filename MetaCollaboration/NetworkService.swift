@@ -36,7 +36,7 @@ class NetworkService: NetworkServiceProtocol {
                 completion(.failure(NetworkError.invalidResponse))
                 return
             }
-                        
+            
             if response.statusCode == 200 {
                 if let data = data {
                     DispatchQueue.main.async {
@@ -130,7 +130,7 @@ class NetworkService: NetworkServiceProtocol {
     
     func getAssetByName(assetName: String, loadingCallback: @escaping (Bool) -> Void, completion: @escaping (Result<String, Error>) -> Void) {
         loadingCallback(true)
-
+        
         let urlString = Shared.shared.baseUrl.absoluteString + "/assets/" + assetName + "/download"
         guard let url = URL(string: urlString) else {
             loadingCallback(false)
@@ -160,7 +160,7 @@ class NetworkService: NetworkServiceProtocol {
                         
                         // Check if file is already downloaded
                         if FileManager.default.fileExists(atPath: fileURL.path) {
-//                            print("Asset already downloaded \(fileURL.lastPathComponent)")
+                            // print("Asset already downloaded \(fileURL.lastPathComponent)")
                             completion(.success(fileURL.lastPathComponent))
                             return
                         }
@@ -168,7 +168,7 @@ class NetworkService: NetworkServiceProtocol {
                         try FileManager.default.moveItem(at: localURL, to: fileURL)
                         print("Asset saved to \(fileURL)")
                         loadingCallback(false)
-                        completion(.success(fileURL.lastPathComponent))
+                        completion(.success(response?.suggestedFilename ?? "no-assetname"))
                     } catch {
                         print("Error saving asset: \(error)")
                         loadingCallback(false)

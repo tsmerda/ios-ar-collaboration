@@ -29,8 +29,12 @@ extension CollaborationViewModel {
         config.isCollaborationEnabled = true
         
         // Object detection - set up reference on objects (.arobject) that should be detected in a scene
-        guard let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "FlowerObject", bundle: nil) else {
-            fatalError("Missing expected asset catalog resources.")
+        //        guard let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "ARResources", bundle: nil) else {
+        //            fatalError("Missing expected asset catalog resources.")
+        //        }
+        
+        guard !referenceObjects.isEmpty else {
+            fatalError("No ARReferenceObjects loaded.")
         }
         config.detectionObjects = referenceObjects
         
@@ -61,10 +65,6 @@ extension CollaborationViewModel {
         
         // Start looking for other players via MultiPeerConnectivity.
         multipeerSession = MultipeerSession(receivedDataHandler: self.receivedData, peerJoinedHandler: self.peerJoined, peerLeftHandler: peerLeft, peerDiscoveredHandler: peerDiscovered)
-        
-        // Inicializace gest pro modifikaci scény a modelů
-        arView.gestureSetup()
-        
         
         // ADD REAL-TIME SYNCHRONIZATION
         guard let multipeerConnectivityService =

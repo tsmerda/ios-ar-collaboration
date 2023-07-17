@@ -36,7 +36,7 @@ struct ContentView: View {
                     //                                viewModel.refreshCollaborationView()
                     //                            }
                     //                    } else {
-                    ARViewContainer()
+                    ARViewContainer(showingSheet: $showingSheet)
                         .environmentObject(viewModel)
                         .zIndex(1)
                         .id(viewModel.uniqueID)

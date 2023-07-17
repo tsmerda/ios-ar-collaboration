@@ -57,7 +57,7 @@ struct GuideView: View {
                 
                 Spacer()
                 
-                Text(viewModel.ARResults)
+                Text(viewModel.currentGuide?.name ?? "None")
                     .font(.system(.caption).weight(.medium))
                     .foregroundColor(.cyan)
             }

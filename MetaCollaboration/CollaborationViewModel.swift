@@ -34,6 +34,7 @@ class CollaborationViewModel: ObservableObject {
     //    @Published var arMode: activeARMode = activeARMode.recognitionMode
     @Published var mlModel: VNCoreMLModel?
     @Published var usdzModel: URL?
+    @Published var referenceObjects = Set<ARReferenceObject>()
     @Published var ARResults: String = "Currently no object recognized"
     @Published var assetsDownloadingCount = 0
     @Published var downloadedAssets: [String] = []
@@ -42,6 +43,8 @@ class CollaborationViewModel: ObservableObject {
     @Published var assetList: [Asset]? /// = MockAssetList
     @Published var currentGuide: ExtendedGuide?
     @Published var uniqueID = UUID()
+    var showingSheet: Binding<Bool>?
+    
     //    @Published var currentStep: Int = 0
     
     private var networkService: NetworkService
@@ -73,14 +76,13 @@ class CollaborationViewModel: ObservableObject {
             }
         }
         
-        // Check downloaded and assets saved in device local storage and add into downloadedAssets array
+        // Check downloaded guide saved in UserDefaults and add into currentGuide
         guideAlreadyDownloaded()
-        // Check downloaded and assets saved in device local storage and add into downloadedAssets array
+        // Check downloaded assets saved in device local storage and add into downloadedAssets
         assetAlreadyDownloaded()
     }
     
     // MARK: - Public Methods
-    
     func updateDownloadedAssets(assetName: String) {
         if !downloadedAssets.contains(assetName) {
             DispatchQueue.main.async { [self] in
@@ -92,12 +94,16 @@ class CollaborationViewModel: ObservableObject {
                 
                 // Select model if it's not in selectedAssets array
                 if !selectedAssets.contains(assetNameWithoutExtension) {
-                    if assetUrl.pathExtension == "mlmodel" {
+                    print("\(String(describing: self.currentGuide?.objectSteps?[0].objectName)) -- \(assetNameWithoutExtension)")
+                    if assetUrl.pathExtension == "arobject" {
+                        // Insert ARObject into referenceObjects Set for 3D objects detection
+                        selectModel(assetName: assetName)
+                    } else if assetUrl.pathExtension == "mlmodel" {
                         // Select MLModel for detector
-                        selectModel(assetName: assetName, initial: true)
+                        selectModel(assetName: assetName)
                     } else if currentGuide?.objectSteps?[0].objectName == assetNameWithoutExtension {
                         // Select USDZ model for initial step of guide
-                        selectModel(assetName: assetName, initial: true)
+                        selectModel(assetName: assetName)
                         return
                     }
                 }
@@ -105,8 +111,8 @@ class CollaborationViewModel: ObservableObject {
         }
     }
     
-    // TODO: -- upravit vybirani USZD modelu v zavislosti na aktualnim stepu
-    func selectModel(assetName: String, initial: Bool) {
+    // TODO: -- upravit vybirani USDZ modelu v zavislosti na aktualnim stepu
+    func selectModel(assetName: String) {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         do {
             let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
@@ -120,7 +126,10 @@ class CollaborationViewModel: ObservableObject {
                     do {
                         if assetExtension == "usdz" {
                             self.usdzModel = fileURL
-                        } else {
+                        } else if assetExtension == "arobject" {
+                            let referenceObject = try ARReferenceObject(archiveURL: fileURL)
+                            referenceObjects.insert(referenceObject)
+                        } else if assetExtension == "mlmodel" {
                             let compiledUrl = try MLModel.compileModel(at: fileURL)
                             self.mlModel = try VNCoreMLModel(for: MLModel(contentsOf: compiledUrl))
                         }
@@ -130,11 +139,6 @@ class CollaborationViewModel: ObservableObject {
                         }
                         
                         self.selectedAssets.append(assetName)
-                        
-                        if !initial {
-                            saveSelectedAssets()
-                        }
-                        
                     } catch {
                         print(error)
                     }
@@ -143,13 +147,9 @@ class CollaborationViewModel: ObservableObject {
         } catch { print(error) }
     }
     
-    func saveSelectedAssets() {
-        let defaults = UserDefaults.standard
-        defaults.set(selectedAssets, forKey: "selectedAssets")
-    }
-    
     func refreshCollaborationView() {
-        self.uniqueID = UUID()
+        // TODO: -- Opravit nastaveni UUID() -> zpusobovalo seknuti pri prejiti na ARView
+//        self.uniqueID = UUID()
     }
     
     
@@ -177,20 +177,25 @@ class CollaborationViewModel: ObservableObject {
         self.networkService.getGuideById(guideId: id) { result in
             switch result {
             case .success(let value):
-                print(value)
+                                print(value)
                 self.currentGuide = value
                 
-                // TODO: -- NA BACKENDU SE MUSI NASTAVIT CAMELCASE!!!! (objectName misto object_name atd...) + pridat parametr pro detector model
-                self.getAssetByName(assetName: "YOLOv3")
+                // TODO: - Po testovani odstranit
+                self.getAssetByName(assetName: "r2d2")
+                self.getAssetByName(assetName: "arrow")
+//                self.getAssetByName(assetName: "sneaker_airforce")
                 
-                if let objectSteps = value.objectSteps {
-                    for objectStep in objectSteps {
-                        if let objectName = objectStep.objectName {
-                            // Download models based on objectName from guideStep
-                            self.getAssetByName(assetName: objectName)
-                        }
-                    }
-                }
+                // TODO: -- Implementovat stazeni vsech modelu a na zaklade modelu pod danym Guide, vypsat do detailu Guide?
+                
+                // Download all assets related to guide steps
+                //                if let objectSteps = value.objectSteps {
+                //                    for objectStep in objectSteps {
+                //                        if let objectName = objectStep.objectName {
+                //                            // Download models based on objectName from guideStep
+                //                            self.getAssetByName(assetName: objectName)
+                //                        }
+                //                    }
+                //                }
                 
                 // Save ExtendedGuide downloaded model into local storage
                 let defaults = UserDefaults.standard
@@ -205,6 +210,8 @@ class CollaborationViewModel: ObservableObject {
     
     // Download asset by name
     func getAssetByName(assetName: String) {
+        print("Downloading of asset: \(assetName)")
+        
         self.networkService.getAssetByName(assetName: assetName, loadingCallback: { isLoading in
             DispatchQueue.main.async {
                 if isLoading {
@@ -216,6 +223,7 @@ class CollaborationViewModel: ObservableObject {
         }, completion: { result in
             switch result {
             case .success(let value):
+                //                print("Completition network \(value)")
                 self.updateDownloadedAssets(assetName: value)
             case .failure(let error):
                 print(error)
@@ -233,7 +241,6 @@ class CollaborationViewModel: ObservableObject {
         
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "downloadedGuide")
-        defaults.removeObject(forKey: "selectedAssets")
         
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         do {
@@ -264,7 +271,6 @@ class CollaborationViewModel: ObservableObject {
                                                                        includingPropertiesForKeys: nil,
                                                                        options: .skipsHiddenFiles)
             for fileURL in fileURLs {
-                print(fileURL.lastPathComponent)
                 updateDownloadedAssets(assetName: fileURL.lastPathComponent)
             }
         } catch {

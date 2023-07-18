@@ -129,7 +129,7 @@ extension ARView {
             entity.transform.scale = simd_float3(0.00015, 0.00015, 0.00015)
             modelAnchor.addChild(entity)
             
-                // TODO: -- Najit velikost sipky a souradnice a zpracovat
+            // TODO: -- Najit velikost sipky a souradnice a zpracovat
             // ENTITY 2
             let entity2 = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
             entity2.generateCollisionShapes(recursive: true)
@@ -142,15 +142,17 @@ extension ARView {
             entity2.transform.scale = simd_float3(0.00015, 0.00015, 0.00015)
             modelAnchor.addChild(entity2)
             
-//            let modelTranslation = SIMD3<Float>(0.1, 0.05, 0)
-//            let modelRotation = simd_quatf(angle: .pi, axis: SIMD3<Float>(0, 1, 0)) // Rotate by 180 degrees around Y-axis
-//            let modelTransform = Transform(rotation: modelRotation, translation: modelTranslation)
-//
-//            entity.transform = modelTransform
-//            entity.transform.scale = simd_float3(0.0002, 0.0002, 0.0002)
-//            modelAnchor.addChild(entity)
+            //            let modelTranslation = SIMD3<Float>(0.1, 0.05, 0)
+            //            let modelRotation = simd_quatf(angle: .pi, axis: SIMD3<Float>(0, 1, 0)) // Rotate by 180 degrees around Y-axis
+            //            let modelTransform = Transform(rotation: modelRotation, translation: modelTranslation)
+            //
+            //            entity.transform = modelTransform
+            //            entity.transform.scale = simd_float3(0.0002, 0.0002, 0.0002)
+            //            modelAnchor.addChild(entity)
             
             // self.installGestures([.all], for: entity)
+            
+            // TODO: this 2 lines below throws an error
             modelAnchor.synchronization?.ownershipTransferMode = .autoAccept
             modelAnchor.anchoring = AnchoringComponent(anchor)
             

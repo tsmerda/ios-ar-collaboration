@@ -7,10 +7,5 @@
 		<string>_ar-collab._tcp</string>
 		<string>_ar-collab._udp</string>
 	</array>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UILaunchScreen</key>
-		<string></string>
-	</dict>
 </dict>
 </plist>

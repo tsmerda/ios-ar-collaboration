@@ -22,20 +22,12 @@ enum activeAppMode {
     case offlineMode
 }
 
-//enum activeARMode {
-//    case recognitionMode
-//    case collaborationMode
-//}
-
 class CollaborationViewModel: ObservableObject {
     // MARK: - Properties
     
     @Published var appMode: activeAppMode = activeAppMode.none
-    //    @Published var arMode: activeARMode = activeARMode.recognitionMode
-    @Published var mlModel: VNCoreMLModel?
     @Published var usdzModel: URL?
     @Published var referenceObjects = Set<ARReferenceObject>()
-    @Published var ARResults: String = "Currently no object recognized"
     @Published var assetsDownloadingCount = 0
     @Published var downloadedAssets: [String] = []
     @Published var selectedAssets: [String] = []
@@ -43,11 +35,12 @@ class CollaborationViewModel: ObservableObject {
     @Published var assetList: [Asset]? /// = MockAssetList
     @Published var currentGuide: ExtendedGuide?
     @Published var uniqueID = UUID()
+    
+    @Published var isLoading = false
+    @Published var alertItem: AlertItem?
     var showingSheet: Binding<Bool>?
     
-    //    @Published var currentStep: Int = 0
-    
-    private var networkService: NetworkService
+    private var networkManager: NetworkManager
     
     // MARK: Collaboration properties
     
@@ -62,11 +55,11 @@ class CollaborationViewModel: ObservableObject {
     // MARK: - Initialization
     
     convenience init() {
-        self.init(networkService: NetworkService())
+        self.init(networkManager: NetworkManager())
     }
     
-    init(networkService: NetworkService) {
-        self.networkService = networkService
+    init(networkManager: NetworkManager) {
+        self.networkManager = networkManager
         if let storedAppMode = UserDefaults.standard.string(forKey: "appMode") {
             if storedAppMode == "onlineMode" {
                 appMode = activeAppMode.onlineMode
@@ -129,9 +122,6 @@ class CollaborationViewModel: ObservableObject {
                         } else if assetExtension == "arobject" {
                             let referenceObject = try ARReferenceObject(archiveURL: fileURL)
                             referenceObjects.insert(referenceObject)
-                        } else if assetExtension == "mlmodel" {
-                            let compiledUrl = try MLModel.compileModel(at: fileURL)
-                            self.mlModel = try VNCoreMLModel(for: MLModel(contentsOf: compiledUrl))
                         }
                         
                         if let index = selectedAssets.firstIndex(where: { $0.hasSuffix(".\(assetExtension)") }) {
@@ -149,95 +139,15 @@ class CollaborationViewModel: ObservableObject {
     
     func refreshCollaborationView() {
         // TODO: -- Opravit nastaveni UUID() -> zpusobovalo seknuti pri prejiti na ARView
-//        self.uniqueID = UUID()
-    }
-    
-    
-    // MARK: - Network methods
-    
-    // ========
-    // In offline mode, client download all the ML and USDZ models within guides to be able to use an AR and collaborative experience
-    // In online mode, is not necessary to download all assets at once instead there is ongoing communication with the backend all the time.
-    // ========
-    
-    // Get list of all guides
-    func getAllGuides() {
-        self.networkService.getAllGuides() { result in
-            switch result {
-            case .success(let value):
-                self.guideList = value
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-    // Get guide by ID
-    func getGuideById(id: String) {
-        self.networkService.getGuideById(guideId: id) { result in
-            switch result {
-            case .success(let value):
-                                print(value)
-                self.currentGuide = value
-                
-                // TODO: - Po testovani odstranit
-                self.getAssetByName(assetName: "r2d2")
-                self.getAssetByName(assetName: "arrow")
-//                self.getAssetByName(assetName: "sneaker_airforce")
-                
-                // TODO: -- Implementovat stazeni vsech modelu a na zaklade modelu pod danym Guide, vypsat do detailu Guide?
-                
-                // Download all assets related to guide steps
-                //                if let objectSteps = value.objectSteps {
-                //                    for objectStep in objectSteps {
-                //                        if let objectName = objectStep.objectName {
-                //                            // Download models based on objectName from guideStep
-                //                            self.getAssetByName(assetName: objectName)
-                //                        }
-                //                    }
-                //                }
-                
-                // Save ExtendedGuide downloaded model into local storage
-                let defaults = UserDefaults.standard
-                if let encodedGuide = try? JSONEncoder().encode(value) {
-                    defaults.set(encodedGuide, forKey: "downloadedGuide")
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-    // Download asset by name
-    func getAssetByName(assetName: String) {
-        print("Downloading of asset: \(assetName)")
-        
-        self.networkService.getAssetByName(assetName: assetName, loadingCallback: { isLoading in
-            DispatchQueue.main.async {
-                if isLoading {
-                    self.assetsDownloadingCount += 1
-                } else {
-                    self.assetsDownloadingCount -= 1
-                }
-            }
-        }, completion: { result in
-            switch result {
-            case .success(let value):
-                //                print("Completition network \(value)")
-                self.updateDownloadedAssets(assetName: value)
-            case .failure(let error):
-                print(error)
-            }
-        })
+        //        self.uniqueID = UUID()
     }
     
     // Remove guide and all downloaded models from device
     func removeDatasetFromLocalStorage() {
+        //    TODO: ARObject zustava inicializovany => resetovat AR session nebo colaboration view
         currentGuide = nil
         downloadedAssets.removeAll()
         selectedAssets.removeAll()
-        mlModel = nil
-        ARResults = "Currently no model available"
         
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "downloadedGuide")
@@ -276,5 +186,128 @@ class CollaborationViewModel: ObservableObject {
         } catch {
             print(error)
         }
+    }
+    
+    
+    // MARK: - Network methods
+    
+    // ========
+    // In offline mode, client download all the ML and USDZ models within guides to be able to use an AR and collaborative experience
+    // In online mode, is not necessary to download all assets at once instead there is ongoing communication with the backend all the time.
+    // ========
+    
+    // Get list of all guides
+    func getAllGuides() {
+        isLoading = true
+        
+        NetworkManager.shared.getAllGuides { [self] result in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                switch result {
+                case .success(let guides):
+                    self.guideList = guides
+                    
+                case .failure(let error):
+                    switch error {
+                    case .invalidData:
+                        self.alertItem = AlertContext.invalidData
+                    case .invalidURL:
+                        self.alertItem = AlertContext.invalidURL
+                    case .invalidResponse:
+                        self.alertItem = AlertContext.invalidResponse
+                    case .unableToComplete:
+                        self.alertItem = AlertContext.unableToComplete
+                    }
+                }
+            }
+        }
+    }
+    
+    // Get guide by ID
+    func getGuideById(id: String) {
+        isLoading = true
+        
+        NetworkManager.shared.getGuideById(guideId: id) { [self] result in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                switch result {
+                case .success(let guide):
+                    self.currentGuide = guide
+                    
+                    // TODO: - Po testovani odstranit
+                    self.getAssetByName(assetName: "r2d2")
+                    self.getAssetByName(assetName: "arrow")
+                    
+                    // TODO: -- Implementovat stazeni vsech modelu a na zaklade modelu pod danym Guide, vypsat do detailu Guide?
+                    
+                    // Download all assets related to guide steps
+                    //                if let objectSteps = value.objectSteps {
+                    //                    for objectStep in objectSteps {
+                    //                        if let objectName = objectStep.objectName {
+                    //                            // Download models based on objectName from guideStep
+                    //                            self.getAssetByName(assetName: objectName)
+                    //                        }
+                    //                    }
+                    //                }
+                    
+                    // TODO: - Is it necessary to save into UserDefaults?
+                    // Save ExtendedGuide downloaded model into local storage
+                    let defaults = UserDefaults.standard
+                    if let encodedGuide = try? JSONEncoder().encode(guide) {
+                        defaults.set(encodedGuide, forKey: "downloadedGuide")
+                    }
+                    
+                case .failure(let error):
+                    switch error {
+                    case .invalidData:
+                        self.alertItem = AlertContext.invalidData
+                    case .invalidURL:
+                        self.alertItem = AlertContext.invalidURL
+                    case .invalidResponse:
+                        self.alertItem = AlertContext.invalidResponse
+                    case .unableToComplete:
+                        self.alertItem = AlertContext.unableToComplete
+                    }
+                }
+            }
+        }
+    }
+    
+    // Download asset by name
+    func getAssetByName(assetName: String) {
+        //        isLoading = true
+        
+        NetworkManager.shared.getAssetByName(assetName: assetName, loadingCallback: { isLoading in
+            DispatchQueue.main.async {
+                if isLoading {
+                    self.assetsDownloadingCount += 1
+                } else {
+                    self.assetsDownloadingCount -= 1
+                }
+            }
+        }, completion: { [self] result in
+            DispatchQueue.main.async {
+                //                self.isLoading = false
+                
+                switch result {
+                case .success(let asset):
+                    self.updateDownloadedAssets(assetName: asset)
+                    
+                case .failure(let error):
+                    switch error {
+                    case .invalidData:
+                        self.alertItem = AlertContext.invalidData
+                    case .invalidURL:
+                        self.alertItem = AlertContext.invalidURL
+                    case .invalidResponse:
+                        self.alertItem = AlertContext.invalidResponse
+                    case .unableToComplete:
+                        self.alertItem = AlertContext.unableToComplete
+                    }
+                }
+            }
+        })
     }
 }

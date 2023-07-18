@@ -102,31 +102,6 @@ struct GuideView: View {
                         Text(viewModel.currentGuide?.objectSteps![selectedStep].instruction?.text ?? "")
                             .font(.system(.footnote).weight(.regular))
                             .foregroundColor(.black)
-                        
-                        //                        HStack {
-                        //                            Button(action: {
-                        //                                viewModel.arMode = activeARMode.collaborationMode
-                        //                                presentationMode.wrappedValue.dismiss()
-                        //                            }) {
-                        //                                HStack {
-                        //                                    Image(systemName: "arkit")
-                        //                                        .imageScale(.large)
-                        //                                        .foregroundColor(Color(.black))
-                        //
-                        //                                    Text("SHOW MODEL")
-                        //                                        .font(.caption.bold())
-                        //                                }
-                        //                                .padding(6)
-                        //                                .overlay(
-                        //                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        //                                        .stroke(Color(.black).opacity(0.5), lineWidth: 1)
-                        //                                )
-                        //                            }
-                        //
-                        //                            Text("Begin collaborative session")
-                        //                                .font(.system(.caption2).weight(.light))
-                        //                                .foregroundColor(.gray)
-                        //                        }
                     }
                 }
                 

@@ -11,7 +11,7 @@ struct LoadingView: View {
     
     var body: some View {
         ZStack {
-            Color("backgroundColor").opacity(0.7)
+            Color("backgroundColor")
                 .edgesIgnoringSafeArea(.all)
             
             ProgressView("Loading assets").foregroundColor(.accentColor)

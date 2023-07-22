@@ -16,11 +16,20 @@ import SwiftUI
 import RealityKit
 import MultipeerConnectivity
 
+
 enum ActiveAppMode: String {
     case none
     case onlineMode
     case offlineMode
 }
+
+enum NetworkState {
+    case na
+    case loading
+    case success
+    case failed(error: Error)
+}
+
 
 class CollaborationViewModel: ObservableObject {
     // MARK: - Properties
@@ -29,19 +38,17 @@ class CollaborationViewModel: ObservableObject {
     @Published var referenceObjects = Set<ARReferenceObject>()
     @Published var assetsDownloadingCount = 0
     @Published var downloadedAssets: [String] = []
-//    @Published var selectedAssets: [String] = []
+    //    @Published var selectedAssets: [String] = []
     @Published var guideList: [Guide]? /// = MockGuideList
     @Published var assetList: [Asset]? /// = MockAssetList
     @Published var currentGuide: ExtendedGuide?
     @Published var uniqueID = UUID()
     
-    @Published var isLoading = false
-    @Published var alertItem: AlertItem?
-    
+    @Published private(set) var networkState: NetworkState = .na
+    @Published var hasError: Bool = false
+        
     // TODO: - je tohle potreba?
     var showStepSheet: Binding<Bool>?
-    
-    private var networkManager: NetworkManager
     
     // MARK: Collaboration properties
     
@@ -55,13 +62,7 @@ class CollaborationViewModel: ObservableObject {
     
     // MARK: - Initialization
     
-    convenience init() {
-        self.init(networkManager: NetworkManager())
-    }
-    
-    init(networkManager: NetworkManager) {
-        self.networkManager = networkManager
-        
+    init() {
         // Check downloaded guide saved in UserDefaults and add into currentGuide
         guideAlreadyDownloaded()
         // Check downloaded assets saved in device local storage and add into downloadedAssets
@@ -76,21 +77,21 @@ class CollaborationViewModel: ObservableObject {
                 
                 // Get asset name without extension
                 let assetUrl = URL(fileURLWithPath: assetName)
-//                let assetNameWithoutExtension = assetUrl.deletingPathExtension().lastPathComponent
+                //                let assetNameWithoutExtension = assetUrl.deletingPathExtension().lastPathComponent
                 
                 if assetUrl.pathExtension == "arobject" {
                     // Insert ARObject into referenceObjects Set for 3D objects detection
                     selectModel(assetName: assetName)
                 }
-
-//                // Select model if it's not in selectedAssets array
-//                if !selectedAssets.contains(assetNameWithoutExtension) {
-//                    //                    print("\(String(describing: self.currentGuide?.objectSteps?[0].objectName)) -- \(assetNameWithoutExtension)")
-//                    if assetUrl.pathExtension == "arobject" {
-//                        // Insert ARObject into referenceObjects Set for 3D objects detection
-//                        selectModel(assetName: assetName)
-//                    }
-//                }
+                
+                //                // Select model if it's not in selectedAssets array
+                //                if !selectedAssets.contains(assetNameWithoutExtension) {
+                //                    //                    print("\(String(describing: self.currentGuide?.objectSteps?[0].objectName)) -- \(assetNameWithoutExtension)")
+                //                    if assetUrl.pathExtension == "arobject" {
+                //                        // Insert ARObject into referenceObjects Set for 3D objects detection
+                //                        selectModel(assetName: assetName)
+                //                    }
+                //                }
             }
         }
     }
@@ -112,12 +113,12 @@ class CollaborationViewModel: ObservableObject {
                             referenceObjects.insert(referenceObject)
                         }
                         
-//                    TODO: Proc tato funkce ??
-//                        if let index = selectedAssets.firstIndex(where: { $0.hasSuffix(".\(assetExtension)") }) {
-//                            selectedAssets.remove(at: index)
-//                        }
-//
-//                        self.selectedAssets.append(assetName)
+                        //                    TODO: Proc tato funkce ??
+                        //                        if let index = selectedAssets.firstIndex(where: { $0.hasSuffix(".\(assetExtension)") }) {
+                        //                            selectedAssets.remove(at: index)
+                        //                        }
+                        //
+                        //                        self.selectedAssets.append(assetName)
                     } catch {
                         print(error)
                     }
@@ -136,7 +137,7 @@ class CollaborationViewModel: ObservableObject {
         //    TODO: ARObject zustava inicializovany => resetovat AR session nebo colaboration view
         currentGuide = nil
         downloadedAssets.removeAll()
-//        selectedAssets.removeAll()
+        //        selectedAssets.removeAll()
         
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "downloadedGuide")
@@ -186,117 +187,74 @@ class CollaborationViewModel: ObservableObject {
     // ========
     
     // Get list of all guides
-    func getAllGuides() {
-        isLoading = true
+    @MainActor
+    func getAllGuides() async {
+        self.networkState = .loading
+        self.hasError = false
         
-        NetworkManager.shared.getAllGuides { [self] result in
-            DispatchQueue.main.async {
-                self.isLoading = false
-                
-                switch result {
-                case .success(let guides):
-                    self.guideList = guides
-                    
-                case .failure(let error):
-                    switch error {
-                    case .invalidData:
-                        self.alertItem = AlertContext.invalidData
-                    case .invalidURL:
-                        self.alertItem = AlertContext.invalidURL
-                    case .invalidResponse:
-                        self.alertItem = AlertContext.invalidResponse
-                    case .unableToComplete:
-                        self.alertItem = AlertContext.unableToComplete
-                    }
-                }
-            }
+        do {
+            self.guideList = try await NetworkManager.shared.getAllGuides()
+            self.networkState = .success
+        } catch {
+            self.networkState = .failed(error: error)
+            self.hasError = true
         }
     }
     
     // Get guide by ID
-    func getGuideById(id: String) {
-        isLoading = true
+    @MainActor
+    func getGuideById(id: String) async {
+        self.networkState = .loading
+        self.hasError = false
         
-        NetworkManager.shared.getGuideById(guideId: id) { [self] result in
-            DispatchQueue.main.async {
-                self.isLoading = false
-                
-                switch result {
-                case .success(let guide):
-                    self.currentGuide = guide
-                    
-                    // TODO: - Po testovani odstranit
-                    self.getAssetByName(assetName: "r2d2")
-                    //                    self.getAssetByName(assetName: "arrow")
-                    
-                    // TODO: -- Implementovat stazeni vsech modelu a na zaklade modelu pod danym Guide, vypsat do detailu Guide?
-                    
-                    // Download all assets related to guide steps
-                    //                if let objectSteps = value.objectSteps {
-                    //                    for objectStep in objectSteps {
-                    //                        if let objectName = objectStep.objectName {
-                    //                            // Download models based on objectName from guideStep
-                    //                            self.getAssetByName(assetName: objectName)
-                    //                        }
-                    //                    }
-                    //                }
-                    
-                    // TODO: - Is it necessary to save into UserDefaults?
-                    // Save ExtendedGuide downloaded model into local storage
-                    let defaults = UserDefaults.standard
-                    if let encodedGuide = try? JSONEncoder().encode(guide) {
-                        defaults.set(encodedGuide, forKey: "downloadedGuide")
-                    }
-                    
-                case .failure(let error):
-                    switch error {
-                    case .invalidData:
-                        self.alertItem = AlertContext.invalidData
-                    case .invalidURL:
-                        self.alertItem = AlertContext.invalidURL
-                    case .invalidResponse:
-                        self.alertItem = AlertContext.invalidResponse
-                    case .unableToComplete:
-                        self.alertItem = AlertContext.unableToComplete
-                    }
-                }
+        do {
+            let guide = try await NetworkManager.shared.getGuideById(guideId: id)
+            self.currentGuide = guide
+            
+            // TODO: - Po testovani odstranit
+            await self.getAssetByName(assetName: "r2d2")
+            //                    self.getAssetByName(assetName: "arrow")
+            
+            // TODO: -- Implementovat stazeni vsech modelu a na zaklade modelu pod danym Guide, vypsat do detailu Guide?
+            
+            // Download all assets related to guide steps
+            //                if let objectSteps = value.objectSteps {
+            //                    for objectStep in objectSteps {
+            //                        if let objectName = objectStep.objectName {
+            //                            // Download models based on objectName from guideStep
+            //                            self.getAssetByName(assetName: objectName)
+            //                        }
+            //                    }
+            //                }
+            
+            // TODO: - Is it necessary to save into UserDefaults?
+            // Save ExtendedGuide downloaded model into local storage
+            let defaults = UserDefaults.standard
+            if let encodedGuide = try? JSONEncoder().encode(guide) {
+                defaults.set(encodedGuide, forKey: "downloadedGuide")
             }
+            
+            self.networkState = .success
+        } catch {
+            self.networkState = .failed(error: error)
+            self.hasError = true
         }
     }
     
     // Download asset by name
-    func getAssetByName(assetName: String) {
-        //        isLoading = true
+    @MainActor
+    func getAssetByName(assetName: String) async {
+        self.networkState = .loading
+        self.hasError = false
         
-        NetworkManager.shared.getAssetByName(assetName: assetName, loadingCallback: { isLoading in
-            DispatchQueue.main.async {
-                if isLoading {
-                    self.assetsDownloadingCount += 1
-                } else {
-                    self.assetsDownloadingCount -= 1
-                }
-            }
-        }, completion: { [self] result in
-            DispatchQueue.main.async {
-                //                self.isLoading = false
-                
-                switch result {
-                case .success(let asset):
-                    self.updateDownloadedAssets(assetName: asset)
-                    
-                case .failure(let error):
-                    switch error {
-                    case .invalidData:
-                        self.alertItem = AlertContext.invalidData
-                    case .invalidURL:
-                        self.alertItem = AlertContext.invalidURL
-                    case .invalidResponse:
-                        self.alertItem = AlertContext.invalidResponse
-                    case .unableToComplete:
-                        self.alertItem = AlertContext.unableToComplete
-                    }
-                }
-            }
-        })
+        do {
+            let downloadedAsset = try await NetworkManager.shared.getAssetByName(assetName: assetName)
+            self.updateDownloadedAssets(assetName: downloadedAsset)
+            
+            self.networkState = .success
+        } catch {
+            self.networkState = .failed(error: error)
+            self.hasError = true
+        }
     }
 }

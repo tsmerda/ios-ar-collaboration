@@ -8,19 +8,11 @@
 import SwiftUI
 
 @main
+@available(iOS 16.4, *)
 struct MetaCollaborationApp: App {
-    @StateObject var viewModel = CollaborationViewModel()
-    
     var body: some Scene {
         WindowGroup {
-            if viewModel.appMode == activeAppMode.none {
-                ChooseModeView()
-                    .environmentObject(viewModel)
-            }
-            else {
-                ContentView()
-                    .environmentObject(viewModel)
-            }
+            ContentView()
         }
     }
 }

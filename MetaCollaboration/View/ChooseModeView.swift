@@ -7,67 +7,144 @@
 
 import SwiftUI
 
+enum SelectedMode {
+    case none
+    case online
+    case offline
+}
+
 struct ChooseModeView: View {
-    @EnvironmentObject var viewModel: CollaborationViewModel
+    @AppStorage("appMode") var appMode: ActiveAppMode = .none
+    @State private var selectedMode: SelectedMode = .none
     
     var body: some View {
-        VStack(alignment: .center, spacing: 20) {
+        VStack(alignment: .leading, spacing: 0) {
+            
             Text("Please select the required mode")
-                .font(.system(.title).weight(.light))
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: 260)
+                .font(.system(size: 32).bold())
+                .foregroundColor(.white)
+                .padding(.vertical, 32)
             
-            Text("Online mode provides recognition of scene objects on the server. In offline mode, you work with ML models downloaded to the device.")
-                .font(.system(.caption2).weight(.light))
-                .multilineTextAlignment(.leading)
-                .foregroundColor(.gray)
-                .padding(.bottom, 20)
-                .frame(maxWidth: 260)
+            HStack() {
+                Image(systemName: "info.circle")
+                    .font(.system(size: 24).weight(.light))
+                    .foregroundColor(.accentColor)
+                
+                Spacer()
+                
+                Text("Online mode provides recognition of scene objects on the server. In offline mode, you work with ML models downloaded to the device.")
+                    .font(.system(size: 12).weight(.light))
+                    .multilineTextAlignment(.leading)
+                    .foregroundColor(.gray)
+            }
+            .padding(20)
+            .background(Color("secondaryColor"))
+            .cornerRadius(8)
+            .padding(.bottom, 80)
             
-            Button(action: {
-//                UserDefaults.standard.set("onlineMode", forKey: "appMode")
-//                viewModel.appMode = activeAppMode.onlineMode
-            }) {
-                SquareView(icon: "icloud.and.arrow.down", text: "Online")
+            HStack(spacing: 24) {
+                Spacer()
+                
+                Button(action: {
+                    selectedMode = .online
+                }) {
+                    SquareView(mode: .online, isSelected: selectedMode == .online)
+                }
+                .disabled(true)
+                
+                Button(action: {
+                    selectedMode = .offline
+                }) {
+                    SquareView(mode: .offline, isSelected: selectedMode == .offline)
+                }
+                
+                Spacer()
+                
             }
             
-            Button(action: {
-                UserDefaults.standard.set("offlineMode", forKey: "appMode")
-                viewModel.appMode = activeAppMode.offlineMode
-            }) {
-                SquareView(icon: "platter.filled.bottom.and.arrow.down.iphone", text: "Offline")
+            Spacer()
+            
+            HStack {
+                Spacer()
+                
+                Button("Choose mode") {
+                    appMode = selectedMode == .online ? .onlineMode : .offlineMode
+                }
+                .buttonStyle(ButtonStyledFill())
+                .padding(.bottom, 40)
+                
+                Spacer()
             }
             
         }
-        .padding()
+        .padding(16)
+        .background(Color("backgroundColor"))
     }
 }
 
 struct SquareView: View {
-    let icon: String
-    let text: String
+    let mode: SelectedMode
+    var isSelected: Bool
     
     var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 48).weight(.thin))
-                .foregroundColor(text == "Online" ? .gray : .green)
-            Text(text)
-                .font(.system(.headline).weight(.light))
-                .foregroundColor(text == "Online" ? .gray : .green)
-            if text == "Online" {
+        VStack(spacing: 0) {
+            Image(systemName: mode == .online ? "icloud.and.arrow.down" : "wifi.slash")
+                .font(.system(size: 40).weight(.light))
+                .foregroundColor(isSelected ? .accentColor : .white)
+                .padding(.bottom, 2)
+            
+            Text(mode == .online ? "Online" : "Offline")
+                .font(.system(size: 17))
+                .foregroundColor(isSelected ? .accentColor : .white)
+            
+            if mode == .online {
                 Text("NOT IMPLEMENTED")
-                    .font(.system(.caption2).weight(.bold))
+                    .font(.system(size: 10).weight(.bold))
                     .foregroundColor(.gray)
-                    .padding(.trailing, 2)
+                    .padding(.top, 4)
             }
         }
         .frame(width: 150, height: 150)
-        .background(.white)
-        .cornerRadius(10)
-        .shadow(radius: 5)
+        .background(Color.accentColor.opacity(0.1))
+        .cornerRadius(8)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 1)
+        )
     }
 }
+
+
+
+
+// TODO: - Add styles to separate file
+struct ButtonStyledFill: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 16).weight(.semibold))
+            .foregroundStyle(.black)
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
+            .background(Color.accentColor)
+            .cornerRadius(16)
+    }
+}
+
+struct ButtonStyledOutline: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 16).weight(.semibold))
+            .foregroundStyle(Color.accentColor)
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
+            .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color.accentColor, lineWidth: 1)
+            )
+    }
+}
+
 
 struct ChooseModeView_Previews: PreviewProvider {
     static var previews: some View {

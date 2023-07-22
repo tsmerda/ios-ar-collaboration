@@ -14,7 +14,6 @@ extension ARView {
     // Extend ARView to implement tapGesture handler
     // Hybrid workaround between UIKit and SwiftUI
     
-    
     // TODO: -- Is this necessary???
     private struct AssociatedKeys {
         static var collaborationViewModel = "collaborationViewModel"
@@ -34,14 +33,14 @@ extension ARView {
         }
     }
     
-    func gestureSetup(showingSheet: Binding<Bool>) {
+    func gestureSetup(showStepSheet: Binding<Bool>) {
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         self.addGestureRecognizer(tap)
-        self.collaborationViewModel.showingSheet = showingSheet
+        self.collaborationViewModel.showStepSheet = showStepSheet
     }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
-        /// This function does sends a message "hello!" to all peers.
+        // TODO: - This function does sends a message "hello!" to all peers.
         //        let displayName = self.collaborationViewModel.multipeerSession?.printMyPeerID.displayName
         //        if let myData = "hello! from \(String(describing: displayName))"
         //            .data(using: .unicode) {
@@ -57,7 +56,7 @@ extension ARView {
                 switch objectType.kind {
                 case .detected:
                     print("Tapped on a detected object")
-                    self.collaborationViewModel.showingSheet?.wrappedValue = true
+                    self.collaborationViewModel.showStepSheet?.wrappedValue = true
                     
                 case .inserted:
                     /// If you tap on an existing entity, it will run a scale up and down animation
@@ -101,15 +100,21 @@ extension ARView {
     }
     
     func placeSceneObject(for anchor: ARObjectAnchor, _ viewModel: CollaborationViewModel) {
-        guard let usdzModel = viewModel.usdzModel else {
-            print("Error: No model URL provided")
-            return
-        }
+        //    TODO: Opravit nacitani usdz modelu ARROW
+        //        guard let usdzModel = viewModel.usdzModel else {
+        //            print("Error: No model URL provided")
+        //            return
+        //        }
         do {
             let modelAnchor = AnchorEntity(anchor: anchor)
             
             // Create and add entity to newAnchor
-            let entity = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
+            //            let entity = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
+            guard let entity = try? Entity.load(named: "arrow") else {
+                print("Error: No model URL provided")
+                return
+            }
+            
             entity.generateCollisionShapes(recursive: true)
             entity.components[ObjectType.self] = ObjectType(kind: .inserted)
             
@@ -131,7 +136,12 @@ extension ARView {
             
             // TODO: -- Najit velikost sipky a souradnice a zpracovat
             // ENTITY 2
-            let entity2 = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
+            //            let entity2 = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
+            guard let entity2 = try? Entity.load(named: "arrow") else {
+                print("Error: No model URL provided")
+                return
+            }
+            
             entity2.generateCollisionShapes(recursive: true)
             entity2.components[ObjectType.self] = ObjectType(kind: .inserted)
             let modelTranslation2 = SIMD3<Float>(-boundingBoxSize.x / 2, boundingBoxSize.y / 2, -boundingBoxSize.z)
@@ -159,7 +169,7 @@ extension ARView {
             self.scene.addAnchor(modelAnchor)
             self.session.add(anchor: anchor)
         } catch {
-            print("Error: Failed to load entity from URL \(usdzModel): \(error)")
+            print("Error: Failed to load entity: \(error)")
         }
     }
 }

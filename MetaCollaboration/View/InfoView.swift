@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct InfoView: View {
-    @EnvironmentObject var viewModel: CollaborationViewModel
+    @AppStorage("appMode") var appMode: ActiveAppMode = .none
     
     var body: some View {
         NavigationView {
@@ -25,8 +25,7 @@ struct InfoView: View {
                         Text("Change app mode")
                         Spacer()
                         Button(action: {
-                            viewModel.appMode = .none
-                            UserDefaults.standard.set("none", forKey: "appMode")
+                            appMode = .none
                         }) {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 24))

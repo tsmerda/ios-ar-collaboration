@@ -11,14 +11,14 @@ import SwiftUI
 
 struct ARViewContainer: UIViewRepresentable {
     @EnvironmentObject var viewModel: CollaborationViewModel
-    @Binding var showingSheet: Bool
+    @Binding var showStepSheet: Bool
     
     typealias UIViewType = ARView
 
     func makeUIView(context: Context) -> ARView {
         viewModel.initializeARViewContainer()
         viewModel.arView.session.delegate = context.coordinator
-        viewModel.arView.gestureSetup(showingSheet: $showingSheet)
+        viewModel.arView.gestureSetup(showStepSheet: $showStepSheet)
         return viewModel.arView
     }
 

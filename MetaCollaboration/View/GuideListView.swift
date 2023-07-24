@@ -12,6 +12,8 @@ import Vision
 struct GuideListView: View {
     @EnvironmentObject var viewModel: CollaborationViewModel
     
+    @State private var isShowingSettings: Bool = false
+    
     var body: some View {
         ZStack {
             switch viewModel.networkState {
@@ -47,25 +49,18 @@ struct GuideListView: View {
                         .scrollContentBackground(.hidden)
                         
                         Spacer()
-                        
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                viewModel.removeDatasetFromLocalStorage()
-                            }) {
-                                Text("REMOVE ALL DATASETS FROM DEVICE")
-                                    .foregroundColor(.red)
-                                    .font(.system(size: 12).bold())
-                            }
-                            Spacer()
-                        }
-                        .padding(.bottom, 40)
-                        .background(Color("backgroundColor"))
                     }
                     .background(Color("backgroundColor")
                         .ignoresSafeArea(.all, edges: .all))
                     .navigationTitle("Guides")
                     .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(action: {
+                                isShowingSettings = true
+                            }) {
+                                Image(systemName: "slider.horizontal.3")
+                            }
+                        }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button(action: {
                                 // Refresh guides
@@ -90,6 +85,10 @@ struct GuideListView: View {
         .task {
             await viewModel.getAllGuides()
         }
+        .sheet(isPresented: $isShowingSettings) {
+            SettingsView()
+                .environmentObject(CollaborationViewModel())
+        }
         .alert("Server Error", isPresented: $viewModel.hasError, presenting: viewModel.networkState) { detail in
             Button("Retry") {
                 Task {
@@ -101,12 +100,6 @@ struct GuideListView: View {
                 Text(error.localizedDescription)
             }
         }
-        //        .alert(item: $viewModel.alertItem) { alertItem in
-        //            Alert(title: alertItem.title, message: alertItem.message, dismissButton: alertItem.dismissButton)
-        //        }
-        
-        //            if viewModel.isLoading { LoadingView() }
-        //        }
     }
 }
 
@@ -126,14 +119,6 @@ struct GuideRow: View {
                     .foregroundColor(Color("disabledColor"))
                     .multilineTextAlignment(.leading)
             }
-            
-            //        TODO: - Vyuzit?
-            //            if isLoading > 0 {
-            //                ProgressView()
-            //                    .progressViewStyle(CircularProgressViewStyle(tint: Color.green))
-            //                    .zIndex(2)
-            //                    .padding(.trailing, 2)
-            //            }
             
             if isDownloaded {
                 Image(systemName: "play")

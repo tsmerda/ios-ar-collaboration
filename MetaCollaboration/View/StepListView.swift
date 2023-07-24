@@ -26,8 +26,8 @@ struct StepListView: View {
                                 .font(.system(size: 24, weight: .light))
                         } else {
                             Image(systemName: "checkmark.circle")
-                                .foregroundColor(.accentColor)
                                 .font(.system(size: 24, weight: .light))
+                                .foregroundColor(.accentColor)
                         }
                     }
                     .foregroundColor(.white)

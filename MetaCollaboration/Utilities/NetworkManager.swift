@@ -17,7 +17,7 @@ protocol NetworkManagerProtocol {
 class NetworkManager: NetworkManagerProtocol {
     
     static let shared = NetworkManager()
-    private let baseURL = "http://192.168.1.11:8080/api/v3"
+    private let baseURL = "http://192.168.0.99:8080/api/v3"
     
     // MARK: - Get all guides
     func getAllGuides() async throws -> [Guide] {

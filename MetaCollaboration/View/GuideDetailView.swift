@@ -39,71 +39,10 @@ struct GuideDetailView: View {
                 } placeholder: { Color.gray }
                     .frame(width: .infinity, height: 230)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .padding(.bottom, 24)
                 
                 if isDownloaded {
-                    List {
-                        Section(header: Text("General info").foregroundColor(Color("disabledColor"))) {
-                            HStack {
-                                Text("Guide type:")
-                                    .font(.system(size: 15, weight: .light))
-                                    .foregroundColor(Color("disabledColor"))
-                                
-                                Spacer()
-                                
-                                Text(guide?.guideType.rawValue ?? "<guideType>")
-                                    .font(.system(size: 15, weight: .medium))
-                                    .foregroundColor(.white)
-                            }
-                            .listRowBackground(Color("secondaryColor"))
-                            
-                            HStack {
-                                Text("Steps:")
-                                    .font(.system(size: 15, weight: .light))
-                                    .foregroundColor(Color("disabledColor"))
-                                
-                                Spacer()
-                                
-                                Text("0")
-                                    .font(.system(size: 15, weight: .medium))
-                                    .foregroundColor(.white)
-                                
-                                // TODO: - Po updatu BE aktualizovat steps count
-                                //                                if guide?.objectSteps != nil {
-                                //                                    Text(guide?.objectSteps?.count ?? "")
-                                //                                        .font(.system(size: 15, weight: .medium))
-                                //                                        .foregroundColor(.white)
-                                //                                } else {
-                                //                                    Text("0")
-                                //                                        .font(.system(size: 15, weight: .medium))
-                                //                                        .foregroundColor(.white)
-                                //                                }
-                            }
-                            .listRowBackground(Color("secondaryColor"))
-                        }
-                        
-                        if downloadedAssets != [] {
-                            Section(header: Text("Assets").foregroundColor(Color("disabledColor"))) {
-                                ForEach(downloadedAssets, id: \.self) { asset in
-                                    HStack(spacing: 8) {
-                                        Text("arobject")
-                                            .font(.system(size: 15, weight: .light))
-                                            .foregroundColor(Color("disabledColor"))
-                                        
-                                        Spacer()
-                                        
-                                        Text(asset)
-                                            .font(.system(size: 15, weight: .medium))
-                                            .foregroundColor(.white)
-                                        
-                                        // TODO: -- Add asset description
-                                    }
-                                    .listRowBackground(Color("secondaryColor"))
-                                }
-                            }
-                        }
-                    }
-                    .listStyle(InsetGroupedListStyle())
-                    .scrollContentBackground(.hidden)
+                    GuideDetailInfoView()
                 }
                 
                 Spacer()

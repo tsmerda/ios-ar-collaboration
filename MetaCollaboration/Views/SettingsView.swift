@@ -98,9 +98,8 @@ struct SettingsView: View {
                         
                         Button(action: {
                             viewModel.removeDatasetFromLocalStorage()
-                            appMode = .none
                         }) {
-                            Text("Remove")
+                            Text("Remove all")
                                 .fontWeight(.bold)
                                 .foregroundColor(Color("errorColor"))
                         }

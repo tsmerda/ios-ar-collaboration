@@ -48,14 +48,14 @@ struct ChooseModeView: View {
                 Button(action: {
                     selectedMode = .online
                 }) {
-                    SquareView(mode: .online, isSelected: selectedMode == .online)
+                    ModeSquareView(mode: .online, isSelected: selectedMode == .online)
                 }
                 .disabled(true)
                 
                 Button(action: {
                     selectedMode = .offline
                 }) {
-                    SquareView(mode: .offline, isSelected: selectedMode == .offline)
+                    ModeSquareView(mode: .offline, isSelected: selectedMode == .offline)
                 }
                 
                 Spacer()
@@ -81,70 +81,6 @@ struct ChooseModeView: View {
         .background(Color("backgroundColor"))
     }
 }
-
-struct SquareView: View {
-    let mode: SelectedMode
-    var isSelected: Bool
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            Image(systemName: mode == .online ? "icloud.and.arrow.down" : "wifi.slash")
-                .font(.system(size: 40).weight(.light))
-                .foregroundColor(isSelected ? .accentColor : .white)
-                .padding(.bottom, 2)
-            
-            Text(mode == .online ? "Online" : "Offline")
-                .font(.system(size: 17))
-                .foregroundColor(isSelected ? .accentColor : .white)
-            
-            if mode == .online {
-                Text("NOT IMPLEMENTED")
-                    .font(.system(size: 10).weight(.bold))
-                    .foregroundColor(.gray)
-                    .padding(.top, 4)
-            }
-        }
-        .frame(width: 150, height: 150)
-        .background(Color.accentColor.opacity(0.1))
-        .cornerRadius(8)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 1)
-        )
-    }
-}
-
-
-
-
-// TODO: - Add styles to separate file
-struct ButtonStyledFill: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 16).weight(.semibold))
-            .foregroundStyle(.black)
-            .padding(.vertical, 16)
-            .frame(maxWidth: .infinity)
-            .background(Color.accentColor)
-            .cornerRadius(16)
-    }
-}
-
-struct ButtonStyledOutline: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 16).weight(.semibold))
-            .foregroundStyle(Color.accentColor)
-            .padding(.vertical, 16)
-            .frame(maxWidth: .infinity)
-            .cornerRadius(16)
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.accentColor, lineWidth: 1)
-            )
-    }
-}
-
 
 struct ChooseModeView_Previews: PreviewProvider {
     static var previews: some View {

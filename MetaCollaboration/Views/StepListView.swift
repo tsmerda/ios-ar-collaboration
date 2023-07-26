@@ -48,6 +48,6 @@ struct StepListView: View {
 
 struct StepListView_Previews: PreviewProvider {
     static var previews: some View {
-        StepListView(guide: ExtendedGuide(name: "Name", guideType: .tutorial, objectSteps: mockObjectSteps))
+        StepListView(guide: ExtendedGuide(name: "Name", guideType: .tutorial, objectSteps: []))
     }
 }

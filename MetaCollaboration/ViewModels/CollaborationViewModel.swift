@@ -37,18 +37,34 @@ class CollaborationViewModel: ObservableObject {
     //    @Published var usdzModel: URL?
     @Published var referenceObjects = Set<ARReferenceObject>()
     @Published var assetsDownloadingCount = 0
-    @Published var downloadedAssets: [String] = []
+    @Published var downloadedAssets: [String] = [] {
+        didSet {
+//        TODO: - Zpracovat stejne jako downloadedGuides
+            // Save downloadedAssets locally or delete it
+            if !downloadedAssets.isEmpty {
+//                saveGuidesToJSON(downloadedGuides)
+            } else {
+//                deleteGuidesJSON()
+            }
+        }
+    }
+    @Published var downloadedGuides: [ExtendedGuide] = [] {
+        didSet {
+            // Save downloadedGuides locally to JSON or delete JSON
+            if !downloadedGuides.isEmpty {
+                saveGuidesToJSON(downloadedGuides)
+            } else {
+                deleteGuidesJSON()
+            }
+        }
+    }
     //    @Published var selectedAssets: [String] = []
-    @Published var guideList: [Guide]? /// = MockGuideList
-    @Published var assetList: [Asset]? /// = MockAssetList
+    @Published var guideList: [Guide]?
     @Published var currentGuide: ExtendedGuide?
     @Published var uniqueID = UUID()
     
     @Published private(set) var networkState: NetworkState = .na
     @Published var hasError: Bool = false
-        
-    // TODO: - je tohle potreba?
-    var showStepSheet: Binding<Bool>?
     
     // MARK: Collaboration properties
     
@@ -56,17 +72,22 @@ class CollaborationViewModel: ObservableObject {
     @Published var multipeerSession: MultipeerSession?
     @Published var sessionIDObservation: NSKeyValueObservation?
     
+    // TODO: - je tohle potreba?
+    var showStepSheet: Binding<Bool>?
+    
     // A dictionary to map MultiPeer IDs to ARSession ID's.
     // This is useful for keeping track of which peer created which ARAnchors.
     var peerSessionIDs = [MCPeerID: String]()
+    
+    let jsonDataFile = "guidesData.json"
     
     // MARK: - Initialization
     
     init() {
         // Check downloaded guide saved in UserDefaults and add into currentGuide
-        guideAlreadyDownloaded()
+        initDownloadedGuides()
         // Check downloaded assets saved in device local storage and add into downloadedAssets
-        assetAlreadyDownloaded()
+        initDownloadedAssets()
     }
     
     // MARK: - Public Methods
@@ -137,11 +158,11 @@ class CollaborationViewModel: ObservableObject {
         //    TODO: ARObject zustava inicializovany => resetovat AR session nebo colaboration view
         currentGuide = nil
         downloadedAssets.removeAll()
-        //        selectedAssets.removeAll()
+        print(downloadedGuides)
+        downloadedGuides.removeAll()
+        print(downloadedGuides)
         
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: "downloadedGuide")
-        
+        //    TODO: !!!!! _______
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         do {
             let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
@@ -154,16 +175,11 @@ class CollaborationViewModel: ObservableObject {
         } catch { print(error) }
     }
     
-    func guideAlreadyDownloaded() {
-        if let downloadedGuideData = UserDefaults.standard.data(forKey: "downloadedGuide") {
-            let decoder = JSONDecoder()
-            if let downloadedGuide = try? decoder.decode(ExtendedGuide.self, from: downloadedGuideData) {
-                self.currentGuide = downloadedGuide
-            }
-        }
+    func initDownloadedGuides() {
+        downloadedGuides = readGuidesFromJSON()
     }
     
-    func assetAlreadyDownloaded() {
+    func initDownloadedAssets() {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
         do {
@@ -178,6 +194,11 @@ class CollaborationViewModel: ObservableObject {
         }
     }
     
+    func isGuideIdDownloaded(_ id: String) -> Bool {
+        return self.downloadedGuides.contains { item in
+            item.id == id
+        }
+    }
     
     // MARK: - Network methods
     
@@ -209,7 +230,8 @@ class CollaborationViewModel: ObservableObject {
         
         do {
             let guide = try await NetworkManager.shared.getGuideById(guideId: id)
-            self.currentGuide = guide
+            //            TODO: - nastavi se po spusteni daneho guide !!!
+            //                self.currentGuide = guide
             
             // TODO: - Po testovani odstranit
             await self.getAssetByName(assetName: "r2d2")
@@ -227,12 +249,8 @@ class CollaborationViewModel: ObservableObject {
             //                    }
             //                }
             
-            // TODO: - Is it necessary to save into UserDefaults?
-            // Save ExtendedGuide downloaded model into local storage
-            let defaults = UserDefaults.standard
-            if let encodedGuide = try? JSONEncoder().encode(guide) {
-                defaults.set(encodedGuide, forKey: "downloadedGuide")
-            }
+            downloadedGuides.append(guide)
+//            saveGuideToJSON(guides: downloadedGuides)
             
             self.networkState = .success
         } catch {

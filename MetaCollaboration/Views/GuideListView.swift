@@ -24,13 +24,13 @@ struct GuideListView: View {
                             if let guideList = viewModel.guideList, !guideList.isEmpty {
                                 // array is not empty
                                 ForEach(guideList) { guide in
-                                    NavigationLink(destination: GuideDetailView(guide: guide, isDownloaded: viewModel.currentGuide?.name == guide.name, downloadedAssets: viewModel.downloadedAssets, onGetGuideAction: {
+                                    NavigationLink(destination: GuideDetailView(guide: guide, isDownloaded: viewModel.isGuideIdDownloaded(guide.id!), downloadedAssets: viewModel.downloadedAssets, onGetGuideAction: {
                                         Task {
                                             await viewModel.getGuideById(id: guide.id!)
                                         }
                                         
                                     } )) {
-                                        GuideRow(guide: guide, isDownloaded: viewModel.currentGuide?.name == guide.name)
+                                        GuideRowView(guide: guide, isDownloaded: viewModel.isGuideIdDownloaded(guide.id!))
                                     }
                                     .foregroundColor(.accentColor)
                                     .listRowBackground(Color("secondaryColor"))
@@ -87,7 +87,7 @@ struct GuideListView: View {
         }
         .sheet(isPresented: $isShowingSettings) {
             SettingsView()
-                .environmentObject(CollaborationViewModel())
+                .environmentObject(viewModel)
         }
         .alert("Server Error", isPresented: $viewModel.hasError, presenting: viewModel.networkState) { detail in
             Button("Retry") {
@@ -100,40 +100,6 @@ struct GuideListView: View {
                 Text(error.localizedDescription)
             }
         }
-    }
-}
-
-struct GuideRow: View {
-    let guide: Guide
-    var isDownloaded: Bool
-    
-    var body: some View {
-        HStack(spacing: 6) {
-            VStack(alignment: .leading, spacing: 14) {
-                Text("\(guide.name)")
-                    .font(.system(size: 17).bold())
-                    .foregroundColor(.white)
-                
-                Text("\(guide._description ?? "")")
-                    .font(.subheadline)
-                    .foregroundColor(Color("disabledColor"))
-                    .multilineTextAlignment(.leading)
-            }
-            
-            if isDownloaded {
-                Image(systemName: "play")
-                    .font(.system(size: 24, weight: .light))
-                    .foregroundColor(.accentColor)
-            } else {
-                Image(systemName: "arrow.down.to.line")
-                    .font(.system(size: 24, weight: .light))
-                    .foregroundColor(.accentColor)
-            }
-            
-            Spacer()
-        }
-        .padding(2)
-        .cornerRadius(8)
     }
 }
 

@@ -18,6 +18,7 @@ struct GuideDetailView: View {
     //    @Binding var currentGuide: ExtendedGuide?
     
     var body: some View {
+//    TODO: - Pridat scroll view kvuli posouvani textu a zalamovani nadpisu
         VStack {
             VStack(alignment: .leading, spacing: 0) {
                 Text(guide?.name ?? "Guide name")
@@ -25,7 +26,7 @@ struct GuideDetailView: View {
                     .foregroundColor(.white)
                     .padding(.bottom, 26)
                 
-                Text(guide?._description ?? "Guide description")
+                Text(guide?.description ?? "Guide description")
                     .font(.subheadline)
                     .foregroundColor(Color("disabledColor"))
                     .multilineTextAlignment(.leading)

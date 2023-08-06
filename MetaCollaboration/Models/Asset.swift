@@ -19,27 +19,4 @@ public struct Asset: Identifiable, Codable {
         self.description = description
     }
 
-//    public enum CodingKeys: String, CodingKey {
-//        case assetName
-//        case _description = "description"
-//    }
-
 }
-
-
-//public struct Asset: Identifiable, Codable {
-//    public var id: UUID = UUID()
-//    public var assetName: String?
-//    public var description: String?
-//
-//    public init(assetName: String? = nil, description: String? = nil) {
-//        self.assetName = assetName
-//        self.description = description
-//    }
-//
-//    public enum CodingKeys: String, CodingKey {
-//        case assetName
-//        case description = "description"
-//    }
-//
-//}

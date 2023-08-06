@@ -7,7 +7,7 @@ Tomáš Šmerda
 Discover a cutting-edge iOS app for collaborative augmented reality experiences. Share and manipulate scenes in real-time, leveraging ARKit, RealityKit, and MultipeerConnectivity. Experience the future of AR with seamless usability and potential for further development in the metaverse.
 
 ## Architecture
-* MetaCollaboration project is implemented using the <strong>Model-View-ViewModel (MVC)</strong> architecture pattern.
+* MetaCollaboration project is implemented using the <strong>Model-View-ViewModel (MVVM)</strong> architecture pattern.
 * The app uses iOS 16 and SwiftUI 4.0
 
 ## Prerequisites

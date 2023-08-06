@@ -10,6 +10,9 @@ import CoreML
 import Vision
 
 struct GuideListView: View {
+    
+    @AppStorage("collaborationMode") var collaborationMode: Bool = false
+    
     @EnvironmentObject var viewModel: CollaborationViewModel
     
     @State private var isShowingSettings: Bool = false
@@ -29,7 +32,10 @@ struct GuideListView: View {
                                             await viewModel.getGuideById(id: guide.id!)
                                         }
                                         
-                                    } )) {
+                                    }, onSetCurrentGuideAction: {
+                                        viewModel.setCurrentGuide(guide.id!)
+                                        collaborationMode = true
+                                    })) {
                                         GuideRowView(guide: guide, isDownloaded: viewModel.isGuideIdDownloaded(guide.id!))
                                     }
                                     .foregroundColor(.accentColor)

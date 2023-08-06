@@ -34,17 +34,16 @@ enum NetworkState {
 class CollaborationViewModel: ObservableObject {
     // MARK: - Properties
     
-    //    @Published var usdzModel: URL?
     @Published var referenceObjects = Set<ARReferenceObject>()
-    @Published var assetsDownloadingCount = 0
     @Published var downloadedAssets: [String] = [] {
         didSet {
-//        TODO: - Zpracovat stejne jako downloadedGuides
             // Save downloadedAssets locally or delete it
             if !downloadedAssets.isEmpty {
-//                saveGuidesToJSON(downloadedGuides)
+                if let lastAddedElement = downloadedAssets.last {
+                    loadReferenceObjects(lastAddedElement)
+                }
             } else {
-//                deleteGuidesJSON()
+                removeAssetsFromDevice()
             }
         }
     }
@@ -58,7 +57,6 @@ class CollaborationViewModel: ObservableObject {
             }
         }
     }
-    //    @Published var selectedAssets: [String] = []
     @Published var guideList: [Guide]?
     @Published var currentGuide: ExtendedGuide?
     @Published var uniqueID = UUID()
@@ -91,86 +89,53 @@ class CollaborationViewModel: ObservableObject {
     }
     
     // MARK: - Public Methods
-    func updateDownloadedAssets(assetName: String) {
-        if !downloadedAssets.contains(assetName) {
-            DispatchQueue.main.async { [self] in
-                downloadedAssets.append(assetName)
-                
-                // Get asset name without extension
-                let assetUrl = URL(fileURLWithPath: assetName)
-                //                let assetNameWithoutExtension = assetUrl.deletingPathExtension().lastPathComponent
-                
-                if assetUrl.pathExtension == "arobject" {
-                    // Insert ARObject into referenceObjects Set for 3D objects detection
-                    selectModel(assetName: assetName)
+    
+    func loadReferenceObjects(_ assetName: String) {
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        do {
+            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            
+            for fileURL in fileURLs {
+                //            TODO: - Resolve: failed to setup referenceObjects nilError
+                if fileURL.pathExtension == "arobject" && fileURL.lastPathComponent == assetName {
+                    let referenceObject = try ARReferenceObject(archiveURL: fileURL)
+                    referenceObjects.insert(referenceObject)
                 }
-                
-                //                // Select model if it's not in selectedAssets array
-                //                if !selectedAssets.contains(assetNameWithoutExtension) {
-                //                    //                    print("\(String(describing: self.currentGuide?.objectSteps?[0].objectName)) -- \(assetNameWithoutExtension)")
-                //                    if assetUrl.pathExtension == "arobject" {
-                //                        // Insert ARObject into referenceObjects Set for 3D objects detection
-                //                        selectModel(assetName: assetName)
-                //                    }
-                //                }
             }
+        } catch {
+            // TODO: hodit do alert modalu
+            print("Failed to set up referenceObjects: \(error)")
         }
     }
     
-    func selectModel(assetName: String) {
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
-                                                                       includingPropertiesForKeys: nil,
-                                                                       options: .skipsHiddenFiles)
-            for fileURL in fileURLs {
-                if fileURL.lastPathComponent == assetName {
-                    
-                    let assetExtension = URL(fileURLWithPath: assetName).pathExtension
-                    
-                    do {
-                        if assetExtension == "arobject" {
-                            let referenceObject = try ARReferenceObject(archiveURL: fileURL)
-                            referenceObjects.insert(referenceObject)
-                        }
-                        
-                        //                    TODO: Proc tato funkce ??
-                        //                        if let index = selectedAssets.firstIndex(where: { $0.hasSuffix(".\(assetExtension)") }) {
-                        //                            selectedAssets.remove(at: index)
-                        //                        }
-                        //
-                        //                        self.selectedAssets.append(assetName)
-                    } catch {
-                        print(error)
-                    }
-                }
-            }
-        } catch { print(error) }
-    }
-    
     func refreshCollaborationView() {
-        // TODO: -- Opravit nastaveni UUID() -> zpusobovalo seknuti pri prejiti na ARView
+        // TODO: - Opravit nastaveni UUID() -> zpusobovalo seknuti pri prejiti na ARView
         //        self.uniqueID = UUID()
     }
     
     // Remove guide and all downloaded models from device
-    func removeDatasetFromLocalStorage() {
+    func removeAllFromLocalStorage() {
+        print(referenceObjects)
         //    TODO: ARObject zustava inicializovany => resetovat AR session nebo colaboration view
         currentGuide = nil
+        referenceObjects.removeAll()
         downloadedAssets.removeAll()
-        print(downloadedGuides)
         downloadedGuides.removeAll()
-        print(downloadedGuides)
-        
-        //    TODO: !!!!! _______
+    }
+    
+    //    TODO: - as extension
+    func removeAssetsFromDevice() {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         do {
             let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
                                                                        includingPropertiesForKeys: nil,
                                                                        options: .skipsHiddenFiles)
             for fileURL in fileURLs {
-                try FileManager.default.removeItem(at: fileURL)
-                print("Model \(fileURL) removed")
+                if fileURL.pathExtension == "arobject" {
+                    try FileManager.default.removeItem(at: fileURL)
+                    print("Model \(fileURL) removed")
+                }
             }
         } catch { print(error) }
     }
@@ -187,7 +152,9 @@ class CollaborationViewModel: ObservableObject {
                                                                        includingPropertiesForKeys: nil,
                                                                        options: .skipsHiddenFiles)
             for fileURL in fileURLs {
-                updateDownloadedAssets(assetName: fileURL.lastPathComponent)
+                if !downloadedAssets.contains(fileURL.lastPathComponent) {
+                    downloadedAssets.append(fileURL.lastPathComponent)
+                }
             }
         } catch {
             print(error)
@@ -197,6 +164,12 @@ class CollaborationViewModel: ObservableObject {
     func isGuideIdDownloaded(_ id: String) -> Bool {
         return self.downloadedGuides.contains { item in
             item.id == id
+        }
+    }
+    
+    func setCurrentGuide(_ id: String) {
+        if let guide = self.downloadedGuides.first(where: { $0.id == id }) {
+            self.currentGuide = guide
         }
     }
     
@@ -230,14 +203,12 @@ class CollaborationViewModel: ObservableObject {
         
         do {
             let guide = try await NetworkManager.shared.getGuideById(guideId: id)
-            //            TODO: - nastavi se po spusteni daneho guide !!!
-            //                self.currentGuide = guide
+            downloadedGuides.append(guide)
+            // TODO: - nastavi se po spusteni daneho guide, kdy se vybere z downloadedGuides
+            // self.currentGuide = guide
             
-            // TODO: - Po testovani odstranit
+            // TODO: - Implementovat stazeni vsech modelu, ktere jsou v danym <guide>
             await self.getAssetByName(assetName: "r2d2")
-            //                    self.getAssetByName(assetName: "arrow")
-            
-            // TODO: -- Implementovat stazeni vsech modelu a na zaklade modelu pod danym Guide, vypsat do detailu Guide?
             
             // Download all assets related to guide steps
             //                if let objectSteps = value.objectSteps {
@@ -248,9 +219,6 @@ class CollaborationViewModel: ObservableObject {
             //                        }
             //                    }
             //                }
-            
-            downloadedGuides.append(guide)
-//            saveGuideToJSON(guides: downloadedGuides)
             
             self.networkState = .success
         } catch {
@@ -267,7 +235,10 @@ class CollaborationViewModel: ObservableObject {
         
         do {
             let downloadedAsset = try await NetworkManager.shared.getAssetByName(assetName: assetName)
-            self.updateDownloadedAssets(assetName: downloadedAsset)
+            if !downloadedAssets.contains(downloadedAsset) {
+                downloadedAssets.append(downloadedAsset)
+            }
+            //            self.updateDownloadedAssets(assetName: downloadedAsset)
             
             self.networkState = .success
         } catch {

@@ -24,25 +24,4 @@ public struct Confirmation: Codable {
         self.done = done
     }
 
-
 }
-
-
-//public struct Confirmation: Codable {
-//
-//    public var comment: String?
-//    public var photoUrl: String?
-//    public var date: Int64?
-//    /** Whether the step was successfully finished by the user. */
-//    public var done: Bool
-//
-//    public init(comment: String? = nil, photoUrl: String? = nil, date: Int64? = nil, done: Bool) {
-//        self.comment = comment
-//        self.photoUrl = photoUrl
-//        self.date = date
-//        self.done = done
-//    }
-//
-//
-//}
-

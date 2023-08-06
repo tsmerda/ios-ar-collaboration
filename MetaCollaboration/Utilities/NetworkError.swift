@@ -8,5 +8,21 @@
 import Foundation
 
 enum NetworkError: Error {
-    case invalidStatusCode
+    case invalidURL
+    case serverError
+    case invalidData
+    case unkown(Error)
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            return ""
+        case .serverError:
+            return "There was an error with the server. Please try again later"
+        case .invalidData:
+            return "The server data is invalid. Please try again later"
+        case .unkown(let error):
+            return error.localizedDescription
+        }
+    }
 }

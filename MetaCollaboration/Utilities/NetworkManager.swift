@@ -17,60 +17,83 @@ protocol NetworkManagerProtocol {
 class NetworkManager: NetworkManagerProtocol {
     
     static let shared = NetworkManager()
-    private let baseURL = "http://192.168.1.13:8080/api/v3"
+    private let baseURL = "http://192.168.1.14:8080/api/v3"
     
     // MARK: - Get all guides
     func getAllGuides() async throws -> [Guide] {
-        let url = URL(string: baseURL + "/guides")!
+        guard let url  = URL(string: baseURL + "/guides") else {
+            throw NetworkError.invalidURL
+        }
+        
         let (data, response) = try await URLSession.shared.data(from: url)
         
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw NetworkError.invalidStatusCode
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            throw NetworkError.serverError
         }
         
         let decoder = JSONDecoder()
-        
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try decoder.decode([Guide].self, from: data)
+                
+        guard let guides = try? decoder.decode([Guide].self, from: data) else {
+            throw NetworkError.invalidData
+        }
+        
+        return guides
     }
     
     // MARK: - Get guide by id
     func getGuideById(guideId: String) async throws -> ExtendedGuide {
-        let url = URL(string: baseURL + "/guides/" + guideId)!
+        guard let url = URL(string: baseURL + "/guides/" + guideId) else {
+            throw NetworkError.invalidURL
+        }
+        
         let (data, response) = try await URLSession.shared.data(from: url)
         
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw NetworkError.invalidStatusCode
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            throw NetworkError.serverError
         }
         
         let decoder = JSONDecoder()
-        
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try decoder.decode(ExtendedGuide.self, from: data)
+        
+        guard let guide = try? decoder.decode(ExtendedGuide.self, from: data) else {
+            throw NetworkError.invalidData
+        }
+        
+        return guide
     }
     
     // MARK: - Get all assets
     func getAllAssets() async throws -> [Asset] {
-        let url = URL(string: baseURL + "/assets")!
+        guard let url = URL(string: baseURL + "/assets") else {
+            throw NetworkError.invalidURL
+        }
+        
         let (data, response) = try await URLSession.shared.data(from: url)
         
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw NetworkError.invalidStatusCode
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            throw NetworkError.serverError
         }
         
         let decoder = JSONDecoder()
-        
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try decoder.decode([Asset].self, from: data)
+        
+        guard let asset = try? decoder.decode([Asset].self, from: data) else {
+            throw NetworkError.invalidData
+        }
+        
+        return asset
     }
     
     // MARK: - Get asset by name
     func getAssetByName(assetName: String) async throws -> String {
-        let url = URL(string: baseURL + "/assets/" + assetName + "/download")!
+        guard let url = URL(string: baseURL + "/assets/" + assetName + "/download") else {
+            throw NetworkError.invalidURL
+        }
         let (localURL, response) = try await URLSession.shared.download(from: url)
     
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw NetworkError.invalidStatusCode
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            throw NetworkError.serverError
         }
     
         let documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -78,12 +101,10 @@ class NetworkManager: NetworkManagerProtocol {
     
         // Check if file is already downloaded
         if FileManager.default.fileExists(atPath: fileURL.path) {
-            // print("Asset already downloaded \(fileURL.lastPathComponent)")
             return fileURL.lastPathComponent
         }
     
         try FileManager.default.moveItem(at: localURL, to: fileURL)
         return response.suggestedFilename ?? "no-assetname"
-    
     }
 }

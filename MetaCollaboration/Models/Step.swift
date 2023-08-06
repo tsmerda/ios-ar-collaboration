@@ -21,5 +21,4 @@ public struct Step: Codable {
         self.order = order
     }
 
-
 }

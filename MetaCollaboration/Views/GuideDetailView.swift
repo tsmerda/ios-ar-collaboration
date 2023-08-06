@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct GuideDetailView: View {
-    @AppStorage("collaborationMode") var collaborationMode: Bool = false
     
     var guide: Guide?
     var isDownloaded: Bool
     var downloadedAssets: [String] = []
     
     let onGetGuideAction: () -> Void
+    let onSetCurrentGuideAction: () -> Void
     //    @Binding var currentGuide: ExtendedGuide?
     
     var body: some View {
@@ -73,7 +73,7 @@ struct GuideDetailView: View {
                     .disabled(isDownloaded)
                     
                     Button("Begin guide") {
-                        collaborationMode = true
+                        onSetCurrentGuideAction()
                     }
                     .buttonStyle(ButtonStyledFill())
                     .disabled(!isDownloaded)
@@ -88,6 +88,6 @@ struct GuideDetailView: View {
 
 struct GuideDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        GuideDetailView(isDownloaded: false, onGetGuideAction: {})
+        GuideDetailView(isDownloaded: false, onGetGuideAction: {}, onSetCurrentGuideAction: {})
     }
 }

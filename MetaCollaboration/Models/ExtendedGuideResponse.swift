@@ -33,13 +33,4 @@ public struct ExtendedGuideResponse: Codable {
         self.objectSteps = objectSteps
     }
 
-//    public enum CodingKeys: String, CodingKey {
-//        case _id = "id"
-//        case name
-//        case _description = "description"
-//        case imageUrl
-//        case guideType
-//        case objectSteps
-//    }
-
 }

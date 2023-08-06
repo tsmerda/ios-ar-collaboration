@@ -19,5 +19,4 @@ public struct SimpleStep: Codable {
         self.title = title
     }
 
-
 }

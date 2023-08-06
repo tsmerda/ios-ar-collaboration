@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct GuideDetailInfoView: View {
+    
+    // TODO: doplnit
     var body: some View {
         GroupBox() {
             DisclosureGroup("Detailed information") {

@@ -10,7 +10,7 @@ import Foundation
 
 
 public struct ObjectStep: Identifiable, Codable {
-
+    
     public var id: String?
     public var modelId: Int?
     public var title: String?
@@ -18,7 +18,7 @@ public struct ObjectStep: Identifiable, Codable {
     public var steps: [Step]?
     public var instruction: Instruction?
     public var order: Decimal?
-
+    
     public init(id: String? = nil, modelId: Int? = nil, title: String? = nil, objectName: String? = nil, steps: [Step]? = nil, instruction: Instruction? = nil, order: Decimal? = nil) {
         self.id = id
         self.modelId = modelId
@@ -28,62 +28,36 @@ public struct ObjectStep: Identifiable, Codable {
         self.instruction = instruction
         self.order = order
     }
-
-//    public enum CodingKeys: String, CodingKey {
-//        case id = "_id"
-//        case modelId
-//        case title
-//        case objectName
-//        case steps
-//        case instruction
-//        case order
-//    }
-
+    
 }
 
-
-//public struct ObjectStep: Identifiable, Codable {
-//
-//    public var id: UUID?
-//    public var modelId: Int?
-//    public var objectName: String?
-//    public var steps: [Step]?
-//    public var instruction: Instruction?
-//    public var order: Decimal?
-//
-//    public init(id: UUID? = UUID(), modelId: Int? = nil, objectName: String? = nil, steps: [Step]? = nil, instruction: Instruction? = nil, order: Decimal? = nil) {
-//        self.id = id
-//        self.modelId = modelId
-//        self.objectName = objectName
-//        self.steps = steps
-//        self.instruction = instruction
-//        self.order = order
-//    }
-//
-//    public init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
-//        modelId = try container.decodeIfPresent(Int.self, forKey: .modelId)
-//        objectName = try container.decodeIfPresent(String.self, forKey: .objectName)
-//        steps = try container.decodeIfPresent([Step].self, forKey: .steps)
-//        instruction = try container.decodeIfPresent(Instruction.self, forKey: .instruction)
-//        order = try container.decodeIfPresent(Decimal.self, forKey: .order)
-//    }
-//
-//}
-//
-//let mockObjectSteps: [ObjectStep] = [
-//    ObjectStep(modelId: 123, objectName: "toy_drummer_idle", steps: [
-//        Step(contents: [
-//            Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
-//            Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver.")
-//        ], confirmation: Confirmation(comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)", photoUrl: "photoUrl", date: 1676623885569, done: true), order: 1)
-//    ], instruction: Instruction(title: "Removing screw", text: "Remove the M3 screw from the fan holder.", imageUrl: "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"), order: 1),
-//
-//    ObjectStep(modelId: 234, objectName: "sneaker_airforce", steps: [
-//        Step(contents: [
-//            Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
-//            Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver.")
-//        ], confirmation: Confirmation(comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)", photoUrl: "photoUrl", date: 1676623885569, done: true), order: 1)
-//    ], instruction: Instruction(title: "Removing screw 2", text: "Remove the M3 screw from the fan holder. 2", imageUrl: "https://help.prusa3d.com/wp-content/uploads/2020/12/3887c24a60b2b24a.jpg"), order: 1)
-//]
+#if DEBUG
+// MARK: - Example Launch
+extension ObjectStep {
+    
+    static var example: ObjectStep {
+        ObjectStep(modelId: 123, objectName: "toy_drummer_idle", steps: [
+            Step(contents: [
+                Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
+                Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver.")
+            ], confirmation: Confirmation(comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)", photoUrl: "photoUrl", date: 1676623885569, done: true), order: 1)
+        ], instruction: Instruction(title: "Removing screw", text: "Remove the M3 screw from the fan holder.", imageUrl: "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"), order: 1)
+    }
+    
+    static var exampleArray: [ObjectStep] = [
+        ObjectStep(modelId: 123, objectName: "toy_drummer_idle", steps: [
+            Step(contents: [
+                Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
+                Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver.")
+            ], confirmation: Confirmation(comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)", photoUrl: "photoUrl", date: 1676623885569, done: true), order: 1)
+        ], instruction: Instruction(title: "Removing screw", text: "Remove the M3 screw from the fan holder.", imageUrl: "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"), order: 1),
+        ObjectStep(modelId: 234, objectName: "sneaker_airforce", steps: [
+            Step(contents: [
+                Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
+                Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver.")
+            ], confirmation: Confirmation(comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)", photoUrl: "photoUrl", date: 1676623885569, done: true), order: 1)
+        ], instruction: Instruction(title: "Removing screw 2", text: "Remove the M3 screw from the fan holder. 2", imageUrl: "https://help.prusa3d.com/wp-content/uploads/2020/12/3887c24a60b2b24a.jpg"), order: 1)
+    ]
+    
+}
+#endif

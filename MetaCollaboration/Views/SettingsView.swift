@@ -96,8 +96,9 @@ struct SettingsView: View {
                             .font(.footnote)
                             .multilineTextAlignment(.leading)
                         
+                        // TODO: - zakazat v pripade ze neni nic stazeno
                         Button(action: {
-                            viewModel.removeDatasetFromLocalStorage()
+                            viewModel.removeAllFromLocalStorage()
                         }) {
                             Text("Remove all")
                                 .fontWeight(.bold)

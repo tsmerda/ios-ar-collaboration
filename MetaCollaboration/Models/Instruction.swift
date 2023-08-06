@@ -21,5 +21,4 @@ public struct Instruction: Codable {
         self.imageUrl = imageUrl
     }
 
-
 }

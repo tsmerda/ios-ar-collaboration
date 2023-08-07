@@ -10,6 +10,7 @@ import Foundation
 protocol NetworkManagerProtocol {
     func getAllGuides() async throws -> [Guide]
     func getGuideById(guideId: String) async throws -> ExtendedGuide
+    func getStepById(guideId: String, objectStepOrder: Int) async throws -> ObjectStep
     func getAllAssets() async throws -> [Asset]
     func getAssetByName(assetName: String) async throws -> String
 }
@@ -17,7 +18,7 @@ protocol NetworkManagerProtocol {
 class NetworkManager: NetworkManagerProtocol {
     
     static let shared = NetworkManager()
-    private let baseURL = "http://192.168.1.14:8080/api/v3"
+    private let baseURL = "http://192.168.0.99:8080/api/v3"
     
     // MARK: - Get all guides
     func getAllGuides() async throws -> [Guide] {
@@ -43,7 +44,7 @@ class NetworkManager: NetworkManagerProtocol {
     
     // MARK: - Get guide by id
     func getGuideById(guideId: String) async throws -> ExtendedGuide {
-        guard let url = URL(string: baseURL + "/guides/" + guideId) else {
+        guard let url = URL(string: baseURL + "/guides/\(guideId)") else {
             throw NetworkError.invalidURL
         }
         
@@ -61,6 +62,28 @@ class NetworkManager: NetworkManagerProtocol {
         }
         
         return guide
+    }
+    
+    // MARK: - Get object step by id and step order
+    func getStepById(guideId: String, objectStepOrder: Int) async throws -> ObjectStep {
+        guard let url = URL(string: baseURL + "/guides/\(guideId)/\(objectStepOrder)") else {
+            throw NetworkError.invalidURL
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            throw NetworkError.serverError
+        }
+        
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        guard let step = try? decoder.decode(ObjectStep.self, from: data) else {
+            throw NetworkError.invalidData
+        }
+        
+        return step
     }
     
     // MARK: - Get all assets
@@ -87,7 +110,7 @@ class NetworkManager: NetworkManagerProtocol {
     
     // MARK: - Get asset by name
     func getAssetByName(assetName: String) async throws -> String {
-        guard let url = URL(string: baseURL + "/assets/" + assetName + "/download") else {
+        guard let url = URL(string: baseURL + "/assets/\(assetName)/download") else {
             throw NetworkError.invalidURL
         }
         let (localURL, response) = try await URLSession.shared.download(from: url)

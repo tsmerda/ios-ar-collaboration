@@ -11,14 +11,8 @@ import Foundation
 
 public struct Step: Codable {
 
-    public var contents: [Content]
+    public var contents: [Content]?
     public var confirmation: Confirmation?
-    public var order: Decimal?
-
-    public init(contents: [Content], confirmation: Confirmation? = nil, order: Decimal? = nil) {
-        self.contents = contents
-        self.confirmation = confirmation
-        self.order = order
-    }
-
+    public var order: Int?
+    
 }

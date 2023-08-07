@@ -20,13 +20,13 @@ struct CollaborationView: View {
         NavigationStack() {
             GeometryReader { geo in
                 VStack(spacing: 0) {
-                    ARViewContainer(showStepSheet: $showStepSheet)
-                        .environmentObject(viewModel)
-                        .zIndex(1)
-                    //                        .id(viewModel.uniqueID)
-                        .onAppear {
-                            viewModel.refreshCollaborationView()
-                        }
+//                    ARViewContainer(showStepSheet: $showStepSheet)
+//                        .environmentObject(viewModel)
+//                        .zIndex(1)
+//                    //                        .id(viewModel.uniqueID)
+//                        .onAppear {
+//                            viewModel.refreshCollaborationView()
+//                        }
                 }
                 .sheet(isPresented: $showStepSheet) {
                     StepDetailView(onNavigateAction: {

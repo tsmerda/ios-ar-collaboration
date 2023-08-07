@@ -13,10 +13,5 @@ public struct Asset: Identifiable, Codable {
     public var id: UUID = UUID()
     public var assetName: Data?
     public var description: String?
-
-    public init(assetName: Data? = nil, description: String? = nil) {
-        self.assetName = assetName
-        self.description = description
-    }
-
+    
 }

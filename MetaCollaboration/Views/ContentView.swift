@@ -29,6 +29,18 @@ struct ContentView: View {
                     .environmentObject(viewModel)
             }
         }
+        // TODO: - Dalo by se vyuzit pouze neco jako networkState == .failed(error) ?
+        .alert("Server Error", isPresented: $viewModel.hasError) {
+            Button("Retry") {
+                Task {
+                    await viewModel.getAllGuides()
+                }
+            }
+        } message: {
+            if case let .failed(error) = viewModel.networkState {
+                Text(error.localizedDescription)
+            }
+        }
     }
 }
 

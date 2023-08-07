@@ -23,14 +23,5 @@ public struct ExtendedGuide: Codable {
     public var imageUrl: String?
     public var guideType: GuideType
     public var objectSteps: [ObjectStep]?
-
-    public init(id: String? = nil, name: String, description: String? = nil, imageUrl: String? = nil, guideType: GuideType, objectSteps: [ObjectStep]? = nil) {
-        self.id = id
-        self.name = name
-        self.description = description
-        self.imageUrl = imageUrl
-        self.guideType = guideType
-        self.objectSteps = objectSteps
-    }
     
 }

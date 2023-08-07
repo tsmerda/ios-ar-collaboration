@@ -10,7 +10,7 @@ import Foundation
 
 
 public struct Guide: Identifiable, Codable {
-
+    
     public enum GuideType: String, Codable {
         case manual = "manual"
         case tutorial = "tutorial"
@@ -22,13 +22,20 @@ public struct Guide: Identifiable, Codable {
     public var description: String?
     public var imageUrl: String?
     public var guideType: GuideType
-
-    public init(id: String? = nil, name: String, description: String? = nil, imageUrl: String? = nil, guideType: GuideType) {
-        self.id = id
-        self.name = name
-        self.description = description
-        self.imageUrl = imageUrl
-        self.guideType = guideType
-    }
-
+    
 }
+
+#if DEBUG
+// MARK: - Example Guide
+extension Guide {
+    
+    static var example: Guide {
+        Guide(name: "Upgrading old Prusa MK2s.",
+              description: "How to upgrade the old MK2s to MK2s+ featuring the cool magnetic heatbed.",
+              imageUrl: "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg",
+              guideType: .manual
+        )
+    }
+    
+}
+#endif

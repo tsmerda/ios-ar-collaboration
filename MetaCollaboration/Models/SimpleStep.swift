@@ -11,12 +11,7 @@ import Foundation
 
 public struct SimpleStep: Codable {
 
-    public var order: Decimal?
+    public var order: Int?
     public var title: String?
-
-    public init(order: Decimal? = nil, title: String? = nil) {
-        self.order = order
-        self.title = title
-    }
-
+    
 }

@@ -96,7 +96,6 @@ struct SettingsView: View {
                             .font(.footnote)
                             .multilineTextAlignment(.leading)
                         
-                        // TODO: - zakazat v pripade ze neni nic stazeno
                         Button(action: {
                             viewModel.removeAllFromLocalStorage()
                         }) {
@@ -104,6 +103,7 @@ struct SettingsView: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(Color("errorColor"))
                         }
+                        .disabled(viewModel.downloadedAssets.isEmpty)
                         .padding()
                         .background(
                             Color("dividerColor")

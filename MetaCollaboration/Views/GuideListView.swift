@@ -27,14 +27,19 @@ struct GuideListView: View {
                             if let guideList = viewModel.guideList, !guideList.isEmpty {
                                 // array is not empty
                                 ForEach(guideList) { guide in
-                                    NavigationLink(destination: GuideDetailView(guide: guide, isDownloaded: viewModel.isGuideIdDownloaded(guide.id!), downloadedAssets: viewModel.downloadedAssets, onGetGuideAction: {
+                                    NavigationLink(destination: GuideDetailView(guide: guide, downloadedGuide: viewModel.downloadedGuideById(guide.id!), onGetGuideAction: {
                                         Task {
                                             await viewModel.getGuideById(id: guide.id!)
                                         }
                                         
                                     }, onSetCurrentGuideAction: {
-                                        viewModel.setCurrentGuide(guide.id!)
-                                        collaborationMode = true
+                                        Task {
+                                            await viewModel.getStepById(guide.id!, 1)
+                                            if viewModel.currentStep != nil {
+                                                viewModel.setCurrentGuide(guide.id!)
+                                                collaborationMode = true
+                                            }
+                                        }
                                     })) {
                                         GuideRowView(guide: guide, isDownloaded: viewModel.isGuideIdDownloaded(guide.id!))
                                     }
@@ -94,17 +99,6 @@ struct GuideListView: View {
         .sheet(isPresented: $isShowingSettings) {
             SettingsView()
                 .environmentObject(viewModel)
-        }
-        .alert("Server Error", isPresented: $viewModel.hasError, presenting: viewModel.networkState) { detail in
-            Button("Retry") {
-                Task {
-                    await viewModel.getAllGuides()
-                }
-            }
-        } message: { detail in
-            if case let .failed(error) = detail {
-                Text(error.localizedDescription)
-            }
         }
     }
 }

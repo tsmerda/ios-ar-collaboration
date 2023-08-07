@@ -1,5 +1,5 @@
 //
-//  CollaborationViewModel+JSON.swift
+//  CollaborationViewModel+Guides.swift
 //  MetaCollaboration
 //
 //  Created by Tomáš Šmerda on 24.07.2023.
@@ -56,4 +56,5 @@ extension CollaborationViewModel {
             }
         }
     }
+    
 }

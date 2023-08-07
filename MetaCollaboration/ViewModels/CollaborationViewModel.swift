@@ -59,6 +59,7 @@ class CollaborationViewModel: ObservableObject {
     }
     @Published var guideList: [Guide]?
     @Published var currentGuide: ExtendedGuide?
+    @Published var currentStep: ObjectStep?
     @Published var uniqueID = UUID()
     
     @Published private(set) var networkState: NetworkState = .na
@@ -83,32 +84,12 @@ class CollaborationViewModel: ObservableObject {
     
     init() {
         // Check downloaded guide saved in UserDefaults and add into currentGuide
-        initDownloadedGuides()
+        downloadedGuides = readGuidesFromJSON()
         // Check downloaded assets saved in device local storage and add into downloadedAssets
         initDownloadedAssets()
     }
     
     // MARK: - Public Methods
-    
-    func loadReferenceObjects(_ assetName: String) {
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-            
-            for fileURL in fileURLs {
-                //            TODO: - Resolve: failed to setup referenceObjects nilError
-                if fileURL.pathExtension == "arobject" && fileURL.lastPathComponent == assetName {
-                    let referenceObject = try ARReferenceObject(archiveURL: fileURL)
-                    referenceObjects.insert(referenceObject)
-                }
-            }
-        } catch {
-            // TODO: hodit do alert modalu
-            print("Failed to set up referenceObjects: \(error)")
-        }
-    }
-    
     func refreshCollaborationView() {
         // TODO: - Opravit nastaveni UUID() -> zpusobovalo seknuti pri prejiti na ARView
         //        self.uniqueID = UUID()
@@ -116,7 +97,6 @@ class CollaborationViewModel: ObservableObject {
     
     // Remove guide and all downloaded models from device
     func removeAllFromLocalStorage() {
-        print(referenceObjects)
         //    TODO: ARObject zustava inicializovany => resetovat AR session nebo colaboration view
         currentGuide = nil
         referenceObjects.removeAll()
@@ -124,47 +104,17 @@ class CollaborationViewModel: ObservableObject {
         downloadedGuides.removeAll()
     }
     
-    //    TODO: - as extension
-    func removeAssetsFromDevice() {
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
-                                                                       includingPropertiesForKeys: nil,
-                                                                       options: .skipsHiddenFiles)
-            for fileURL in fileURLs {
-                if fileURL.pathExtension == "arobject" {
-                    try FileManager.default.removeItem(at: fileURL)
-                    print("Model \(fileURL) removed")
-                }
-            }
-        } catch { print(error) }
-    }
-    
-    func initDownloadedGuides() {
-        downloadedGuides = readGuidesFromJSON()
-    }
-    
-    func initDownloadedAssets() {
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
-                                                                       includingPropertiesForKeys: nil,
-                                                                       options: .skipsHiddenFiles)
-            for fileURL in fileURLs {
-                if !downloadedAssets.contains(fileURL.lastPathComponent) {
-                    downloadedAssets.append(fileURL.lastPathComponent)
-                }
-            }
-        } catch {
-            print(error)
-        }
-    }
-    
     func isGuideIdDownloaded(_ id: String) -> Bool {
         return self.downloadedGuides.contains { item in
             item.id == id
         }
+    }
+    
+    func downloadedGuideById(_ id: String) -> ExtendedGuide? {
+        if let guide = self.downloadedGuides.first(where: { $0.id == id }) {
+            return guide
+        }
+        return nil
     }
     
     func setCurrentGuide(_ id: String) {
@@ -220,6 +170,20 @@ class CollaborationViewModel: ObservableObject {
             //                    }
             //                }
             
+            self.networkState = .success
+        } catch {
+            self.networkState = .failed(error: error)
+            self.hasError = true
+        }
+    }
+    
+    @MainActor
+    func getStepById(_ guideId: String, _ objectStepOrder: Int) async {
+        self.networkState = .loading
+        self.hasError = false
+        
+        do {
+            self.currentStep = try await NetworkManager.shared.getStepById(guideId: guideId, objectStepOrder: objectStepOrder)
             self.networkState = .success
         } catch {
             self.networkState = .failed(error: error)

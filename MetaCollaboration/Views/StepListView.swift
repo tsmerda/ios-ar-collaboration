@@ -15,7 +15,7 @@ struct StepListView: View {
             List{
                 ForEach(guide.objectSteps ?? []) { step in
                     HStack(spacing: 8) {
-                        Text(step.instruction?.title ?? "Step")
+                        Text(step.title ?? "Step")
                             .font(.system(size: 15))
                         
                         Spacer()
@@ -26,8 +26,8 @@ struct StepListView: View {
                                 .font(.system(size: 24, weight: .light))
                         } else {
                             Image(systemName: "checkmark.circle")
-                                .font(.system(size: 24, weight: .light))
                                 .foregroundColor(.accentColor)
+                                .font(.system(size: 24, weight: .light))
                         }
                     }
                     .foregroundColor(.white)

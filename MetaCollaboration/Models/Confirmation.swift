@@ -13,15 +13,8 @@ public struct Confirmation: Codable {
 
     public var comment: String?
     public var photoUrl: String?
-    public var date: Int64
+    public var date: Int64?
     /** Whether the step was successfully finished by the user. */
-    public var done: Bool
-
-    public init(comment: String? = nil, photoUrl: String? = nil, date: Int64, done: Bool) {
-        self.comment = comment
-        self.photoUrl = photoUrl
-        self.date = date
-        self.done = done
-    }
+    public var done: Bool?
 
 }

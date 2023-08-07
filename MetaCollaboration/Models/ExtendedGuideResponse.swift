@@ -24,13 +24,4 @@ public struct ExtendedGuideResponse: Codable {
     public var guideType: GuideType
     public var objectSteps: [SimpleStep]?
 
-    public init(id: String? = nil, name: String, description: String? = nil, imageUrl: String? = nil, guideType: GuideType, objectSteps: [SimpleStep]? = nil) {
-        self.id = id
-        self.name = name
-        self.description = description
-        self.imageUrl = imageUrl
-        self.guideType = guideType
-        self.objectSteps = objectSteps
-    }
-
 }

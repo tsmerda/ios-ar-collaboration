@@ -28,13 +28,14 @@
 		B56CE57B29BCC928007D092F /* Instruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE57329BCC928007D092F /* Instruction.swift */; };
 		B56CE57C29BCC928007D092F /* ExtendedGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56CE57429BCC928007D092F /* ExtendedGuide.swift */; };
 		B56E4C312A7138CA006F5E97 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B56E4C302A7138CA006F5E97 /* README.md */; };
+		B5746A992A81223000BE9229 /* CollaborationViewModel+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5746A982A81223000BE9229 /* CollaborationViewModel+Assets.swift */; };
 		B581CF1E2A6E9B9B0084DDB2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF1D2A6E9B9B0084DDB2 /* SettingsView.swift */; };
 		B581CF202A6E9F0E0084DDB2 /* SettingsLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF1F2A6E9F0E0084DDB2 /* SettingsLabelView.swift */; };
 		B581CF222A6E9F1A0084DDB2 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF212A6E9F1A0084DDB2 /* SettingsRowView.swift */; };
 		B581CF242A6EB1AF0084DDB2 /* GuideDetailInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF232A6EB1AF0084DDB2 /* GuideDetailInfoView.swift */; };
 		B581CF262A6EC5800084DDB2 /* ExtendedGuideResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF252A6EC5800084DDB2 /* ExtendedGuideResponse.swift */; };
 		B581CF282A6EC5930084DDB2 /* SimpleStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF272A6EC5930084DDB2 /* SimpleStep.swift */; };
-		B581CF2C2A6EE9810084DDB2 /* CollaborationViewModel+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF2B2A6EE9810084DDB2 /* CollaborationViewModel+JSON.swift */; };
+		B581CF2C2A6EE9810084DDB2 /* CollaborationViewModel+Guides.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF2B2A6EE9810084DDB2 /* CollaborationViewModel+Guides.swift */; };
 		B581CF2F2A7051A60084DDB2 /* GuideRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF2E2A7051A60084DDB2 /* GuideRowView.swift */; };
 		B581CF312A7051F20084DDB2 /* ModeSquareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF302A7051F20084DDB2 /* ModeSquareView.swift */; };
 		B581CF342A70527C0084DDB2 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B581CF332A70527C0084DDB2 /* ButtonStyles.swift */; };
@@ -74,13 +75,14 @@
 		B56CE57329BCC928007D092F /* Instruction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Instruction.swift; sourceTree = "<group>"; };
 		B56CE57429BCC928007D092F /* ExtendedGuide.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedGuide.swift; sourceTree = "<group>"; };
 		B56E4C302A7138CA006F5E97 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B5746A982A81223000BE9229 /* CollaborationViewModel+Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollaborationViewModel+Assets.swift"; sourceTree = "<group>"; };
 		B581CF1D2A6E9B9B0084DDB2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B581CF1F2A6E9F0E0084DDB2 /* SettingsLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLabelView.swift; sourceTree = "<group>"; };
 		B581CF212A6E9F1A0084DDB2 /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
 		B581CF232A6EB1AF0084DDB2 /* GuideDetailInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideDetailInfoView.swift; sourceTree = "<group>"; };
 		B581CF252A6EC5800084DDB2 /* ExtendedGuideResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedGuideResponse.swift; sourceTree = "<group>"; };
 		B581CF272A6EC5930084DDB2 /* SimpleStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleStep.swift; sourceTree = "<group>"; };
-		B581CF2B2A6EE9810084DDB2 /* CollaborationViewModel+JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollaborationViewModel+JSON.swift"; sourceTree = "<group>"; };
+		B581CF2B2A6EE9810084DDB2 /* CollaborationViewModel+Guides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollaborationViewModel+Guides.swift"; sourceTree = "<group>"; };
 		B581CF2E2A7051A60084DDB2 /* GuideRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideRowView.swift; sourceTree = "<group>"; };
 		B581CF302A7051F20084DDB2 /* ModeSquareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeSquareView.swift; sourceTree = "<group>"; };
 		B581CF332A70527C0084DDB2 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
@@ -113,7 +115,8 @@
 				B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */,
 				B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */,
 				B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */,
-				B581CF2B2A6EE9810084DDB2 /* CollaborationViewModel+JSON.swift */,
+				B581CF2B2A6EE9810084DDB2 /* CollaborationViewModel+Guides.swift */,
+				B5746A982A81223000BE9229 /* CollaborationViewModel+Assets.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -146,8 +149,8 @@
 				B5537B662A0F9E8B006F8102 /* Extensions */,
 				B56CE56C29BCC913007D092F /* Models */,
 				B59369D52A659BA200C3B9F2 /* Views */,
-				B581CF2D2A7050E90084DDB2 /* Components */,
 				B59369D62A659BAD00C3B9F2 /* ViewModels */,
+				B581CF2D2A7050E90084DDB2 /* Components */,
 				B5630D3229846A35005BC686 /* Info.plist */,
 				B5576CEB297D94970069758E /* Assets.xcassets */,
 				B5576CED297D94970069758E /* Preview Content */,
@@ -327,11 +330,12 @@
 				B505025C299FDBF700121A5A /* ChooseModeView.swift in Sources */,
 				B581CF262A6EC5800084DDB2 /* ExtendedGuideResponse.swift in Sources */,
 				B59369E02A667D5000C3B9F2 /* CollaborationView.swift in Sources */,
+				B5746A992A81223000BE9229 /* CollaborationViewModel+Assets.swift in Sources */,
 				B56CE57729BCC928007D092F /* Confirmation.swift in Sources */,
 				B59369DE2A65AE1C00C3B9F2 /* LoadingView.swift in Sources */,
 				B581CF312A7051F20084DDB2 /* ModeSquareView.swift in Sources */,
 				B581CF242A6EB1AF0084DDB2 /* GuideDetailInfoView.swift in Sources */,
-				B581CF2C2A6EE9810084DDB2 /* CollaborationViewModel+JSON.swift in Sources */,
+				B581CF2C2A6EE9810084DDB2 /* CollaborationViewModel+Guides.swift in Sources */,
 				B56CE57529BCC928007D092F /* ObjectStep.swift in Sources */,
 				B5576CEA297D94960069758E /* ContentView.swift in Sources */,
 				B581CF342A70527C0084DDB2 /* ButtonStyles.swift in Sources */,

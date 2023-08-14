@@ -202,7 +202,6 @@ class CollaborationViewModel: ObservableObject {
             if !downloadedAssets.contains(downloadedAsset) {
                 downloadedAssets.append(downloadedAsset)
             }
-            //            self.updateDownloadedAssets(assetName: downloadedAsset)
             
             self.networkState = .success
         } catch {

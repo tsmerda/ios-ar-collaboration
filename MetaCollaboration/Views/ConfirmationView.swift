@@ -58,7 +58,7 @@ struct ConfirmationView: View {
             
             TextField("Text", text: $notes, axis: .vertical)
                 .focused($focusedField, equals: .notes)
-                .frame(width: .infinity, height: 80, alignment: .top)
+                .frame(width: .infinity, height: 100, alignment: .top)
                 .foregroundColor(.white)
                 .padding(.horizontal)
                 .padding(.vertical, 10)

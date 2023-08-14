@@ -41,7 +41,7 @@ extension ObjectStep {
                    steps: [
             Step(contents: [
                 Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
-                Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver.")
+                Content(contentType: .textblock, order: 2, text: "First, check that you have a screwdriver.")
             ], confirmation: Confirmation(comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)", photoUrl: "photoUrl", date: 1676623885569, done: true), order: 1)
         ], instruction: Instruction(title: "Removing screw", text: "Remove the M3 screw from the fan holder.", imageUrl: "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"), order: 1),
         ObjectStep(modelId: 234,
@@ -50,7 +50,7 @@ extension ObjectStep {
                    steps: [
             Step(contents: [
                 Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
-                Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver.")
+                Content(contentType: .textblock, order: 2, text: "First, check that you have a screwdriver.")
             ], confirmation: Confirmation(comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)", photoUrl: "photoUrl", date: 1676623885569, done: true), order: 1)
         ], instruction: Instruction(title: "Removing screw 2", text: "Remove the M3 screw from the fan holder. 2", imageUrl: "https://help.prusa3d.com/wp-content/uploads/2020/12/3887c24a60b2b24a.jpg"), order: 2)
     ]

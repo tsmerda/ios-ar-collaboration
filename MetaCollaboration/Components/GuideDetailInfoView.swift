@@ -22,8 +22,10 @@ struct GuideDetailInfoView: View {
                     
                     HStack {
                         Group {
-                            Image(systemName: "\(step.order!).circle")
-                            Text(step.title ?? "Step")
+                            if step.order != nil {
+                                Image(systemName: "\(step.order!).circle")
+                            }
+                            Text(step.title ?? "Unknown title")
                         }
                         .foregroundColor(.white)
                         .font(.system(.body))

@@ -29,6 +29,7 @@ extension CollaborationViewModel {
         }
     }
     
+    // TODO: error hodit do alert modalu
     func initDownloadedAssets() {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
@@ -46,7 +47,7 @@ extension CollaborationViewModel {
         }
     }
     
-    // TODO: hodit do alert modalu
+    // TODO: error hodit do alert modalu
     func removeAssetsFromDevice() {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         do {

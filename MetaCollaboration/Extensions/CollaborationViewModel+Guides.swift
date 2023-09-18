@@ -14,7 +14,7 @@ extension CollaborationViewModel {
         return FileManager.default.fileExists(atPath: fileURL.path)
     }
     
-    func saveGuidesToJSON(_ guides: [ExtendedGuide]) {
+    func saveGuidesToJSON(_ guides: [ExtendedGuideResponse]) {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         
@@ -30,14 +30,14 @@ extension CollaborationViewModel {
         }
     }
     
-    func readGuidesFromJSON() -> [ExtendedGuide] {
+    func readGuidesFromJSON() -> [ExtendedGuideResponse] {
         let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(jsonDataFile)
         
         do {
             let jsonData = try Data(contentsOf: fileURL)
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
-            return try decoder.decode([ExtendedGuide].self, from: jsonData)
+            return try decoder.decode([ExtendedGuideResponse].self, from: jsonData)
         } catch {
             return []
         }

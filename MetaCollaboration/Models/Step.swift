@@ -11,8 +11,24 @@ import Foundation
 
 public struct Step: Codable {
 
+    public var id: String
     public var contents: [Content]?
     public var confirmation: Confirmation?
     public var order: Int?
+
+    public init(id: String? = nil, contents: [Content], confirmation: Confirmation? = nil, order: Int? = nil) {
+        self.id = id ?? UUID().uuidString
+        self.contents = contents
+        self.confirmation = confirmation
+        self.order = order
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
+        contents = try container.decodeIfPresent([Content].self, forKey: .contents)
+        confirmation = try container.decodeIfPresent(Confirmation.self, forKey: .confirmation)
+        order = try container.decodeIfPresent(Int.self, forKey: .order)
+    }
     
 }

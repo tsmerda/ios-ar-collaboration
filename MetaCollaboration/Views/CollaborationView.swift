@@ -12,21 +12,54 @@ struct CollaborationView: View {
     
     @EnvironmentObject var viewModel: CollaborationViewModel
     
-    @State private var showStepSheet = true
+    @State private var showStepSheet = false
+    @State private var showStepListSheet = true
     @State private var showConfirmationView = false
+    @State private var showImagePopup = false
     
     // TODO: - Pridat haptic feedback let hapticFeedback = UINotificationFeedbackGenerator()
     var body: some View {
         NavigationStack() {
             GeometryReader { geo in
-                VStack(spacing: 0) {
-                    ARViewContainer(showStepSheet: $showStepSheet)
-                        .environmentObject(viewModel)
-                        .zIndex(1)
-                    //                        .id(viewModel.uniqueID)
-                        .onAppear {
-                            viewModel.refreshCollaborationView()
+                ZStack {
+                    VStack(spacing: 0) {
+                        ARViewContainer(showStepSheet: $showStepSheet)
+                            .environmentObject(viewModel)
+                            .zIndex(1)
+                        //                        .id(viewModel.uniqueID)
+                            .onAppear {
+                                viewModel.refreshCollaborationView()
+                            }
+                    }
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            
+                            if viewModel.currentGuide?.imageUrl != nil {
+                                AsyncImage(url: URL(string: (viewModel.currentGuide?.imageUrl)!)){ image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                } placeholder: { Color("secondaryColor") }
+                                    .frame(width: 80, height: 80)
+                                    .cornerRadius(8)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 11)
+                                            .stroke(Color.accentColor, lineWidth: 1)
+                                    )
+                                    .padding()
+                                    .padding(.bottom, 160)
+                                    .onTapGesture {
+                                        showImagePopup.toggle()
+                                    }
+                            }
                         }
+                    }
+                    
+                    if showImagePopup {
+                        ImagePopupView(showImagePopup: $showImagePopup, imageUrl: viewModel.currentGuide?.imageUrl ?? "")
+                    }
                 }
                 .sheet(isPresented: $showStepSheet) {
                     StepDetailView(onNavigateAction: {
@@ -39,6 +72,12 @@ struct CollaborationView: View {
                     .interactiveDismissDisabled()
                     .presentationDragIndicator(.automatic)
                 }
+                .fullScreenCover(isPresented: $showStepListSheet) {
+                    StepListView(guide: viewModel.currentGuide ?? nil, currentStepId: viewModel.currentStep?.id ?? "")
+                        .onDisappear {
+                            showStepSheet.toggle()
+                        }
+                }
                 .background(Color("backgroundColor")
                     .ignoresSafeArea(.all, edges: .all))
                 .navigationTitle(viewModel.currentGuide?.name ?? "Upgrading old Prusa MK2s.")
@@ -49,22 +88,11 @@ struct CollaborationView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
-                            // TODO: - Zobrazit alert nez zavre guide?
-                            collaborationMode = false
-                        }) {
-                            Image(systemName: "xmark")
-                                .foregroundColor(.accentColor)
-                        }
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        NavigationLink(destination: StepListView(guide: viewModel.currentGuide!)
-                            .onAppear{
-                                showStepSheet.toggle()
+                            showStepSheet.toggle()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                showStepListSheet.toggle()
                             }
-                            .onDisappear {
-                                showStepSheet.toggle()
-                            })
-                        {
+                        }) {
                             Image(systemName: "text.badge.checkmark")
                                 .foregroundColor(.accentColor)
                         }
@@ -72,7 +100,7 @@ struct CollaborationView: View {
                 }
             }
             .navigationDestination(isPresented: $showConfirmationView) {
-                ConfirmationView(guide: viewModel.currentGuide!)
+                ConfirmationView(guide: viewModel.currentGuide ?? nil)
                     .onDisappear {
                         showStepSheet.toggle()
                     }

@@ -9,7 +9,7 @@ import Foundation
 
 protocol NetworkManagerProtocol {
     func getAllGuides() async throws -> [Guide]
-    func getGuideById(guideId: String) async throws -> ExtendedGuide
+    func getGuideById(guideId: String) async throws -> ExtendedGuideResponse
     func getStepById(guideId: String, objectStepOrder: Int) async throws -> ObjectStep
     func getAllAssets() async throws -> [Asset]
     func getAssetByName(assetName: String) async throws -> String
@@ -19,7 +19,7 @@ protocol NetworkManagerProtocol {
 class NetworkManager: NetworkManagerProtocol {
     
     static let shared = NetworkManager()
-    private let baseURL = "http://192.168.0.125:8080/api/v3"
+    private let baseURL = "http://192.168.0.99:8080/api/v3"
     
     // MARK: - Get all guides
     func getAllGuides() async throws -> [Guide] {
@@ -44,7 +44,7 @@ class NetworkManager: NetworkManagerProtocol {
     }
     
     // MARK: - Get guide by id
-    func getGuideById(guideId: String) async throws -> ExtendedGuide {
+    func getGuideById(guideId: String) async throws -> ExtendedGuideResponse {
         guard let url = URL(string: baseURL + "/guides/\(guideId)") else {
             throw NetworkError.invalidURL
         }
@@ -58,7 +58,7 @@ class NetworkManager: NetworkManagerProtocol {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
-        guard let guide = try? decoder.decode(ExtendedGuide.self, from: data) else {
+        guard let guide = try? decoder.decode(ExtendedGuideResponse.self, from: data) else {
             throw NetworkError.invalidData
         }
         

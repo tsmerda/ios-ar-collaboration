@@ -10,7 +10,7 @@ import SwiftUI
 struct GuideDetailView: View {
     
     var guide: Guide?
-    var downloadedGuide: ExtendedGuide?
+    var downloadedGuide: ExtendedGuideResponse?
     
     let onGetGuideAction: () -> Void
     let onSetCurrentGuideAction: () -> Void
@@ -54,13 +54,13 @@ struct GuideDetailView: View {
                             .padding(.bottom, 16)
                     }
                     
-                    if downloadedGuide != nil {
-                        GuideDetailInfoView(objectSteps: downloadedGuide?.objectSteps)
-                    } else {
-                        Text("To show the detailed steps, you need to download this guide.")
-                            .font(.system(size: 13).bold())
-                            .foregroundColor(.accentColor)
-                    }
+//                    if downloadedGuide != nil {
+//                        GuideDetailInfoView(objectSteps: downloadedGuide?.objectSteps)
+//                    } else {
+//                        Text("To show the detailed steps, you need to download this guide.")
+//                            .font(.system(size: 13).bold())
+//                            .foregroundColor(.accentColor)
+//                    }
                 }
             }
             
@@ -81,6 +81,7 @@ struct GuideDetailView: View {
                 
                 Spacer()
             }
+            .padding(.horizontal)
             .padding(.bottom, 8)
             
             HStack {

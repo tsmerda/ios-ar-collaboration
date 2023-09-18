@@ -47,7 +47,7 @@ class CollaborationViewModel: ObservableObject {
             }
         }
     }
-    @Published var downloadedGuides: [ExtendedGuide] = [] {
+    @Published var downloadedGuides: [ExtendedGuideResponse] = [] {
         didSet {
             // Save downloadedGuides locally to JSON or delete JSON
             if !downloadedGuides.isEmpty {
@@ -58,7 +58,7 @@ class CollaborationViewModel: ObservableObject {
         }
     }
     @Published var guideList: [Guide]?
-    @Published var currentGuide: ExtendedGuide?
+    @Published var currentGuide: ExtendedGuideResponse? = ExtendedGuideResponse.example
     @Published var currentStep: ObjectStep?
     @Published var uniqueID = UUID()
     
@@ -110,7 +110,7 @@ class CollaborationViewModel: ObservableObject {
         }
     }
     
-    func downloadedGuideById(_ id: String) -> ExtendedGuide? {
+    func downloadedGuideById(_ id: String) -> ExtendedGuideResponse? {
         if let guide = self.downloadedGuides.first(where: { $0.id == id }) {
             return guide
         }

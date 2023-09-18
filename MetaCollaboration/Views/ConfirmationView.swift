@@ -13,7 +13,7 @@ struct ConfirmationView: View {
         case notes
     }
     
-    let guide: ExtendedGuide?
+    let guide: ExtendedGuideResponse?
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -151,6 +151,6 @@ struct ConfirmationView: View {
 
 struct ConfirmationView_Previews: PreviewProvider {
     static var previews: some View {
-        ConfirmationView(guide: ExtendedGuide(name: "", guideType: .tutorial))
+        ConfirmationView(guide: ExtendedGuideResponse(name: "", guideType: .tutorial))
     }
 }

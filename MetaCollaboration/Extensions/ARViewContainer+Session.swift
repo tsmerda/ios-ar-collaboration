@@ -38,6 +38,7 @@ extension ARViewContainer {
         }
         
         // Kontrola a správa nově přidaných anchors
+        #if !targetEnvironment(simulator)
         func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
             for anchor in anchors {
                 if let participantAnchor = anchor as? ARParticipantAnchor{
@@ -101,6 +102,7 @@ extension ARViewContainer {
                 }
             }
         }
+        #endif
         
         //    TODO: -- FIX
         //        func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {

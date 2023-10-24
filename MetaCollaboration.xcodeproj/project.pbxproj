@@ -48,6 +48,8 @@
 		B59369E42A66CBED00C3B9F2 /* GuideDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59369E32A66CBED00C3B9F2 /* GuideDetailView.swift */; };
 		B59369E62A66CBFD00C3B9F2 /* GuideListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59369E52A66CBFD00C3B9F2 /* GuideListView.swift */; };
 		B59369E92A6701C700C3B9F2 /* arrow.usdz in Resources */ = {isa = PBXBuildFile; fileRef = B59369E82A6701C700C3B9F2 /* arrow.usdz */; };
+		B5ABC2322ADFCFE4007082F8 /* ModelName.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ABC2312ADFCFE4007082F8 /* ModelName.swift */; };
+		B5ABC2342ADFD013007082F8 /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ABC2332ADFD013007082F8 /* Coordinates.swift */; };
 		B5D4D9522985AD940087489B /* ARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D4D9512985AD940087489B /* ARViewContainer.swift */; };
 		B5E680E229F6F53D00E98737 /* MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E680E129F6F53D00E98737 /* MultipeerSession.swift */; };
 /* End PBXBuildFile section */
@@ -96,6 +98,8 @@
 		B59369E32A66CBED00C3B9F2 /* GuideDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideDetailView.swift; sourceTree = "<group>"; };
 		B59369E52A66CBFD00C3B9F2 /* GuideListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideListView.swift; sourceTree = "<group>"; };
 		B59369E82A6701C700C3B9F2 /* arrow.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = arrow.usdz; sourceTree = "<group>"; };
+		B5ABC2312ADFCFE4007082F8 /* ModelName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelName.swift; sourceTree = "<group>"; };
+		B5ABC2332ADFD013007082F8 /* Coordinates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
 		B5D4D9512985AD940087489B /* ARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewContainer.swift; sourceTree = "<group>"; };
 		B5E680E129F6F53D00E98737 /* MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerSession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -186,11 +190,13 @@
 				B56CE57029BCC928007D092F /* Content.swift */,
 				B56CE57429BCC928007D092F /* ExtendedGuide.swift */,
 				B56CE57229BCC928007D092F /* Guide.swift */,
+				B5ABC2332ADFD013007082F8 /* Coordinates.swift */,
 				B56CE57329BCC928007D092F /* Instruction.swift */,
 				B56CE56D29BCC928007D092F /* ObjectStep.swift */,
 				B56CE57129BCC928007D092F /* Step.swift */,
 				B581CF252A6EC5800084DDB2 /* ExtendedGuideResponse.swift */,
 				B581CF272A6EC5930084DDB2 /* SimpleStep.swift */,
+				B5ABC2312ADFCFE4007082F8 /* ModelName.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -345,6 +351,7 @@
 				B59369D82A659C3E00C3B9F2 /* NetworkError.swift in Sources */,
 				B5537B6A2A0FABB7006F8102 /* ARView+Gestures.swift in Sources */,
 				B581CF2F2A7051A60084DDB2 /* GuideRowView.swift in Sources */,
+				B5ABC2322ADFCFE4007082F8 /* ModelName.swift in Sources */,
 				B581CF202A6E9F0E0084DDB2 /* SettingsLabelView.swift in Sources */,
 				B581CF282A6EC5930084DDB2 /* SimpleStep.swift in Sources */,
 				B5E680E229F6F53D00E98737 /* MultipeerSession.swift in Sources */,
@@ -365,6 +372,7 @@
 				B56CE57829BCC928007D092F /* Content.swift in Sources */,
 				B56CE57B29BCC928007D092F /* Instruction.swift in Sources */,
 				B56CE57C29BCC928007D092F /* ExtendedGuide.swift in Sources */,
+				B5ABC2342ADFD013007082F8 /* Coordinates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,7 +515,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -543,7 +551,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

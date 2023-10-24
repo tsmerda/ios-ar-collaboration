@@ -12,8 +12,8 @@ struct StepDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var viewModel: CollaborationViewModel
     
-    @State private var selectedStep: Int = 0
-    @State private var isConfirmed: Bool = false
+    //    @State private var selectedStep: Int = 0
+    //    @State private var isConfirmed: Bool = false
     
     let onNavigateAction: () -> Void
     
@@ -49,20 +49,26 @@ struct StepDetailView: View {
             
             List {
                 Section(header: Text("Tasks").foregroundColor(Color("disabledColor"))) {
-                    ForEach(0..<2) { step in
-                        HStack(spacing: 8) {
-                            Text("First, check that you have a screwdriver.")
-                                .foregroundColor(.white)
-                                .font(.system(size: 14))
+                    ForEach(viewModel.currentStep?.steps ?? [], id: \.id) { step in
+                        HStack(alignment: .top, spacing: 8) {
+                            LazyVStack(alignment: .leading, spacing: 12) {
+                                ForEach(step.contents ?? [], id: \.order) { content in
+                                    //                                TODO: -- az bude vracet BE
+                                    //                                    if content.contentType == .textblock {
+                                    Text(content.text ?? "")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 14))
+                                    //                                    }
+                                }
+                            }
+                            
                             
                             Spacer()
                             
-                            // TODO: - Pridat az bude hotovy BE vypis stepu podle confirmation
-                            if true {
-                                Image(systemName: "circle")
-                                    .font(.system(size: 24, weight: .light))
-                            } else {
-                                Image(systemName: "checkmark.circle")
+                            Button(action: {
+                                viewModel.toggleStepDone(step: step)
+                            }) {
+                                Image(systemName: (step.confirmation?.done ?? false) ? "checkmark.circle" : "circle")
                                     .foregroundColor(.accentColor)
                                     .font(.system(size: 24, weight: .light))
                             }
@@ -76,7 +82,7 @@ struct StepDetailView: View {
             .scrollContentBackground(.hidden)
             
             Spacer()
-                        
+            
             HStack {
                 Spacer()
                 

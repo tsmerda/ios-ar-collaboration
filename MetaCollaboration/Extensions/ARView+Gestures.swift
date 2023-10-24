@@ -99,6 +99,7 @@ extension ARView {
         //        }
     }
     
+    #if !targetEnvironment(simulator)
     func placeSceneObject(for anchor: ARObjectAnchor, _ viewModel: CollaborationViewModel) {
         //    TODO: Opravit nacitani usdz modelu ARROW
         //        guard let usdzModel = viewModel.usdzModel else {
@@ -109,7 +110,7 @@ extension ARView {
             let modelAnchor = AnchorEntity(anchor: anchor)
             
             // Create and add entity to newAnchor
-            //            let entity = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
+            // let entity = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
             guard let entity = try? Entity.load(named: "arrow") else {
                 print("Error: No model URL provided")
                 return
@@ -172,6 +173,7 @@ extension ARView {
             print("Error: Failed to load entity: \(error)")
         }
     }
+    #endif
 }
 
 //            // Create and add model to newAnchor

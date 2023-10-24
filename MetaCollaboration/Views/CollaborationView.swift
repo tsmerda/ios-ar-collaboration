@@ -13,52 +13,29 @@ struct CollaborationView: View {
     @EnvironmentObject var viewModel: CollaborationViewModel
     
     @State private var showStepSheet = false
-    @State private var showStepListSheet = true
+    @State private var showStepListSheet = false
     @State private var showConfirmationView = false
-    @State private var showImagePopup = false
+    //    @State private var showImagePopup = false
     
-    // TODO: - Pridat haptic feedback let hapticFeedback = UINotificationFeedbackGenerator()
     var body: some View {
         NavigationStack() {
             GeometryReader { geo in
                 ZStack {
                     VStack(spacing: 0) {
+                    #if !targetEnvironment(simulator)
                         ARViewContainer(showStepSheet: $showStepSheet)
                             .environmentObject(viewModel)
-                            .zIndex(1)
-                        //                        .id(viewModel.uniqueID)
+                        // .zIndex(1)
+                        // .id(viewModel.uniqueID)
                             .onAppear {
                                 viewModel.refreshCollaborationView()
                             }
+                    #endif
                     }
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            
-                            if viewModel.currentGuide?.imageUrl != nil {
-                                AsyncImage(url: URL(string: (viewModel.currentGuide?.imageUrl)!)){ image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                } placeholder: { Color("secondaryColor") }
-                                    .frame(width: 80, height: 80)
-                                    .cornerRadius(8)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 11)
-                                            .stroke(Color.accentColor, lineWidth: 1)
-                                    )
-                                    .padding()
-                                    .padding(.bottom, 160)
-                                    .onTapGesture {
-                                        showImagePopup.toggle()
-                                    }
-                            }
-                        }
-                    }
-                    
-                    if showImagePopup {
-                        ImagePopupView(showImagePopup: $showImagePopup, imageUrl: viewModel.currentGuide?.imageUrl ?? "")
+                }
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.showStepListSheet = true
                     }
                 }
                 .sheet(isPresented: $showStepSheet) {
@@ -73,10 +50,16 @@ struct CollaborationView: View {
                     .presentationDragIndicator(.automatic)
                 }
                 .fullScreenCover(isPresented: $showStepListSheet) {
-                    StepListView(guide: viewModel.currentGuide ?? nil, currentStepId: viewModel.currentStep?.id ?? "")
-                        .onDisappear {
+                    StepListView(
+                        guide: viewModel.currentGuide ?? nil,
+                        currentStepId: viewModel.currentStep?.id ?? "",
+                        onSelectStep: { viewModel.getStepById(viewModel.currentGuide?.id ?? "", $0) }
+                    )
+                    .onDisappear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             showStepSheet.toggle()
                         }
+                    }
                 }
                 .background(Color("backgroundColor")
                     .ignoresSafeArea(.all, edges: .all))
@@ -109,9 +92,38 @@ struct CollaborationView: View {
     }
 }
 
-@available(iOS 16.4, *)
 struct CollaborationView_Previews: PreviewProvider {
     static var previews: some View {
         CollaborationView().environmentObject(CollaborationViewModel())
     }
 }
+
+//                    VStack {
+//                        Spacer()
+//                        HStack {
+//                            Spacer()
+//
+//                            if viewModel.currentGuide?.imageUrl != nil {
+//                                AsyncImage(url: URL(string: (viewModel.currentGuide?.imageUrl)!)){ image in
+//                                    image
+//                                        .resizable()
+//                                        .aspectRatio(contentMode: .fill)
+//                                } placeholder: { Color("secondaryColor") }
+//                                    .frame(width: 80, height: 80)
+//                                    .cornerRadius(8)
+//                                    .overlay(
+//                                        RoundedRectangle(cornerRadius: 11)
+//                                            .stroke(Color.accentColor, lineWidth: 1)
+//                                    )
+//                                    .padding()
+//                                    .padding(.bottom, 160)
+//                                    .onTapGesture {
+//                                        showImagePopup.toggle()
+//                                    }
+//                            }
+//                        }
+//                    }
+
+//                    if showImagePopup {
+//                        ImagePopupView(showImagePopup: $showImagePopup, imageUrl: viewModel.currentGuide?.imageUrl ?? "")
+//                    }

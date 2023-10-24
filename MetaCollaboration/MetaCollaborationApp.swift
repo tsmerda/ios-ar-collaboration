@@ -8,7 +8,6 @@
 import SwiftUI
 
 @main
-@available(iOS 16.4, *)
 struct MetaCollaborationApp: App {
     var body: some Scene {
         WindowGroup {

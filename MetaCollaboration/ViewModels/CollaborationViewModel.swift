@@ -58,8 +58,9 @@ class CollaborationViewModel: ObservableObject {
         }
     }
     @Published var guideList: [Guide]?
+    // TODO: -- Example by mel byt tam kde se vola tento viewmodel pro debug
     @Published var currentGuide: ExtendedGuideResponse? = ExtendedGuideResponse.example
-    @Published var currentStep: ObjectStep?
+    @Published var currentStep: ObjectStep? = ObjectStep.example
     @Published var uniqueID = UUID()
     
     @Published private(set) var networkState: NetworkState = .na
@@ -82,6 +83,7 @@ class CollaborationViewModel: ObservableObject {
     
     // MARK: - Initialization
     
+    // TODO: -- fix init variables for testing and debuging
     init() {
         // Check downloaded guide saved in UserDefaults and add into currentGuide
         downloadedGuides = readGuidesFromJSON()
@@ -123,7 +125,27 @@ class CollaborationViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Network methods
+    func setCurrentGuideIfNeeded(guideId: String) {
+        getStepById(guideId, 1)
+        if currentStep != nil {
+            DispatchQueue.main.async {
+                self.setCurrentGuide(guideId)
+            }
+        } else {
+            debugPrint("Current step is nil.")
+        }
+    }
+    
+    func toggleStepDone(step: Step) {
+        if let index = currentStep?.steps?.firstIndex(where: { $0.id == step.id }) {
+            currentStep?.steps?[index].confirmation?.done.toggle()
+        }
+    }
+}
+
+// MARK: - Network methods
+
+extension CollaborationViewModel {
     
     // ========
     // In offline mode, client download all the ML and USDZ models within guides to be able to use an AR and collaborative experience
@@ -131,82 +153,82 @@ class CollaborationViewModel: ObservableObject {
     // ========
     
     // Get list of all guides
-    @MainActor
-    func getAllGuides() async {
-        self.networkState = .loading
-        self.hasError = false
-        
-        do {
-            self.guideList = try await NetworkManager.shared.getAllGuides()
-            self.networkState = .success
-        } catch {
-            self.networkState = .failed(error: error)
-            self.hasError = true
+    func getAllGuides() {
+        Task { @MainActor in
+            self.networkState = .loading
+            self.hasError = false
+            do {
+                self.guideList = try await NetworkManager.shared.getAllGuides()
+                self.networkState = .success
+            } catch {
+                self.networkState = .failed(error: error)
+                self.hasError = true
+            }
         }
     }
     
     // Get guide by ID
-    @MainActor
-    func getGuideById(id: String) async {
-        self.networkState = .loading
-        self.hasError = false
-        
-        do {
-            let guide = try await NetworkManager.shared.getGuideById(guideId: id)
-            downloadedGuides.append(guide)
-            // TODO: - nastavi se po spusteni daneho guide, kdy se vybere z downloadedGuides
-            // self.currentGuide = guide
-            
-            // TODO: - Implementovat stazeni vsech modelu, ktere jsou v danym <guide>
-            await self.getAssetByName(assetName: "r2d2")
-            
-            // Download all assets related to guide steps
-            //                if let objectSteps = value.objectSteps {
-            //                    for objectStep in objectSteps {
-            //                        if let objectName = objectStep.objectName {
-            //                            // Download models based on objectName from guideStep
-            //                            self.getAssetByName(assetName: objectName)
-            //                        }
-            //                    }
-            //                }
-            
-            self.networkState = .success
-        } catch {
-            self.networkState = .failed(error: error)
-            self.hasError = true
+    func getGuideById(id: String) {
+        Task { @MainActor in
+            self.networkState = .loading
+            self.hasError = false
+            do {
+                let guide = try await NetworkManager.shared.getGuideById(guideId: id)
+                downloadedGuides.append(guide)
+                
+                // TODO: - nastavi se po spusteni daneho guide, kdy se vybere z downloadedGuides
+                // self.currentGuide = guide
+                
+                // TODO: - Implementovat stazeni vsech modelu, ktere jsou v danym <guide>
+                self.getAssetByName(assetName: "r2d2")
+                
+                // Download all assets related to guide steps
+                //                if let objectSteps = value.objectSteps {
+                //                    for objectStep in objectSteps {
+                //                        if let objectName = objectStep.objectName {
+                //                            // Download models based on objectName from guideStep
+                //                            self.getAssetByName(assetName: objectName)
+                //                        }
+                //                    }
+                //                }
+                self.networkState = .success
+            } catch {
+                self.networkState = .failed(error: error)
+                self.hasError = true
+            }
         }
     }
     
-    @MainActor
-    func getStepById(_ guideId: String, _ objectStepOrder: Int) async {
-        self.networkState = .loading
-        self.hasError = false
-        
-        do {
-            self.currentStep = try await NetworkManager.shared.getStepById(guideId: guideId, objectStepOrder: objectStepOrder)
-            self.networkState = .success
-        } catch {
-            self.networkState = .failed(error: error)
-            self.hasError = true
+    func getStepById(_ guideId: String, _ objectStepOrder: Int) {
+        Task { @MainActor in
+            networkState = .loading
+            hasError = false
+            do {
+                currentStep = try await NetworkManager.shared.getStepById(guideId: guideId, objectStepOrder: objectStepOrder)
+                networkState = .success
+            } catch {
+                networkState = .failed(error: error)
+                hasError = true
+            }
         }
     }
     
     // Download asset by name
-    @MainActor
-    func getAssetByName(assetName: String) async {
-        self.networkState = .loading
-        self.hasError = false
-        
-        do {
-            let downloadedAsset = try await NetworkManager.shared.getAssetByName(assetName: assetName)
-            if !downloadedAssets.contains(downloadedAsset) {
-                downloadedAssets.append(downloadedAsset)
+    func getAssetByName(assetName: String) {
+        Task { @MainActor in
+            self.networkState = .loading
+            self.hasError = false
+            do {
+                let downloadedAsset = try await NetworkManager.shared.getAssetByName(assetName: assetName)
+                if !downloadedAssets.contains(downloadedAsset) {
+                    downloadedAssets.append(downloadedAsset)
+                }
+                
+                self.networkState = .success
+            } catch {
+                self.networkState = .failed(error: error)
+                self.hasError = true
             }
-            
-            self.networkState = .success
-        } catch {
-            self.networkState = .failed(error: error)
-            self.hasError = true
         }
     }
 }

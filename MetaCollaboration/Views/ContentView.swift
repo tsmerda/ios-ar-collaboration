@@ -31,11 +31,7 @@ struct ContentView: View {
         }
         // TODO: - Dalo by se vyuzit pouze neco jako networkState == .failed(error) ?
         .alert("Server Error", isPresented: $viewModel.hasError) {
-            Button("Retry") {
-                Task {
-                    await viewModel.getAllGuides()
-                }
-            }
+            Button("Retry") { viewModel.getAllGuides() }
         } message: {
             if case let .failed(error) = viewModel.networkState {
                 Text(error.localizedDescription)
@@ -44,7 +40,6 @@ struct ContentView: View {
     }
 }
 
-@available(iOS 16.4, *)
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()

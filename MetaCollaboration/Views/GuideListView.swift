@@ -10,7 +10,6 @@ import CoreML
 import Vision
 
 struct GuideListView: View {
-    
     @AppStorage("collaborationMode") var collaborationMode: Bool = false
     
     @EnvironmentObject var viewModel: CollaborationViewModel
@@ -24,22 +23,24 @@ struct GuideListView: View {
                 NavigationView {
                     VStack {
                         List {
+                            // TODO: -- vsechny guide.id osetrit
                             if let guideList = viewModel.guideList, !guideList.isEmpty {
-                                // array is not empty
                                 ForEach(guideList) { guide in
                                     NavigationLink(destination: GuideDetailView(guide: guide, downloadedGuide: viewModel.downloadedGuideById(guide.id!), onGetGuideAction: {
-                                        Task {
-                                            await viewModel.getGuideById(id: guide.id!)
-                                        }
-                                        
-                                    }, onSetCurrentGuideAction: {
-                                        Task {
-                                            await viewModel.getStepById(guide.id!, 1)
-                                            if viewModel.currentStep != nil {
-                                                viewModel.setCurrentGuide(guide.id!)
-                                                collaborationMode = true
+                                            if let guideId = guide.id {
+                                                viewModel.getGuideById(id: guideId)
+                                            } else {
+                                                debugPrint("Guide id is nil.")
                                             }
-                                        }
+                                    }, onSetCurrentGuideAction: {
+                                        if let guideId = guide.id {
+                                                Task {
+                                                    viewModel.setCurrentGuideIfNeeded(guideId: guideId)
+                                                    collaborationMode = viewModel.currentStep != nil
+                                                }
+                                            } else {
+                                                debugPrint("Set up collaboration view error.")
+                                            }
                                     })) {
                                         GuideRowView(guide: guide, isDownloaded: viewModel.isGuideIdDownloaded(guide.id!))
                                     }
@@ -47,7 +48,6 @@ struct GuideListView: View {
                                     .listRowBackground(Color("secondaryColor"))
                                 }
                             } else {
-                                // array is empty or nil
                                 HStack {
                                     Spacer()
                                     Text("No dataset available")
@@ -73,12 +73,8 @@ struct GuideListView: View {
                             }
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: {
-                                // Refresh guides
-                                Task {
-                                    await viewModel.getAllGuides()
-                                }
-                            }) {
+                            // Refresh guides
+                            Button(action: { viewModel.getAllGuides() }) {
                                 Image(systemName: "arrow.triangle.2.circlepath")
                                     .foregroundColor(.accentColor)
                             }
@@ -89,12 +85,10 @@ struct GuideListView: View {
                 LoadingView()
             default:
                 EmptyView()
-            }
-            
-            
+            }  
         }
-        .task {
-            await viewModel.getAllGuides()
+        .onAppear {
+            viewModel.getAllGuides()
         }
         .sheet(isPresented: $isShowingSettings) {
             SettingsView()

@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct StepListView: View {
-    
     let guide: ExtendedGuideResponse?
     let currentStepId: String
+    let onSelectStep: (Int) -> Void
     
     @State private var selection: String? = ""
     
@@ -46,13 +46,17 @@ struct StepListView: View {
                 }
                 .padding(6)
                 .listRowBackground(selection == step.id ? Color.accentColor.opacity(0.1) : Color.clear)
+                .onTapGesture {
+                    onSelectStep(step.order ?? 1)
+                    selection = step.id
+                }
             }
             .scrollContentBackground(.hidden)
             
             HStack {
                 Spacer()
                 
-                Text("Click continue to show guide info & collaboration, click arrow back to show previous step or exit this guide")
+                Text("Click continue to show guide info & collaboration or exit this guide")
                     .font(.system(size: 13).bold())
                     .foregroundColor(.accentColor)
                     .multilineTextAlignment(.center)
@@ -74,18 +78,6 @@ struct StepListView: View {
                 
                 Spacer()
                 
-                Button(action: {
-                    //                TODO: - previous selection
-                    //                    selection = "63ef73307b425e2daf8c9081"
-                }) {
-                    Image(systemName: "arrow.left")
-                        .imageScale(.large)
-                }
-                .buttonStyle(ButtonStyledFill())
-                .frame(width: 80)
-                
-                Spacer()
-                
                 Button("Continue") {
                     self.presentationMode.wrappedValue.dismiss()
                 }
@@ -95,7 +87,10 @@ struct StepListView: View {
             .padding(EdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16))
         }
         .onAppear {
-            selection = currentStepId
+            selection = guide?.objectSteps?.first?.id
+            // TODO: -- Nastavit selection podle currentStepId az se bude vracet spravne z BE
+            // selection = currentStepId
+
         }
         .navigationTitle("Step list")
         .navigationBarTitleDisplayMode(.large)
@@ -109,6 +104,6 @@ struct StepListView: View {
 
 struct StepListView_Previews: PreviewProvider {
     static var previews: some View {
-        StepListView(guide: ExtendedGuideResponse(name: "Name", guideType: .tutorial, objectSteps: SimpleStep.exampleArray), currentStepId: SimpleStep.example.id ?? "")
+        StepListView(guide: ExtendedGuideResponse(name: "Name", guideType: .tutorial, objectSteps: SimpleStep.exampleArray), currentStepId: SimpleStep.example.id, onSelectStep: { _ in })
     }
 }

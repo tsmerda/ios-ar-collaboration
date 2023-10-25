@@ -9,7 +9,7 @@ import Foundation
 
 
 
-public struct Guide: Identifiable, Codable {
+public struct Guide: Hashable, Identifiable, Codable {
     
     public enum GuideType: String, Codable {
         case manual = "manual"

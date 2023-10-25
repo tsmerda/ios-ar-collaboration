@@ -1,14 +1,13 @@
 //
-//  CollaborationViewModel+Guides.swift
+//  GuideListViewModel+Guides.swift
 //  MetaCollaboration
 //
-//  Created by Tomáš Šmerda on 24.07.2023.
+//  Created by Tomáš Šmerda on 25.10.2023.
 //
 
 import Foundation
 
-extension CollaborationViewModel {
-    
+extension GuideListViewModel {
     func guidesJSONExists() -> Bool {
         let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(jsonDataFile)
         return FileManager.default.fileExists(atPath: fileURL.path)
@@ -56,5 +55,4 @@ extension CollaborationViewModel {
             }
         }
     }
-    
 }

@@ -22,7 +22,7 @@ extension ARView {
     var collaborationViewModel: CollaborationViewModel {
         get {
             guard let viewModel = objc_getAssociatedObject(self, &AssociatedKeys.collaborationViewModel) as? CollaborationViewModel else {
-                let viewModel = CollaborationViewModel()
+                let viewModel = CollaborationViewModel(referenceObjects: [])
                 objc_setAssociatedObject(self, &AssociatedKeys.collaborationViewModel, viewModel, .OBJC_ASSOCIATION_RETAIN)
                 return viewModel
             }

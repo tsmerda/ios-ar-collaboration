@@ -1,14 +1,14 @@
 //
-//  CollaborationViewModel+Assets.swift
+//  GuideListViewModel+Assets.swift
 //  MetaCollaboration
 //
-//  Created by Tomáš Šmerda on 07.08.2023.
+//  Created by Tomáš Šmerda on 25.10.2023.
 //
 
 import Foundation
 import ARKit
 
-extension CollaborationViewModel {
+extension GuideListViewModel {
     
     func loadReferenceObjects(_ assetName: String) {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!

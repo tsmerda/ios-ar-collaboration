@@ -8,8 +8,16 @@
 import SwiftUI
 
 struct GuideRowView: View {
-    let guide: Guide
-    var isDownloaded: Bool
+    private let guide: Guide
+    private var isDownloaded: Bool
+    
+    init(
+        guide: Guide,
+        isDownloaded: Bool
+    ) {
+        self.guide = guide
+        self.isDownloaded = isDownloaded
+    }
     
     var body: some View {
         HStack(spacing: 6) {
@@ -23,7 +31,6 @@ struct GuideRowView: View {
                     .foregroundColor(Color("disabledColor"))
                     .multilineTextAlignment(.leading)
             }
-            
             if isDownloaded {
                 Image(systemName: "play")
                     .font(.system(size: 24, weight: .light))
@@ -33,7 +40,6 @@ struct GuideRowView: View {
                     .font(.system(size: 24, weight: .light))
                     .foregroundColor(.accentColor)
             }
-            
             Spacer()
         }
         .padding(2)
@@ -43,6 +49,12 @@ struct GuideRowView: View {
 
 struct GuideRowView_Previews: PreviewProvider {
     static var previews: some View {
-        GuideRowView(guide: Guide(name: "Guide", guideType: .manual), isDownloaded: false)
+        GuideRowView(
+            guide: Guide(
+                name: "Guide",
+                guideType: .manual
+            ),
+            isDownloaded: false
+        )
     }
 }

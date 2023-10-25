@@ -8,35 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
-    @AppStorage("appMode") var appMode: ActiveAppMode = .none
-    @AppStorage("collaborationMode") var collaborationMode: Bool = false
-    
-    @StateObject var viewModel = CollaborationViewModel()
-    
-    init() {
-        collaborationMode = false
-    }
+//    @AppStorage("appMode") var appMode: ActiveAppMode = .none
+//    @AppStorage("collaborationMode") var collaborationMode: Bool = false
+//    
+//    init() {
+//        collaborationMode = false
+//    }
     
     var body: some View {
         ZStack {
-            if appMode == .none {
-                ChooseModeView()
-            } else if !collaborationMode {
-                GuideListView()
-                    .environmentObject(viewModel)
-            } else {
-                CollaborationView()
-                    .environmentObject(viewModel)
-            }
+            // TODO: -- Future implementation ChooseModeView()
+//            if appMode == .none {
+//                ChooseModeView()
+//            } else {
+//                GuideListView()
+//            }
         }
-        // TODO: - Dalo by se vyuzit pouze neco jako networkState == .failed(error) ?
-        .alert("Server Error", isPresented: $viewModel.hasError) {
-            Button("Retry") { viewModel.getAllGuides() }
-        } message: {
-            if case let .failed(error) = viewModel.networkState {
-                Text(error.localizedDescription)
-            }
-        }
+//        .alert("Server Error", isPresented: $viewModel.hasError) {
+//            Button("Retry") { viewModel.getAllGuides() }
+//        } message: {
+//            if case let .failed(error) = viewModel.networkState {
+//                Text(error.localizedDescription)
+//            }
+//        }
     }
 }
 

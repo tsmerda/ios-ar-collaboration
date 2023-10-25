@@ -11,7 +11,7 @@ import SwiftUI
 struct MetaCollaborationApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GuideListView(viewModel: GuideListViewModel())
         }
     }
 }

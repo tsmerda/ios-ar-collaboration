@@ -8,94 +8,106 @@
 import SwiftUI
 
 struct CollaborationView: View {
-    @AppStorage("collaborationMode") var collaborationMode: Bool = false
+    @StateObject private var viewModel: CollaborationViewModel
     
-    @EnvironmentObject var viewModel: CollaborationViewModel
+    @Environment(\.dismiss) private var dismiss
     
-    @State private var showStepSheet = false
-    @State private var showStepListSheet = false
-    @State private var showConfirmationView = false
+    @State private var showStepSheet: Bool = false
+    @State private var showStepListSheet: Bool = true
+    @State private var showConfirmationView: Bool = false
     //    @State private var showImagePopup = false
     
+    private let progressHudBinding: ProgressHudBinding
+    
+    init(viewModel: CollaborationViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+        self.progressHudBinding = ProgressHudBinding(state: viewModel.$progressHudState)
+    }
+    
     var body: some View {
-        NavigationStack() {
-            GeometryReader { geo in
-                ZStack {
-                    VStack(spacing: 0) {
-                    #if !targetEnvironment(simulator)
-                        ARViewContainer(showStepSheet: $showStepSheet)
-                            .environmentObject(viewModel)
-                        // .zIndex(1)
-                        // .id(viewModel.uniqueID)
-                            .onAppear {
-                                viewModel.refreshCollaborationView()
-                            }
-                    #endif
-                    }
+        GeometryReader { geo in
+            ZStack {
+                VStack(spacing: 0) {
+#if !targetEnvironment(simulator)
+                    ARViewContainer(showStepSheet: $showStepSheet)
+                        .environmentObject(viewModel)
+                    // .zIndex(1)
+                    // .id(viewModel.uniqueID)
+                    // .onAppear {
+                    //   viewModel.refreshCollaborationView()
+                    // }
+#endif
                 }
-                .onAppear {
+            }
+            .sheet(isPresented: $showStepSheet) {
+                StepDetailView(onNavigateAction: {
+                    showStepSheet.toggle()
+                    showConfirmationView.toggle()
+                })
+                .environmentObject(viewModel)
+                .presentationDetents([.height(160), .medium])
+                .presentationBackgroundInteraction(.enabled(upThrough: .medium))
+                .interactiveDismissDisabled()
+                .presentationDragIndicator(.automatic)
+            }
+            .fullScreenCover(isPresented: $showStepListSheet) {
+                StepListView(
+                    guide: viewModel.currentGuide ?? nil,
+                    currentStepId: viewModel.currentStep?.id ?? "",
+                    onSelectStep: { viewModel.getStepById(viewModel.currentGuide?.id ?? "", $0) }
+                )
+                .onDisappear {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.showStepListSheet = true
+                        showStepSheet.toggle()
                     }
                 }
-                .sheet(isPresented: $showStepSheet) {
-                    StepDetailView(onNavigateAction: {
-                        showStepSheet.toggle()
-                        showConfirmationView.toggle()
-                    })
-                    .environmentObject(viewModel)
-                    .presentationDetents([.height(160), .medium])
-                    .presentationBackgroundInteraction(.enabled(upThrough: .medium))
-                    .interactiveDismissDisabled()
-                    .presentationDragIndicator(.automatic)
+            }
+            .background(Color("backgroundColor")
+                .ignoresSafeArea(.all, edges: .all))
+            .navigationTitle(viewModel.currentGuide?.name ?? "Upgrading old Prusa MK2s.")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(Color("backgroundColor"), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "xmark")
+                            .foregroundColor(.accentColor)
+                    }
                 }
-                .fullScreenCover(isPresented: $showStepListSheet) {
-                    StepListView(
-                        guide: viewModel.currentGuide ?? nil,
-                        currentStepId: viewModel.currentStep?.id ?? "",
-                        onSelectStep: { viewModel.getStepById(viewModel.currentGuide?.id ?? "", $0) }
-                    )
-                    .onDisappear {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        showStepSheet.toggle()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            showStepSheet.toggle()
+                            showStepListSheet.toggle()
                         }
-                    }
-                }
-                .background(Color("backgroundColor")
-                    .ignoresSafeArea(.all, edges: .all))
-                .navigationTitle(viewModel.currentGuide?.name ?? "Upgrading old Prusa MK2s.")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbarColorScheme(.dark, for: .navigationBar)
-                .toolbarBackground(Color("backgroundColor"), for: .navigationBar)
-                .toolbarBackground(.visible, for: .navigationBar)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            showStepSheet.toggle()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                showStepListSheet.toggle()
-                            }
-                        }) {
-                            Image(systemName: "text.badge.checkmark")
-                                .foregroundColor(.accentColor)
-                        }
+                    }) {
+                        Image(systemName: "text.badge.checkmark")
+                            .foregroundColor(.accentColor)
                     }
                 }
             }
-            .navigationDestination(isPresented: $showConfirmationView) {
-                ConfirmationView(guide: viewModel.currentGuide ?? nil)
-                    .onDisappear {
-                        showStepSheet.toggle()
-                    }
-            }
+        }
+        .navigationDestination(isPresented: $showConfirmationView) {
+            ConfirmationView(guide: viewModel.currentGuide ?? nil)
+                .onDisappear {
+                    showStepSheet.toggle()
+                }
         }
     }
 }
 
-struct CollaborationView_Previews: PreviewProvider {
-    static var previews: some View {
-        CollaborationView().environmentObject(CollaborationViewModel())
-    }
+#Preview {
+    CollaborationView(
+        viewModel: CollaborationViewModel(
+            currentGuide: ExtendedGuideResponse.example,
+            referenceObjects: []
+        )
+    )
 }
 
 //                    VStack {

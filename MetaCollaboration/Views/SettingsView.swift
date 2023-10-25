@@ -9,8 +9,12 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var viewModel: CollaborationViewModel
-    @AppStorage("appMode") var appMode: ActiveAppMode = .none
+//    @AppStorage("appMode") var appMode: ActiveAppMode = .none
+    @StateObject private var viewModel: SettingsViewModel
+    
+    init(viewModel: SettingsViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         NavigationView {
@@ -63,13 +67,13 @@ struct SettingsView: View {
                             Text("Online mode activated")
                                 .foregroundColor(.gray)
                             Spacer()
-                            if appMode == .onlineMode {
+//                            if appMode == .onlineMode {
                                 Image(systemName: "circle.inset.filled")
                                     .foregroundColor(.accentColor)
-                            } else {
-                                Image(systemName: "circle")
-                                    .foregroundColor(.accentColor)
-                            }
+//                            } else {
+//                                Image(systemName: "circle")
+//                                    .foregroundColor(.accentColor)
+//                            }
                         }
                         
                         Divider().padding(.vertical, 4)
@@ -78,13 +82,13 @@ struct SettingsView: View {
                             Text("Offline mode activated")
                                 .foregroundColor(.gray)
                             Spacer()
-                            if appMode == .offlineMode {
-                                Image(systemName: "circle.inset.filled")
-                                    .foregroundColor(.accentColor)
-                            } else {
+//                            if appMode == .offlineMode {
+//                                Image(systemName: "circle.inset.filled")
+//                                    .foregroundColor(.accentColor)
+//                            } else {
                                 Image(systemName: "circle")
                                     .foregroundColor(.accentColor)
-                            }
+//                            }
                         }
                         
                         Divider().padding(.vertical, 4)
@@ -97,7 +101,7 @@ struct SettingsView: View {
                             .multilineTextAlignment(.leading)
                         
                         Button(action: {
-                            viewModel.removeAllFromLocalStorage()
+                            viewModel.removeAllFromLocalStorageAction()
                         }) {
                             Text("Remove all")
                                 .fontWeight(.bold)
@@ -132,7 +136,11 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView()
-            .environmentObject(CollaborationViewModel())
+        SettingsView(
+            viewModel: SettingsViewModel(
+                removeAllFromLocalStorage: {},
+                downloadedAssets: []
+            )
+        )
     }
 }

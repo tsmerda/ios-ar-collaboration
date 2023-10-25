@@ -10,96 +10,136 @@ import CoreML
 import Vision
 
 struct GuideListView: View {
-    @AppStorage("collaborationMode") var collaborationMode: Bool = false
-    
-    @EnvironmentObject var viewModel: CollaborationViewModel
-    
+    @StateObject private var viewModel: GuideListViewModel
     @State private var isShowingSettings: Bool = false
+    @State private var showCollaborationView: Bool = false
+    private let progressHudBinding: ProgressHudBinding
+    
+    init(viewModel: GuideListViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+        self.progressHudBinding = ProgressHudBinding(state: viewModel.$progressHudState)
+    }
     
     var body: some View {
-        ZStack {
-            switch viewModel.networkState {
-            case .success:
-                NavigationView {
-                    VStack {
-                        List {
-                            // TODO: -- vsechny guide.id osetrit
-                            if let guideList = viewModel.guideList, !guideList.isEmpty {
-                                ForEach(guideList) { guide in
-                                    NavigationLink(destination: GuideDetailView(guide: guide, downloadedGuide: viewModel.downloadedGuideById(guide.id!), onGetGuideAction: {
-                                            if let guideId = guide.id {
-                                                viewModel.getGuideById(id: guideId)
-                                            } else {
-                                                debugPrint("Guide id is nil.")
-                                            }
-                                    }, onSetCurrentGuideAction: {
-                                        if let guideId = guide.id {
-                                                Task {
-                                                    viewModel.setCurrentGuideIfNeeded(guideId: guideId)
-                                                    collaborationMode = viewModel.currentStep != nil
-                                                }
-                                            } else {
-                                                debugPrint("Set up collaboration view error.")
-                                            }
-                                    })) {
-                                        GuideRowView(guide: guide, isDownloaded: viewModel.isGuideIdDownloaded(guide.id!))
-                                    }
-                                    .foregroundColor(.accentColor)
-                                    .listRowBackground(Color("secondaryColor"))
-                                }
+        NavigationStack {
+            VStack {
+                guideList
+                Spacer()
+            }
+            .background(Color("backgroundColor")
+                .ignoresSafeArea(.all, edges: .all))
+            .navigationTitle("Guides")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    settingsButton
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    refreshGuidesButton
+                }
+            }
+            .navigationDestination(for: Guide.self) { guide in
+                GuideDetailView(
+                    viewModel: GuideDetailViewModel(
+                        guide: guide,
+                        downloadedGuide: viewModel.downloadedGuideById(guide.id),
+                        onGetGuide: {
+                            if let guideId = guide.id {
+                                viewModel.getGuideById(id: guideId)
                             } else {
-                                HStack {
-                                    Spacer()
-                                    Text("No dataset available")
-                                        .foregroundColor(.black)
-                                        .font(.callout)
-                                    Spacer()
-                                }
+                                debugPrint("Guide id is nil.")
+                            }
+                        },
+                        onSetCurrentGuide: {
+                            if let guideId = guide.id {
+                                viewModel.setCurrentGuide(guideId)
+                                showCollaborationView.toggle()
+                            } else {
+                                debugPrint("Set up collaboration view error.")
                             }
                         }
-                        .scrollContentBackground(.hidden)
-                        
-                        Spacer()
-                    }
-                    .background(Color("backgroundColor")
-                        .ignoresSafeArea(.all, edges: .all))
-                    .navigationTitle("Guides")
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button(action: {
-                                isShowingSettings = true
-                            }) {
-                                Image(systemName: "slider.horizontal.3")
-                            }
-                        }
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            // Refresh guides
-                            Button(action: { viewModel.getAllGuides() }) {
-                                Image(systemName: "arrow.triangle.2.circlepath")
-                                    .foregroundColor(.accentColor)
-                            }
-                        }
+                    )
+                )
+            }
+            // TODO: -- fix this to deinitialize CollaborationView
+            .navigationDestination(isPresented: $showCollaborationView) {
+                if let currentGuide = viewModel.currentGuide {
+                    CollaborationView(
+                        viewModel: CollaborationViewModel(
+                            currentGuide: currentGuide,
+                            referenceObjects: viewModel.referenceObjects
+                        )
+                    )
+                    .onDisappear {
+                        // Deinitialize CollaborationViewModel
+                        debugPrint("CollaborationView disappear")
+                        viewModel.currentGuide = nil
                     }
                 }
-            case .loading:
-                LoadingView()
-            default:
-                EmptyView()
-            }  
+            }
         }
         .onAppear {
             viewModel.getAllGuides()
         }
         .sheet(isPresented: $isShowingSettings) {
-            SettingsView()
-                .environmentObject(viewModel)
+            settingsView
         }
     }
 }
 
-struct GuideListView_Previews: PreviewProvider {
-    static var previews: some View {
-        GuideListView()
-            .environmentObject(CollaborationViewModel())
+private extension GuideListView {
+    var guideList: some View {
+        List {
+            if let guideList = viewModel.guideList, !guideList.isEmpty {
+                ForEach(guideList) { guide in
+                    NavigationLink(value: guide) {
+                        GuideRowView(
+                            guide: guide,
+                            isDownloaded: viewModel.isGuideIdDownloaded(guide.id)
+                        )
+                    }
+                    .foregroundColor(.accentColor)
+                    .listRowBackground(Color("secondaryColor"))
+                }
+            } else {
+                HStack {
+                    Spacer()
+                    Text("No dataset available")
+                        .foregroundColor(.black)
+                        .font(.callout)
+                    Spacer()
+                }
+            }
+        }
+        .scrollContentBackground(.hidden)
     }
+    var settingsButton: some View {
+        Button(action: {
+            isShowingSettings = true
+        }) {
+            Image(systemName: "slider.horizontal.3")
+        }
+    }
+    var refreshGuidesButton: some View {
+        Button(action: { viewModel.getAllGuides() }) {
+            Image(systemName: "arrow.triangle.2.circlepath")
+                .foregroundColor(.accentColor)
+        }
+    }
+    var loadingView: LoadingView {
+        LoadingView()
+    }
+    var settingsView: SettingsView {
+        let viewModel = SettingsViewModel(
+            removeAllFromLocalStorage: viewModel.removeAllFromLocalStorage,
+            downloadedAssets: viewModel.downloadedAssets
+        )
+        return SettingsView(viewModel: viewModel)
+    }
+    var emptyView: EmptyView {
+        EmptyView()
+    }
+}
+
+#Preview {
+    GuideListView(viewModel: GuideListViewModel())
 }

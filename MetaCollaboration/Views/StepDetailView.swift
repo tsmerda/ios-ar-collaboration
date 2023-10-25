@@ -101,6 +101,6 @@ struct StepDetailView: View {
 
 struct StepDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        StepDetailView(onNavigateAction: {}).environmentObject(CollaborationViewModel())
+        StepDetailView(onNavigateAction: {})
     }
 }

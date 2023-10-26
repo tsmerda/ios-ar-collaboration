@@ -18,9 +18,9 @@ struct ChooseModeView: View {
     @State private var selectedMode: SelectedMode = .none
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            
+        VStack(alignment: .center, spacing: 0) {
             Text("Please select the required mode")
+                .multilineTextAlignment(.center)
                 .font(.system(size: 32).bold())
                 .foregroundColor(.white)
                 .padding(.vertical, 32)
@@ -44,46 +44,39 @@ struct ChooseModeView: View {
             
             HStack(spacing: 24) {
                 Spacer()
-                
                 Button(action: {
                     selectedMode = .online
                 }) {
                     ModeSquareView(mode: .online, isSelected: selectedMode == .online)
                 }
                 .disabled(true)
-                
                 Button(action: {
                     selectedMode = .offline
                 }) {
                     ModeSquareView(mode: .offline, isSelected: selectedMode == .offline)
                 }
-                
                 Spacer()
-                
             }
             
             Spacer()
             
             HStack {
                 Spacer()
-                
                 Button("Choose mode") {
                     appMode = selectedMode == .online ? .onlineMode : .offlineMode
                 }
+                .disabled(selectedMode == .none)
                 .buttonStyle(ButtonStyledFill())
                 .padding(.bottom, 40)
-                
                 Spacer()
             }
             
         }
-        .padding(16)
+        .padding()
         .background(Color("backgroundColor"))
     }
 }
 
-struct ChooseModeView_Previews: PreviewProvider {
-    static var previews: some View {
-        ChooseModeView()
-    }
+#Preview {
+    ChooseModeView()
 }

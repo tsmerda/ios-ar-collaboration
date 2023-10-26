@@ -14,17 +14,18 @@ struct SettingsLabelView: View {
     
     var body: some View {
         HStack {
-            Text(labelText.uppercased())
+            Text(labelText)
                 .fontWeight(.bold)
             Spacer()
             Image(systemName: labelImage)
+                .fontWeight(.regular)
         }
     }
 }
 
 struct SettingsLabelView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsLabelView(labelText: "Fructus", labelImage: "info.circle")
+        SettingsLabelView(labelText: "Info", labelImage: "info.circle")
             .previewLayout(.sizeThatFits)
             .padding()
     }

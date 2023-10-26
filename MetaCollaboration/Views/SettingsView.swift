@@ -21,6 +21,7 @@ struct SettingsView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 20) {
                     appDescriptionView
+                    appAuthorView
                     appDetailedInfoView
                     appCustomizationView
                 }
@@ -63,18 +64,45 @@ private extension SettingsView {
         }
         .backgroundStyle(Color("secondaryColor"))
     }
+    var appAuthorView: some View {
+        GroupBox(
+            label:
+                SettingsLabelView(labelText: "Author", labelImage: "person")
+        ) {
+            Divider().padding(.vertical, 4)
+            
+            HStack(alignment: .center, spacing: 10) {
+                Image("author")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 40, height: 40)
+                    .clipShape(Circle())
+                VStack(alignment: .leading) {
+                    Text("Tomáš Šmerda")
+                        .foregroundColor(.gray)
+                        .bold()
+                    HStack {
+                        Text("LinkedIn")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        Link("tomas-smerda", destination: URL(string: "https://linkedin.com/in/tomas-smerda")!)
+                        Image(systemName: "arrow.up.right.square")
+                            .foregroundColor(.pink)
+                    }
+                }
+            }
+        }
+        .backgroundStyle(Color("secondaryColor"))
+    }
     var appDetailedInfoView: some View {
         GroupBox(
             label:
                 SettingsLabelView(labelText: "Application", labelImage: "apps.iphone")
         ) {
-            SettingsRowView(name: "Developer", content: "Tomáš Šmerda")
-            SettingsRowView(name: "Designer", content: "Tomáš Šmerda")
             SettingsRowView(name: "Compatibility", content: "iOS 16")
             SettingsRowView(name: "SwiftUI", content: "4.0")
             SettingsRowView(name: "Website", linkLabel: "Spatial Hub @ MENDELU", linkDestination: "spatialhub.mendelu.cz")
-            SettingsRowView(name: "LinkedIn", linkLabel: "tomas-smerda-708a1b1a1", linkDestination: "linkedin.com/in/tomas-smerda-708a1b1a1")
-            SettingsRowView(name: "Version", content: "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)")
+            SettingsRowView(name: "App version", content: "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)")
         }
         .backgroundStyle(Color("secondaryColor"))
     }

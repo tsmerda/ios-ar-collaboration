@@ -27,7 +27,11 @@ class NetworkManager: NetworkManagerProtocol {
             throw NetworkError.invalidURL
         }
         
-        let (data, response) = try await URLSession.shared.data(from: url)
+        // Wait for network access permission
+        let config = URLSession.shared.configuration
+        config.waitsForConnectivity = true
+        
+        let (data, response) = try await URLSession(configuration: config).data(from: url)
         print(String(decoding: data, as: UTF8.self))
         
         guard (response as? HTTPURLResponse)?.statusCode == 200 else {

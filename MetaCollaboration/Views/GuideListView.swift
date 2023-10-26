@@ -6,13 +6,11 @@
 //
 
 import SwiftUI
-import CoreML
-import Vision
 
 struct GuideListView: View {
     @StateObject private var viewModel: GuideListViewModel
     @State private var isShowingSettings: Bool = false
-    @State private var showCollaborationView: Bool = false
+    @State private var path = NavigationPath()
     private let progressHudBinding: ProgressHudBinding
     
     init(viewModel: GuideListViewModel) {
@@ -21,7 +19,7 @@ struct GuideListView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             VStack {
                 guideList
                 Spacer()
@@ -41,41 +39,27 @@ struct GuideListView: View {
                 GuideDetailView(
                     viewModel: GuideDetailViewModel(
                         guide: guide,
-                        downloadedGuide: viewModel.downloadedGuideById(guide.id),
-                        onGetGuide: {
-                            if let guideId = guide.id {
-                                viewModel.getGuideById(id: guideId)
-                            } else {
-                                debugPrint("Guide id is nil.")
-                            }
-                        },
-                        onSetCurrentGuide: {
-                            if let guideId = guide.id {
-                                viewModel.setCurrentGuide(guideId)
-                                showCollaborationView.toggle()
-                            } else {
-                                debugPrint("Set up collaboration view error.")
-                            }
-                        }
+                        downloadedGuides: viewModel.downloadedGuides,
+                        onDownloadGuide: { viewModel.downloadedGuides.append($0) }
                     )
                 )
             }
             // TODO: -- fix this to deinitialize CollaborationView
-            .navigationDestination(isPresented: $showCollaborationView) {
-                if let currentGuide = viewModel.currentGuide {
-                    CollaborationView(
-                        viewModel: CollaborationViewModel(
-                            currentGuide: currentGuide,
-                            referenceObjects: viewModel.referenceObjects
-                        )
-                    )
-                    .onDisappear {
-                        // Deinitialize CollaborationViewModel
-                        debugPrint("CollaborationView disappear")
-                        viewModel.currentGuide = nil
-                    }
-                }
-            }
+            //            .navigationDestination(isPresented: $showCollaborationView) {
+            //                if let currentGuide = viewModel.currentGuide {
+            //                    CollaborationView(
+            //                        viewModel: CollaborationViewModel(
+            //                            currentGuide: currentGuide,
+            //                            referenceObjects: viewModel.referenceObjects
+            //                        )
+            //                    )
+            //                    .onDisappear {
+            //                        // Deinitialize CollaborationViewModel
+            //                        debugPrint("CollaborationView disappear")
+            //                        viewModel.currentGuide = nil
+            //                    }
+            //                }
+            //            }
         }
         .onAppear {
             viewModel.getAllGuides()
@@ -130,8 +114,7 @@ private extension GuideListView {
     }
     var settingsView: SettingsView {
         let viewModel = SettingsViewModel(
-            removeAllFromLocalStorage: viewModel.removeAllFromLocalStorage,
-            downloadedAssets: viewModel.downloadedAssets
+            removeAllFromLocalStorage: viewModel.removeAllFromLocalStorage
         )
         return SettingsView(viewModel: viewModel)
     }

@@ -30,8 +30,8 @@ final class CollaborationViewModel: ObservableObject {
     @Published var referenceObjects = Set<ARReferenceObject>()
     @Published var currentStep: ObjectStep? /*= ObjectStep.example*/
     @Published var currentGuide: ExtendedGuideResponse?
-//    @Published var uniqueID = UUID()
-        
+    //    @Published var uniqueID = UUID()
+    
     // MARK: Collaboration properties
     
     @Published var arView: ARView!
@@ -52,8 +52,7 @@ final class CollaborationViewModel: ObservableObject {
     ) {
         self.currentGuide = currentGuide
         self.referenceObjects = referenceObjects
-        print("__TED__")
-        print(referenceObjects)
+        debugPrint(referenceObjects)
     }
     
     deinit {
@@ -61,10 +60,10 @@ final class CollaborationViewModel: ObservableObject {
     }
     
     // MARK: - Public Methods
-//    func refreshCollaborationView() {
-        // TODO: - Opravit nastaveni UUID() -> zpusobovalo seknuti pri prejiti na ARView
-        //        self.uniqueID = UUID()
-//    }
+    //    func refreshCollaborationView() {
+    // TODO: - Opravit nastaveni UUID() -> zpusobovalo seknuti pri prejiti na ARView
+    //        self.uniqueID = UUID()
+    //    }
     
     func toggleStepDone(step: Step) {
         if let index = currentStep?.steps?.firstIndex(where: { $0.id == step.id }) {

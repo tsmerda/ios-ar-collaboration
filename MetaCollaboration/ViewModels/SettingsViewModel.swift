@@ -9,14 +9,9 @@ import Foundation
 
 final class SettingsViewModel: ObservableObject {
     private let removeAllFromLocalStorage: () -> Void
-    @Published var downloadedAssets: [String] = []
     
-    init(
-        removeAllFromLocalStorage: @escaping () -> Void,
-        downloadedAssets: [String]
-    ) {
+    init(removeAllFromLocalStorage: @escaping () -> Void) {
         self.removeAllFromLocalStorage = removeAllFromLocalStorage
-        self.downloadedAssets = downloadedAssets
     }
     
     func removeAllFromLocalStorageAction() {

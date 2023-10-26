@@ -10,9 +10,12 @@ import SwiftUI
 struct GuideDetailView: View {
     @StateObject private var viewModel: GuideDetailViewModel
     @Environment(\.dismiss) private var dismiss
+    //    @Binding var path: NavigationPath
+    private let progressHudBinding: ProgressHudBinding
     
     init(viewModel: GuideDetailViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
+        self.progressHudBinding = ProgressHudBinding(state: viewModel.$progressHudState)
     }
     
     var body: some View {
@@ -32,6 +35,21 @@ struct GuideDetailView: View {
         .padding(.horizontal)
         .padding(.bottom)
         .background(Color("backgroundColor"))
+        //        .navigationDestination(isPresented: $showCollaborationView) {
+        //            if let currentGuide = viewModel.currentGuide {
+        //                CollaborationView(
+        //                    viewModel: CollaborationViewModel(
+        //                        currentGuide: currentGuide,
+        //                        referenceObjects: viewModel.referenceObjects
+        //                    )
+        //                )
+        //                .onDisappear {
+        //                    // Deinitialize CollaborationViewModel
+        //                    debugPrint("CollaborationView disappear")
+        //                    viewModel.currentGuide = nil
+        //                }
+        //            }
+        //        }
     }
 }
 
@@ -85,7 +103,7 @@ private extension GuideDetailView {
     var buttonsLabel: some View {
         HStack {
             Spacer()
-            if viewModel.downloadedGuide != nil {
+            if viewModel.downloadedGuide {
                 Text("This guide is already downloaded")
                     .font(.system(size: 13).bold())
                     .foregroundColor(.accentColor)
@@ -102,17 +120,20 @@ private extension GuideDetailView {
     var buttonsStack: some View {
         HStack {
             Button("Download guide") {
-                dismiss()
-                viewModel.onGetGuideAction()
+                if let guideId = viewModel.guide.id {
+                    viewModel.getGuideById(guideId)
+                }
             }
             .buttonStyle(ButtonStyledOutline())
-            .disabled(viewModel.downloadedGuide != nil)
+            .disabled(viewModel.downloadedGuide)
             
             Button("Begin guide") {
-                viewModel.onSetCurrentGuideAction()
+                if let guideId = viewModel.guide.id {
+                    viewModel.onSetCurrentGuideAction(guideId)
+                }
             }
             .buttonStyle(ButtonStyledFill())
-            .disabled(viewModel.downloadedGuide == nil)
+            .disabled(!viewModel.downloadedGuide)
         }
     }
 }
@@ -121,9 +142,10 @@ private extension GuideDetailView {
     GuideDetailView(
         viewModel: GuideDetailViewModel(
             guide: Guide.example,
-            downloadedGuide: ExtendedGuideResponse.example,
-            onGetGuide: {},
-            onSetCurrentGuide: {}
+            downloadedGuides: [ExtendedGuideResponse.example],
+            onDownloadGuide: { _ in }
+            //            onGetGuide: {}
+            //            onSetCurrentGuide: {}
         )
     )
 }

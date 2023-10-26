@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		B505025C299FDBF700121A5A /* ChooseModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B505025B299FDBF700121A5A /* ChooseModeView.swift */; };
 		B5134E542AB8402E0062447F /* ImagePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5134E532AB8402E0062447F /* ImagePopupView.swift */; };
-		B532D1E02AE977530038D09E /* GuideListViewModel+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B532D1DF2AE977530038D09E /* GuideListViewModel+Assets.swift */; };
-		B532D1E22AE977700038D09E /* GuideListViewModel+Guides.swift in Sources */ = {isa = PBXBuildFile; fileRef = B532D1E12AE977700038D09E /* GuideListViewModel+Guides.swift */; };
 		B5537B682A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */; };
 		B5537B6A2A0FABB7006F8102 /* ARView+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */; };
 		B5537B6C2A0FAC97006F8102 /* ARViewContainer+Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */; };
@@ -62,8 +60,6 @@
 /* Begin PBXFileReference section */
 		B505025B299FDBF700121A5A /* ChooseModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseModeView.swift; sourceTree = "<group>"; };
 		B5134E532AB8402E0062447F /* ImagePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePopupView.swift; sourceTree = "<group>"; };
-		B532D1DF2AE977530038D09E /* GuideListViewModel+Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GuideListViewModel+Assets.swift"; sourceTree = "<group>"; };
-		B532D1E12AE977700038D09E /* GuideListViewModel+Guides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GuideListViewModel+Guides.swift"; sourceTree = "<group>"; };
 		B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollaborationViewModel+MultipeerSession.swift"; sourceTree = "<group>"; };
 		B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARView+Gestures.swift"; sourceTree = "<group>"; };
 		B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARViewContainer+Session.swift"; sourceTree = "<group>"; };
@@ -131,8 +127,6 @@
 				B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */,
 				B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */,
 				B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */,
-				B532D1E12AE977700038D09E /* GuideListViewModel+Guides.swift */,
-				B532D1DF2AE977530038D09E /* GuideListViewModel+Assets.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -384,12 +378,10 @@
 				B581CF222A6E9F1A0084DDB2 /* SettingsRowView.swift in Sources */,
 				B56CE57929BCC928007D092F /* Step.swift in Sources */,
 				B59369E42A66CBED00C3B9F2 /* GuideDetailView.swift in Sources */,
-				B532D1E22AE977700038D09E /* GuideListViewModel+Guides.swift in Sources */,
 				B5576CE8297D94960069758E /* MetaCollaborationApp.swift in Sources */,
 				B56CE57629BCC928007D092F /* Asset.swift in Sources */,
 				B59369E62A66CBFD00C3B9F2 /* GuideListView.swift in Sources */,
 				B56CE57829BCC928007D092F /* Content.swift in Sources */,
-				B532D1E02AE977530038D09E /* GuideListViewModel+Assets.swift in Sources */,
 				B56CE57B29BCC928007D092F /* Instruction.swift in Sources */,
 				B56CE57C29BCC928007D092F /* ExtendedGuide.swift in Sources */,
 				B5ABC2342ADFD013007082F8 /* Coordinates.swift in Sources */,

@@ -28,7 +28,7 @@ struct CollaborationView: View {
         GeometryReader { geo in
             ZStack {
                 VStack(spacing: 0) {
-#if !targetEnvironment(simulator)
+                #if !targetEnvironment(simulator)
                     ARViewContainer(showStepSheet: $showStepSheet)
                         .environmentObject(viewModel)
                     // .zIndex(1)
@@ -36,7 +36,7 @@ struct CollaborationView: View {
                     // .onAppear {
                     //   viewModel.refreshCollaborationView()
                     // }
-#endif
+                #endif
                 }
             }
             .sheet(isPresented: $showStepSheet) {

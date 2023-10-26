@@ -6,61 +6,37 @@
 //
 
 import Foundation
-import ARKit
 
 final class GuideListViewModel: ObservableObject {
     @Published private(set) var progressHudState: ProgressHudState = .shouldHideProgress
     
-    @Published var currentGuide: ExtendedGuideResponse? /*= ExtendedGuideResponse.example*/
     @Published var guideList: [Guide]?
-    @Published var referenceObjects = Set<ARReferenceObject>() {
+    @Published var downloadedGuides: [ExtendedGuideResponse] = [] {
         didSet {
-            debugPrint("NEW reference Object")
-            debugPrint(referenceObjects)
+            // Save downloadedGuides locally to JSON or delete JSON
+            if !downloadedGuides.isEmpty {
+                saveGuidesToJSON(downloadedGuides)
+            } else {
+                deleteGuidesJSON()
+            }
         }
     }
-    @Published var downloadedGuides: [ExtendedGuideResponse] = []
-    //    TODO: -- SAVE TO DEVICE LOCALY
-    //    {
-    //        didSet {
-    //            // Save downloadedGuides locally to JSON or delete JSON
-    //            if !downloadedGuides.isEmpty {
-    //                saveGuidesToJSON(downloadedGuides)
-    //            } else {
-    //                deleteGuidesJSON()
-    //            }
-    //        }
-    //    }
-    @Published var downloadedAssets: [String] = []
-//    {
-//        didSet {
-//            if !downloadedAssets.isEmpty {
-//                if let lastAddedElement = downloadedAssets.last {
-//                    loadReferenceObjects(lastAddedElement)
-//                }
-//            } else {
-//                removeAssetsFromDevice()
-//            }
-//        }
-//    }
     
     let jsonDataFile = "guidesData.json"
     
     init() {
         // Check downloaded guide saved in UserDefaults and add into currentGuide
-        //        downloadedGuides = readGuidesFromJSON()
-        // Check downloaded assets saved in device local storage and add into downloadedAssets
-        //        initDownloadedAssets()
+        downloadedGuides = readGuidesFromJSON()
     }
     
     // MARK: - Public methods
     
-    func downloadedGuideById(_ id: String?) -> ExtendedGuideResponse? {
-        if let guide = self.downloadedGuides.first(where: { $0.id == id }) {
-            return guide
-        }
-        return nil
-    }
+    //    func downloadedGuideById(_ id: String?) -> ExtendedGuideResponse? {
+    //        if let guide = self.downloadedGuides.first(where: { $0.id == id }) {
+    //            return guide
+    //        }
+    //        return nil
+    //    }
     
     func isGuideIdDownloaded(_ id: String?) -> Bool {
         if let itemId = id {
@@ -71,26 +47,23 @@ final class GuideListViewModel: ObservableObject {
         return false
     }
     
-    func setCurrentGuide(_ id: String) {
-        if let guide = self.downloadedGuides.first(where: { $0.id == id }) {
-            self.currentGuide = guide
-        }
-    }
-    
-    // Remove guide and all downloaded models from device
+    // TODO: --
+    // Remove guides and all downloaded models from device
     func removeAllFromLocalStorage() {
+        progressHudState = .shouldShowProgress
         //    TODO: ARObject zustava inicializovany => resetovat AR session nebo colaboration view
-        currentGuide = nil
-        referenceObjects.removeAll()
-        downloadedAssets.removeAll()
+        //        currentGuide = nil
+        //        referenceObjects.removeAll()
+        //        downloadedAssets.removeAll()
+        removeAssetsFromDevice()
         downloadedGuides.removeAll()
+        progressHudState = .shouldShowSuccess()
     }
 }
 
 // MARK: - Network methods
 
 extension GuideListViewModel {
-    
     // ========
     // In offline mode, client download all the ML and USDZ models within guides to be able to use an AR and collaborative experience
     // In online mode, is not necessary to download all assets at once instead there is ongoing communication with the backend all the time.
@@ -108,48 +81,71 @@ extension GuideListViewModel {
             }
         }
     }
+}
+
+// MARK: - FileManager: Handling guides and assets
+
+extension GuideListViewModel {
+    func guidesJSONExists() -> Bool {
+        let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(jsonDataFile)
+        return FileManager.default.fileExists(atPath: fileURL.path)
+    }
     
-    // Get guide by ID
-    func getGuideById(id: String) {
-        Task { @MainActor in
-            progressHudState = .shouldShowProgress
-            do {
-                let guide = try await NetworkManager.shared.getGuideById(guideId: id)
-                downloadedGuides.append(guide)
-                
-                // TODO: - Implementovat stazeni vsech modelu, ktere jsou v danym <guide>
-                getAssetByName(assetName: "camel")
-                
-                // Download all assets related to guide steps
-                //                if let objectSteps = value.objectSteps {
-                //                    for objectStep in objectSteps {
-                //                        if let objectName = objectStep.objectName {
-                //                            // Download models based on objectName from guideStep
-                //                            self.getAssetByName(assetName: objectName)
-                //                        }
-                //                    }
-                //                }
-                progressHudState = .shouldHideProgress
-            } catch {
-                progressHudState = .shouldShowFail(message: error.localizedDescription)
+    func saveGuidesToJSON(_ guides: [ExtendedGuideResponse]) {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        
+        do {
+            let jsonData = try encoder.encode(guides)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(jsonDataFile)
+                try jsonString.write(to: fileURL, atomically: true, encoding: .utf8)
+                // print("Guide successfully written to file: \(fileURL)")
             }
+        } catch {
+            debugPrint("Error writing guide to file: \(error)")
         }
     }
     
-    // Download asset by name
-    func getAssetByName(assetName: String) {
-        Task { @MainActor in
-            progressHudState = .shouldShowProgress
+    func readGuidesFromJSON() -> [ExtendedGuideResponse] {
+        let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(jsonDataFile)
+        
+        do {
+            let jsonData = try Data(contentsOf: fileURL)
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            return try decoder.decode([ExtendedGuideResponse].self, from: jsonData)
+        } catch {
+            return []
+        }
+    }
+    
+    func deleteGuidesJSON() {
+        if guidesJSONExists() {
+            let fileManager = FileManager.default
+            let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(jsonDataFile)
+            
             do {
-                let downloadedAsset = try await NetworkManager.shared.getAssetByName(assetName: assetName)
-                if !downloadedAssets.contains(downloadedAsset) {
-                    downloadedAssets.append(downloadedAsset)
-                    loadReferenceObjects(downloadedAsset)
-                }
-                progressHudState = .shouldHideProgress
+                try fileManager.removeItem(at: fileURL)
+                debugPrint("File \(jsonDataFile) deleted successfully.")
             } catch {
-                progressHudState = .shouldShowFail(message: error.localizedDescription)
+                debugPrint("Error deleting file \(jsonDataFile): \(error)")
             }
         }
+    }
+    // TODO: error hodit do alert modalu
+    func removeAssetsFromDevice() {
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        do {
+            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
+                                                                       includingPropertiesForKeys: nil,
+                                                                       options: .skipsHiddenFiles)
+            for fileURL in fileURLs {
+                if fileURL.pathExtension == "arobject" {
+                    try FileManager.default.removeItem(at: fileURL)
+                    debugPrint("Model \(fileURL) removed")
+                }
+            }
+        } catch { debugPrint(error) }
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct GuideDetailView: View {
     @StateObject private var viewModel: GuideDetailViewModel
     @Environment(\.dismiss) private var dismiss
-    //    @Binding var path: NavigationPath
+    @EnvironmentObject var nav: NavigationStateManager
     private let progressHudBinding: ProgressHudBinding
     
     init(viewModel: GuideDetailViewModel) {
@@ -21,7 +21,7 @@ struct GuideDetailView: View {
     var body: some View {
         VStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 16) {
                     guideTitle
                     guideDescription
                     guideImage
@@ -35,21 +35,14 @@ struct GuideDetailView: View {
         .padding(.horizontal)
         .padding(.bottom)
         .background(Color("backgroundColor"))
-        //        .navigationDestination(isPresented: $showCollaborationView) {
-        //            if let currentGuide = viewModel.currentGuide {
-        //                CollaborationView(
-        //                    viewModel: CollaborationViewModel(
-        //                        currentGuide: currentGuide,
-        //                        referenceObjects: viewModel.referenceObjects
-        //                    )
-        //                )
-        //                .onDisappear {
-        //                    // Deinitialize CollaborationViewModel
-        //                    debugPrint("CollaborationView disappear")
-        //                    viewModel.currentGuide = nil
-        //                }
-        //            }
-        //        }
+        .navigationDestination(for: ExtendedGuideResponse.self) { guide in
+            CollaborationView(
+                viewModel: CollaborationViewModel(
+                    currentGuide: guide,
+                    referenceObjects: viewModel.referenceObjects
+                )
+            )
+        }
     }
 }
 
@@ -68,14 +61,13 @@ private extension GuideDetailView {
                 .background(Color.accentColor.opacity(0.1))
                 .cornerRadius(16)
         }
-        .padding(.bottom)
     }
     var guideDescription: some View {
         Text(viewModel.guide.description ?? "Guide description")
             .font(.subheadline)
             .foregroundColor(Color("disabledColor"))
             .multilineTextAlignment(.leading)
-            .padding(.bottom, 24)
+            .padding(.bottom, 8)
     }
     @ViewBuilder
     var guideImage: some View {
@@ -88,12 +80,11 @@ private extension GuideDetailView {
             } placeholder: { Color("secondaryColor") }
                 .frame(width: .infinity, height: 200)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
-                .padding(.bottom, 16)
         }
     }
     //    var guideDetail: some View {
-    //        if downloadedGuide != nil {
-    //            GuideDetailInfoView(objectSteps: downloadedGuide?.objectSteps)
+    //        if viewModel.downloadedGuide {
+    //            GuideDetailInfoView(objectSteps: viewModel.downloadedGuide?.objectSteps)
     //        } else {
     //            Text("To show the detailed steps, you need to download this guide.")
     //                .font(.system(size: 13).bold())
@@ -130,6 +121,11 @@ private extension GuideDetailView {
             Button("Begin guide") {
                 if let guideId = viewModel.guide.id {
                     viewModel.onSetCurrentGuideAction(guideId)
+                    if let currentGuide = viewModel.currentGuide {
+                        nav.goToCollaborationView(currentGuide)
+                    } else {
+                        nav.errorGoToView("Collaboration view")
+                    }
                 }
             }
             .buttonStyle(ButtonStyledFill())
@@ -144,8 +140,6 @@ private extension GuideDetailView {
             guide: Guide.example,
             downloadedGuides: [ExtendedGuideResponse.example],
             onDownloadGuide: { _ in }
-            //            onGetGuide: {}
-            //            onSetCurrentGuide: {}
         )
     )
 }

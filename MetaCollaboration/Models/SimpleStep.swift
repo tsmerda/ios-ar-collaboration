@@ -9,7 +9,7 @@ import Foundation
 
 
 
-public struct SimpleStep: Identifiable, Codable {
+public struct SimpleStep: Hashable, Identifiable, Codable {
 
     public var id: String
     public var order: Int?

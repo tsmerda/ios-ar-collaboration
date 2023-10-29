@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct GuideListView: View {
+    @EnvironmentObject var nav: NavigationStateManager
     @StateObject private var viewModel: GuideListViewModel
     @State private var isShowingSettings: Bool = false
-    @State private var path = NavigationPath()
     private let progressHudBinding: ProgressHudBinding
     
     init(viewModel: GuideListViewModel) {
@@ -19,47 +19,29 @@ struct GuideListView: View {
     }
     
     var body: some View {
-        NavigationStack(path: $path) {
-            VStack {
-                guideList
-                Spacer()
+        ZStack {
+            Color("backgroundColor")
+                .ignoresSafeArea(.all, edges: .all)
+            guideList
+        }
+        .navigationTitle("Guides")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                settingsButton
             }
-            .background(Color("backgroundColor")
-                .ignoresSafeArea(.all, edges: .all))
-            .navigationTitle("Guides")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    settingsButton
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    refreshGuidesButton
-                }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                refreshGuidesButton
             }
-            .navigationDestination(for: Guide.self) { guide in
-                GuideDetailView(
-                    viewModel: GuideDetailViewModel(
-                        guide: guide,
-                        downloadedGuides: viewModel.downloadedGuides,
-                        onDownloadGuide: { viewModel.downloadedGuides.append($0) }
-                    )
+        }
+        .scrollContentBackground(.hidden)
+        .navigationDestination(for: Guide.self) { guide in
+            GuideDetailView(
+                viewModel: GuideDetailViewModel(
+                    guide: guide,
+                    downloadedGuides: viewModel.downloadedGuides,
+                    onDownloadGuide: { viewModel.downloadedGuides.append($0) }
                 )
-            }
-            // TODO: -- fix this to deinitialize CollaborationView
-            //            .navigationDestination(isPresented: $showCollaborationView) {
-            //                if let currentGuide = viewModel.currentGuide {
-            //                    CollaborationView(
-            //                        viewModel: CollaborationViewModel(
-            //                            currentGuide: currentGuide,
-            //                            referenceObjects: viewModel.referenceObjects
-            //                        )
-            //                    )
-            //                    .onDisappear {
-            //                        // Deinitialize CollaborationViewModel
-            //                        debugPrint("CollaborationView disappear")
-            //                        viewModel.currentGuide = nil
-            //                    }
-            //                }
-            //            }
+            )
         }
         .onAppear {
             viewModel.getAllGuides()
@@ -67,34 +49,53 @@ struct GuideListView: View {
         .sheet(isPresented: $isShowingSettings) {
             settingsView
         }
+        //        .navigationDestination(isPresented: $showCollaborationView) {
+        //            if let currentGuide = viewModel.currentGuide {
+        //                CollaborationView(
+        //                    viewModel: CollaborationViewModel(
+        //                        currentGuide: currentGuide,
+        //                        referenceObjects: viewModel.referenceObjects
+        //                    )
+        //                )
+        //                .onDisappear {
+        //                    // Deinitialize CollaborationViewModel
+        //                    debugPrint("CollaborationView disappear")
+        //                    viewModel.currentGuide = nil
+        //                }
+        //            }
+        //        }
     }
 }
 
 private extension GuideListView {
     var guideList: some View {
-        List {
+        VStack {
             if let guideList = viewModel.guideList, !guideList.isEmpty {
-                ForEach(guideList) { guide in
-                    NavigationLink(value: guide) {
+                ForEach(guideList, id: \.id) { guide in
+                    Button(action: {
+                        nav.goToGuideDetail(guide)
+                    }) {
                         GuideRowView(
                             guide: guide,
                             isDownloaded: viewModel.isGuideIdDownloaded(guide.id)
                         )
                     }
-                    .foregroundColor(.accentColor)
                     .listRowBackground(Color("secondaryColor"))
                 }
+                Spacer()
             } else {
                 HStack {
                     Spacer()
-                    Text("No dataset available")
-                        .foregroundColor(.black)
-                        .font(.callout)
+                    Text("There are currently no datasets available")
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.white)
+                        .font(.title3)
                     Spacer()
                 }
+                .frame(maxWidth: 260)
             }
         }
-        .scrollContentBackground(.hidden)
+        .padding()
     }
     var settingsButton: some View {
         Button(action: {

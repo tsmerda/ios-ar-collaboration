@@ -28,7 +28,7 @@ public struct Guide: Hashable, Identifiable, Codable {
 #if DEBUG
 // MARK: - Example Guide
 extension Guide {
-    
+
     static var example: Guide {
         Guide(name: "Upgrading old Prusa MK2s.",
               description: "How to upgrade the old MK2s to MK2s+ featuring the cool magnetic heatbed.",

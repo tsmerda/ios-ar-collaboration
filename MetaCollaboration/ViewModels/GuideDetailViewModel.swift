@@ -21,12 +21,7 @@ final class GuideDetailViewModel: ObservableObject {
             }
         }
     }
-    @Published var referenceObjects = Set<ARReferenceObject>() {
-        didSet {
-            debugPrint("NEW reference Object")
-            debugPrint(referenceObjects)
-        }
-    }
+    @Published var referenceObjects = Set<ARReferenceObject>()
     var downloadedGuide: Bool {
         if let itemId = guide.id {
             return self.downloadedGuides.contains { item in
@@ -95,7 +90,7 @@ extension GuideDetailViewModel {
                 let downloadedAsset = try await NetworkManager.shared.getAssetByName(assetName: assetName)
                 if !downloadedAssets.contains(downloadedAsset) {
                     downloadedAssets.append(downloadedAsset)
-                    //                    loadReferenceObjects(downloadedAsset)
+                    // loadReferenceObjects(downloadedAsset)
                 }
                 progressHudState = .shouldHideProgress
             } catch {
@@ -115,7 +110,7 @@ extension GuideDetailViewModel {
             let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
             
             for fileURL in fileURLs {
-                //            TODO: - Resolve: failed to setup referenceObjects nilError
+                // TODO: - Resolve: failed to setup referenceObjects nilError
                 if fileURL.pathExtension == "arobject" && fileURL.lastPathComponent == assetName {
                     let referenceObject = try ARReferenceObject(archiveURL: fileURL)
                     referenceObjects.insert(referenceObject)

@@ -10,7 +10,7 @@ import SwiftUI
 struct CollaborationView: View {
     @StateObject private var viewModel: CollaborationViewModel
     
-    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var nav: NavigationStateManager
     
     @State private var showStepSheet: Bool = false
     @State private var showStepListSheet: Bool = true
@@ -25,71 +25,26 @@ struct CollaborationView: View {
     }
     
     var body: some View {
-        GeometryReader { geo in
-            ZStack {
-                VStack(spacing: 0) {
-                #if !targetEnvironment(simulator)
-                    ARViewContainer(showStepSheet: $showStepSheet)
-                        .environmentObject(viewModel)
-                    // .zIndex(1)
-                    // .id(viewModel.uniqueID)
-                    // .onAppear {
-                    //   viewModel.refreshCollaborationView()
-                    // }
-                #endif
-                }
-            }
-            .sheet(isPresented: $showStepSheet) {
-                StepDetailView(onNavigateAction: {
-                    showStepSheet.toggle()
-                    showConfirmationView.toggle()
-                })
-                .environmentObject(viewModel)
-                .presentationDetents([.height(160), .medium])
-                .presentationBackgroundInteraction(.enabled(upThrough: .medium))
-                .interactiveDismissDisabled()
-                .presentationDragIndicator(.automatic)
-            }
-            .fullScreenCover(isPresented: $showStepListSheet) {
-                StepListView(
-                    guide: viewModel.currentGuide ?? nil,
-                    currentStepId: viewModel.currentStep?.id ?? "",
-                    onSelectStep: { viewModel.getStepById(viewModel.currentGuide?.id ?? "", $0) }
-                )
-                .onDisappear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        showStepSheet.toggle()
-                    }
-                }
-            }
-            .background(Color("backgroundColor")
-                .ignoresSafeArea(.all, edges: .all))
-            .navigationTitle(viewModel.currentGuide?.name ?? "Upgrading old Prusa MK2s.")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbarBackground(Color("backgroundColor"), for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .navigationBarBackButtonHidden()
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        Image(systemName: "xmark")
-                            .foregroundColor(.accentColor)
-                    }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        showStepSheet.toggle()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            showStepListSheet.toggle()
-                        }
-                    }) {
-                        Image(systemName: "text.badge.checkmark")
-                            .foregroundColor(.accentColor)
-                    }
-                }
+        ZStack {
+            arViewContainer
+        }
+        .sheet(isPresented: $showStepSheet) {
+            stepDetailView
+        }
+        .fullScreenCover(isPresented: $showStepListSheet) {
+            stepListView
+        }
+        .background(Color("backgroundColor")
+            .ignoresSafeArea(.all, edges: .all))
+        .navigationTitle(viewModel.currentGuide?.name ?? "Upgrading old Prusa MK2s.")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarBackground(Color("backgroundColor"), for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                stepListButton
             }
         }
         .navigationDestination(isPresented: $showConfirmationView) {
@@ -97,6 +52,66 @@ struct CollaborationView: View {
                 .onDisappear {
                     showStepSheet.toggle()
                 }
+        }
+    }
+}
+
+private extension CollaborationView {
+    @ViewBuilder
+    var arViewContainer: some View {
+        #if !targetEnvironment(simulator)
+        VStack(spacing: 0) {
+            //            ARViewContainer(showStepSheet: $showStepSheet)
+            //                .environmentObject(viewModel)
+            // .zIndex(1)
+            // .id(viewModel.uniqueID)
+            // .onAppear {
+            //   viewModel.refreshCollaborationView()
+            // }
+        }
+        #endif
+    }
+    var stepDetailView: some View {
+        StepDetailView(
+            viewModel: StepDetailViewModel(
+                currentStep: viewModel.currentStep,
+                onNavigateAction: {
+                    showStepSheet.toggle()
+                    showConfirmationView.toggle()
+                },
+                toggleStepDone: { viewModel.toggleStepDone(step: $0) }
+            )
+        )
+        .presentationDetents([.height(180), .medium])
+        .presentationBackgroundInteraction(.enabled(upThrough: .medium))
+        .interactiveDismissDisabled()
+        .presentationDragIndicator(.automatic)
+    }
+    var stepListView: some View {
+        StepListView(
+            viewModel: StepListViewModel(
+                guide: viewModel.currentGuide ?? nil,
+                currentStepId: viewModel.currentStep?.id ?? "",
+                onSelectStep: {
+                    viewModel.getStepById(viewModel.currentGuide?.id ?? "", $0)
+                }
+            )
+        )
+        .onDisappear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                showStepSheet.toggle()
+            }
+        }
+    }
+    var stepListButton: some View {
+        Button(action: {
+            showStepSheet.toggle()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                showStepListSheet.toggle()
+            }
+        }) {
+            Image(systemName: "text.badge.checkmark")
+                .foregroundColor(.accentColor)
         }
     }
 }

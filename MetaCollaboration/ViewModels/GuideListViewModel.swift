@@ -9,7 +9,6 @@ import Foundation
 
 final class GuideListViewModel: ObservableObject {
     @Published private(set) var progressHudState: ProgressHudState = .shouldHideProgress
-    
     @Published var guideList: [Guide]?
     @Published var downloadedGuides: [ExtendedGuideResponse] = [] {
         didSet {
@@ -31,13 +30,6 @@ final class GuideListViewModel: ObservableObject {
     
     // MARK: - Public methods
     
-    //    func downloadedGuideById(_ id: String?) -> ExtendedGuideResponse? {
-    //        if let guide = self.downloadedGuides.first(where: { $0.id == id }) {
-    //            return guide
-    //        }
-    //        return nil
-    //    }
-    
     func isGuideIdDownloaded(_ id: String?) -> Bool {
         if let itemId = id {
             return self.downloadedGuides.contains { item in
@@ -47,14 +39,9 @@ final class GuideListViewModel: ObservableObject {
         return false
     }
     
-    // TODO: --
     // Remove guides and all downloaded models from device
     func removeAllFromLocalStorage() {
         progressHudState = .shouldShowProgress
-        //    TODO: ARObject zustava inicializovany => resetovat AR session nebo colaboration view
-        //        currentGuide = nil
-        //        referenceObjects.removeAll()
-        //        downloadedAssets.removeAll()
         removeAssetsFromDevice()
         downloadedGuides.removeAll()
         progressHudState = .shouldShowSuccess()
@@ -127,7 +114,7 @@ extension GuideListViewModel {
             
             do {
                 try fileManager.removeItem(at: fileURL)
-                debugPrint("File \(jsonDataFile) deleted successfully.")
+                debugPrint("FILE \(jsonDataFile) DELETED SUCCESSFULLY.")
             } catch {
                 debugPrint("Error deleting file \(jsonDataFile): \(error)")
             }
@@ -143,7 +130,7 @@ extension GuideListViewModel {
             for fileURL in fileURLs {
                 if fileURL.pathExtension == "arobject" {
                     try FileManager.default.removeItem(at: fileURL)
-                    debugPrint("Model \(fileURL) removed")
+                    debugPrint("MODEL \(fileURL) REMOVED")
                 }
             }
         } catch { debugPrint(error) }

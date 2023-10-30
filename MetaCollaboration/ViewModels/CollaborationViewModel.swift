@@ -27,7 +27,7 @@ final class CollaborationViewModel: ObservableObject {
     // MARK: - Properties
     // TODO: - je @Published potreba?
     @Published private(set) var progressHudState: ProgressHudState = .shouldHideProgress
-    @Published var referenceObjects = Set<ARReferenceObject>()
+    @Published var referenceObjects: Set<ARReferenceObject> = []
     @Published var currentStep: ObjectStep? /*= ObjectStep.example*/
     @Published var currentGuide: ExtendedGuideResponse?
     //    @Published var uniqueID = UUID()
@@ -37,7 +37,7 @@ final class CollaborationViewModel: ObservableObject {
     @Published var arView: ARView!
     @Published var multipeerSession: MultipeerSession?
     @Published var sessionIDObservation: NSKeyValueObservation?
-    
+        
     // TODO: - je tohle potreba?
     var showStepSheet: Binding<Bool>?
     

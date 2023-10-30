@@ -14,14 +14,8 @@ final class GuideDetailViewModel: ObservableObject {
     @Published var currentGuide: ExtendedGuideResponse?
     private let onDownloadGuide: (ExtendedGuideResponse) -> Void
     private var downloadedGuides: [ExtendedGuideResponse] = []
-    @Published var downloadedAssets: [String] = [] {
-        didSet {
-            if let lastAddedElement = downloadedAssets.last {
-                loadReferenceObjects(lastAddedElement)
-            }
-        }
-    }
-    @Published var referenceObjects = Set<ARReferenceObject>()
+    // DO NOT WORK ON SIMULATOR!
+    @Published var referenceObjects: Set<ARReferenceObject> = []
     var downloadedGuide: Bool {
         if let itemId = guide.id {
             return self.downloadedGuides.contains { item in
@@ -39,13 +33,29 @@ final class GuideDetailViewModel: ObservableObject {
         self.guide = guide
         self.downloadedGuides = downloadedGuides
         self.onDownloadGuide = onDownloadGuide
-        // Check downloaded assets saved in device local storage and add into downloadedAssets
-        initDownloadedAssets()
+        // Check downloaded reference objects saved locally and insert into referenceObjects
+        // TODO: -- init just reference objects that are for current guide
+        initReferenceObjects()
     }
     
     func onSetCurrentGuideAction(_ id: String) {
         if let guide = self.downloadedGuides.first(where: { $0.id == id }) {
             self.currentGuide = guide
+        }
+    }
+    
+    func insertReferenceObject(_ referenceObjectURL: URL) async throws {
+        // TODO: -- porovnat zda jiz existuje v Setu referenceObjects
+        do {
+            // Check whether the file exists
+            if FileManager.default.fileExists(atPath: referenceObjectURL.path) {
+                let referenceObject = try ARReferenceObject(archiveURL: referenceObjectURL)
+                self.referenceObjects.insert(referenceObject)
+            } else {
+                debugPrint("File does not exist at \(referenceObjectURL.path)")
+            }
+        } catch {
+            debugPrint("Error loading reference object from \(referenceObjectURL.absoluteString): \(error)")
         }
     }
 }
@@ -59,7 +69,6 @@ extension GuideDetailViewModel {
             progressHudState = .shouldShowProgress
             do {
                 let guide = try await NetworkManager.shared.getGuideById(guideId: id)
-                // TODO: pridat do GuideListViewModel
                 downloadedGuides.append(guide)
                 onDownloadGuide(guide)
                 
@@ -87,10 +96,11 @@ extension GuideDetailViewModel {
         Task { @MainActor in
             progressHudState = .shouldShowProgress
             do {
-                let downloadedAsset = try await NetworkManager.shared.getAssetByName(assetName: assetName)
-                if !downloadedAssets.contains(downloadedAsset) {
-                    downloadedAssets.append(downloadedAsset)
-                    // loadReferenceObjects(downloadedAsset)
+                let (assetUrl, responseAssetName) = try await NetworkManager.shared.getAssetByName(assetName: assetName)
+                if let savedReferenceObjectURL = try await saveReferenceObjects(assetUrl, responseAssetName) {
+                    try await insertReferenceObject(savedReferenceObjectURL)
+                } else {
+                    debugPrint("Failed to save referenceObject locally")
                 }
                 progressHudState = .shouldHideProgress
             } catch {
@@ -103,7 +113,27 @@ extension GuideDetailViewModel {
 // MARK: - FileManager: handling assets and reference objects
 
 extension GuideDetailViewModel {
-    func loadReferenceObjects(_ assetName: String) {
+    func saveReferenceObjects(_ assetUrl: URL, _ assetName: String) async throws -> URL? {
+        guard (assetUrl as NSURL).checkResourceIsReachableAndReturnError(nil) else {
+            // File is not reachable, deal with error and return
+            progressHudState = .shouldShowFail(message: "File is not reachable")
+            return nil
+        }
+        
+        let documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let fileURL = documentsURL.appendingPathComponent(assetName)
+        
+        if FileManager.default.fileExists(atPath: fileURL.path) {
+            debugPrint("Reference object is already downloaded")
+            return fileURL
+        }
+        
+        try FileManager.default.moveItem(at: assetUrl, to: fileURL)
+        return fileURL
+    }
+    
+    // TODO: error hodit do alert modalu
+    func initReferenceObjects() {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
         do {
@@ -111,32 +141,14 @@ extension GuideDetailViewModel {
             
             for fileURL in fileURLs {
                 // TODO: - Resolve: failed to setup referenceObjects nilError
-                if fileURL.pathExtension == "arobject" && fileURL.lastPathComponent == assetName {
+                if fileURL.pathExtension == "arobject" {
                     let referenceObject = try ARReferenceObject(archiveURL: fileURL)
-                    referenceObjects.insert(referenceObject)
+                    self.referenceObjects.insert(referenceObject)
                 }
             }
         } catch {
             // TODO: hodit do alert modalu
             debugPrint("Failed to set up referenceObjects: \(error)")
-        }
-    }
-    
-    // TODO: error hodit do alert modalu
-    func initDownloadedAssets() {
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
-                                                                       includingPropertiesForKeys: nil,
-                                                                       options: .skipsHiddenFiles)
-            for fileURL in fileURLs {
-                if !downloadedAssets.contains(fileURL.lastPathComponent) {
-                    downloadedAssets.append(fileURL.lastPathComponent)
-                }
-            }
-        } catch {
-            debugPrint(error)
         }
     }
 }

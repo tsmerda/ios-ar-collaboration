@@ -19,6 +19,7 @@ extension ARView {
         static var collaborationViewModel = "collaborationViewModel"
     }
     
+    // TODO: -- Tohle by se melo predelat, obcas zpusobuje retain cycle
     var collaborationViewModel: CollaborationViewModel {
         get {
             guard let viewModel = objc_getAssociatedObject(self, &AssociatedKeys.collaborationViewModel) as? CollaborationViewModel else {
@@ -163,7 +164,6 @@ extension ARView {
             
             // self.installGestures([.all], for: entity)
             
-            // TODO: this 2 lines below throws an error
             modelAnchor.synchronization?.ownershipTransferMode = .autoAccept
             modelAnchor.anchoring = AnchoringComponent(anchor)
             

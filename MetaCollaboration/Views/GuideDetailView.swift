@@ -9,7 +9,6 @@ import SwiftUI
 
 struct GuideDetailView: View {
     @StateObject private var viewModel: GuideDetailViewModel
-    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var nav: NavigationStateManager
     private let progressHudBinding: ProgressHudBinding
     
@@ -118,10 +117,12 @@ private extension GuideDetailView {
             .buttonStyle(ButtonStyledOutline())
             .disabled(viewModel.downloadedGuide)
             
+            // TODO: -- Add loading until all of referenceObjects are downloaded
             Button("Begin guide") {
                 if let guideId = viewModel.guide.id {
                     viewModel.onSetCurrentGuideAction(guideId)
-                    if let currentGuide = viewModel.currentGuide {
+                    if let currentGuide = viewModel.currentGuide,
+                       !viewModel.referenceObjects.isEmpty {
                         nav.goToCollaborationView(currentGuide)
                     } else {
                         nav.errorGoToView("Collaboration view")

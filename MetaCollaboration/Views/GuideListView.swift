@@ -49,21 +49,6 @@ struct GuideListView: View {
         .sheet(isPresented: $isShowingSettings) {
             settingsView
         }
-        //        .navigationDestination(isPresented: $showCollaborationView) {
-        //            if let currentGuide = viewModel.currentGuide {
-        //                CollaborationView(
-        //                    viewModel: CollaborationViewModel(
-        //                        currentGuide: currentGuide,
-        //                        referenceObjects: viewModel.referenceObjects
-        //                    )
-        //                )
-        //                .onDisappear {
-        //                    // Deinitialize CollaborationViewModel
-        //                    debugPrint("CollaborationView disappear")
-        //                    viewModel.currentGuide = nil
-        //                }
-        //            }
-        //        }
     }
 }
 

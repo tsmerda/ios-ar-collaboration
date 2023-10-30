@@ -12,14 +12,14 @@ protocol NetworkManagerProtocol {
     func getGuideById(guideId: String) async throws -> ExtendedGuideResponse
     func getStepById(guideId: String, objectStepOrder: Int) async throws -> ObjectStep
     func getAllAssets() async throws -> [Asset]
-    func getAssetByName(assetName: String) async throws -> String
+    func getAssetByName(assetName: String) async throws -> (URL, String)
     func putGuideConfirmation(guide: Guide) async throws
 }
 
 class NetworkManager: NetworkManagerProtocol {
     
     static let shared = NetworkManager()
-    private let baseURL = "http://192.168.1.9:8080/api/v3"
+    private let baseURL = "http://192.168.1.14:8080/api/v3"
     
     // MARK: - Get all guides
     func getAllGuides() async throws -> [Guide] {
@@ -118,7 +118,7 @@ class NetworkManager: NetworkManagerProtocol {
     }
     
     // MARK: - Get asset by name
-    func getAssetByName(assetName: String) async throws -> String {
+    func getAssetByName(assetName: String) async throws -> (URL, String) {
         guard let url = URL(string: baseURL + "/assets/\(assetName)/download") else {
             throw NetworkError.invalidURL
         }
@@ -128,16 +128,7 @@ class NetworkManager: NetworkManagerProtocol {
             throw NetworkError.serverError
         }
         
-        let documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        let fileURL = documentsURL.appendingPathComponent(response.suggestedFilename ?? "no-assetname")
-        
-        // Check if file is already downloaded
-        if FileManager.default.fileExists(atPath: fileURL.path) {
-            return fileURL.lastPathComponent
-        }
-        
-        try FileManager.default.moveItem(at: localURL, to: fileURL)
-        return response.suggestedFilename ?? "no-assetname"
+        return (localURL, response.suggestedFilename ?? "no-assetname")
     }
     
     // MARK: - Put guide confirmation by guide

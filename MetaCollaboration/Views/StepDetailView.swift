@@ -26,18 +26,7 @@ struct StepDetailView: View {
                 descriptionText
             }
             .padding()
-            
-            if let steps = viewModel.currentStep?.steps {
-                List {
-                    Section(header: Text("Tasks")) {
-                        ForEach(steps, id: \.id) { step in
-                            stepRow(step)
-                        }
-                        .listRowBackground(Color("secondaryColor"))
-                    }
-                    .headerProminence(.increased)
-                }
-            }
+            tasksWithPreview
             Spacer()
             confirmButton
         }
@@ -56,11 +45,11 @@ private extension StepDetailView {
     }
     var titleRow: some View {
         HStack {
-            Text("Removing screw")
+            Text(viewModel.currentStep?.instruction?.title ?? "Current step title")
                 .font(.system(size: 20).weight(.bold))
                 .foregroundColor(.accentColor)
             Spacer()
-            Text("Step: \(viewModel.currentStep?.order ?? 0)/2")
+            Text("Step: \(String(describing: viewModel.currentStep?.order ?? 0))/2")
                 .font(.system(size: 12).weight(.medium))
                 .foregroundColor(.white)
                 .padding(.horizontal, 12)
@@ -70,20 +59,48 @@ private extension StepDetailView {
         }
     }
     var descriptionText: some View {
-        Text("Remove the M3 screw from the fan holder. Remove the M3 screw from the fan holder. Remove the M3 screw from the fan holder")
+        Text(viewModel.currentStep?.instruction?.text ?? "Current step text")
             .font(.system(size: 16))
             .foregroundColor(Color("disabledColor"))
     }
+    @ViewBuilder
+    var tasksWithPreview: some View {
+        List {
+            // Task Section
+            if let steps = viewModel.currentStep?.steps {
+                Section(header: Text("Tasks")) {
+                    ForEach(steps, id: \.self) { step in
+                        stepRow(step)
+                    }
+                    .listRowBackground(Color("secondaryColor"))
+                }
+                .headerProminence(.increased)
+            }
+        
+            // Preview Image Section
+            if let imageUrl = viewModel.currentStep?.instruction?.imageUrl {
+                Section(header: Text("Preview image")) {
+                    AsyncImage(url: URL(string: imageUrl)){ image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .cornerRadius(8)
+                    } placeholder: { Color("secondaryColor") }
+                }
+                .headerProminence(.increased)
+            }
+        }
+    }
+
     func stepRow(_ step: Step) -> some View {
         HStack(alignment: .top, spacing: 8) {
             LazyVStack(alignment: .leading, spacing: 12) {
-                ForEach(step.contents ?? [], id: \.order) { content in
-                    // TODO: -- az bude vracet BE
-                    // if content.contentType == .textblock {
-                    Text(content.text ?? "")
-                        .foregroundColor(.white)
-                        .font(.system(size: 14))
-                    // }
+                ForEach(step.contents, id: \.self) { content in
+                    if content.contentType == .textblock {
+                        Text(content.text ?? "")
+                            .foregroundColor(.white)
+                            .font(.system(size: 14))
+                    }
                 }
             }
             Spacer()

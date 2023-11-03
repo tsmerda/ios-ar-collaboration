@@ -11,14 +11,13 @@ struct StepListView: View {
     @StateObject private var viewModel: StepListViewModel
     @EnvironmentObject var nav: NavigationStateManager
     
-    @State private var selection: String? = ""
+    @State private var selection: Decimal? = 0
     @Environment(\.dismiss) private var dismiss
     
     init(viewModel: StepListViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
-    // TODO: -- PRIDAT VIEW TITLE
     var body: some View {
         VStack(spacing: 0) {
             stepListTitle
@@ -27,9 +26,9 @@ struct StepListView: View {
             buttonsStack
         }
         .onAppear {
-            selection = viewModel.guide?.objectSteps?.first?.id
-            // TODO: -- Nastavit selection podle currentStepId az se bude vracet spravne z BE
-            // selection = currentStepId
+            if let stepOrder = viewModel.stepOrder {
+                selection = stepOrder
+            }
         }
         .navigationTitle("Step list")
         .navigationBarTitleDisplayMode(.large)
@@ -55,7 +54,7 @@ private extension StepListView {
                     Text(step.title ?? "Unknown title")
                         .font(.system(size: 16))
                     Spacer()
-                    if selection == step.id {
+                    if selection == step.order {
                         Text("Selected".uppercased())
                             .font(.system(size: 11).weight(.bold))
                             .foregroundColor(.accentColor)
@@ -72,13 +71,8 @@ private extension StepListView {
                     }
                 }
                 .padding()
-                .background(selection == step.id ? Color.accentColor.opacity(0.1) : Color.clear)
+                .background(selection == step.order ? Color.accentColor.opacity(0.1) : Color.clear)
                 .cornerRadius(8)
-                //  TODO: -- disable tap gesture
-                //  .onTapGesture {
-                //      onSelectStep(step.order ?? 1)
-                //      selection = step.id
-                //  }
             }
         }
         .padding()
@@ -99,11 +93,11 @@ private extension StepListView {
         VStack {
             HStack {
                 Button("Previous") {
-                    // TODO: -- Nastavit predesly step pokud je k dispozici (aktualni step.order - 1)
-                    // onSelectStep(step.order ?? 1)
+                    viewModel.onSelectPreviousStep()
+                    dismiss()
                 }
                 .buttonStyle(ButtonStyledFill())
-                .disabled(true)
+                .disabled(viewModel.stepOrder == 1)
                 Spacer()
                 Button("Continue") {
                     dismiss()
@@ -142,8 +136,8 @@ private extension StepListView {
                 guideType: .tutorial,
                 objectSteps: SimpleStep.exampleArray
             ),
-            currentStepId: SimpleStep.example.id,
-            onSelectStep: { _ in }
+            stepOrder: 1,
+            onSelectPreviousStep: {}
         )
     )
 }

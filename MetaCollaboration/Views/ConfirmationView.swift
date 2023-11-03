@@ -9,21 +9,24 @@ import SwiftUI
 import PhotosUI
 
 struct ConfirmationView: View {
+    @StateObject private var viewModel: ConfirmationViewModel
+    @Environment(\.dismiss) private var dismiss
+    @State private var selectedRating: Int = 0
+    @State private var notes: String = ""
+    @State private var selectedItem: PhotosPickerItem? = nil
+    @State private var selectedImageData: Data? = nil
+    @State private var showFinalView: Bool = false
+    @FocusState private var focusedField: Field?
+    
     private enum Field: Int, CaseIterable {
         case notes
     }
+    private let progressHudBinding: ProgressHudBinding
     
-    let guide: ExtendedGuideResponse?
-    
-    @Environment(\.presentationMode) var presentationMode
-    
-    @State private var selectedRating: Int = 0
-    @State private var notes: String = ""
-    
-    @State private var selectedItem: PhotosPickerItem? = nil
-    @State private var selectedImageData: Data? = nil
-    
-    @FocusState private var focusedField: Field?
+    init(viewModel: ConfirmationViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+        self.progressHudBinding = ProgressHudBinding(state: viewModel.$progressHudState)
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -37,12 +40,8 @@ struct ConfirmationView: View {
                     Image(systemName: index < selectedRating ? "star.fill" : "star")
                         .font(.system(size: 24, weight: .light))
                         .foregroundColor(.white)
-                        .onTapGesture {
-                            // Update the selectedRating when a star is tapped
-                            selectedRating = index + 1
-                        }
+                        .onTapGesture { selectedRating = index + 1 }
                 }
-                
                 Spacer()
             }
             
@@ -113,20 +112,22 @@ struct ConfirmationView: View {
                         .frame(width: 85, height: 85)
                         .cornerRadius(8)
                 }
-                
             }
             
             Spacer()
             
             HStack {
                 Button("Cancel"){
-                    self.presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 }
                 .buttonStyle(ButtonStyledOutline())
-                
                 Button("Confirm"){
-                    // TODO: - send confirmation request
-                    self.presentationMode.wrappedValue.dismiss()
+                    if viewModel.isLastStep {
+                        showFinalView.toggle()
+                    } else {
+                        viewModel.onConfirmationAction()
+                        dismiss()
+                    }
                 }
                 .buttonStyle(ButtonStyledFill())
             }
@@ -146,11 +147,17 @@ struct ConfirmationView: View {
                 }
             }
         }
+        .navigationDestination(isPresented: $showFinalView) {
+            FinalView()
+        }
     }
 }
 
-struct ConfirmationView_Previews: PreviewProvider {
-    static var previews: some View {
-        ConfirmationView(guide: ExtendedGuideResponse(name: "", guideType: .tutorial))
-    }
+#Preview {
+    ConfirmationView(
+        viewModel: ConfirmationViewModel(
+            guide: ExtendedGuideResponse.example,
+            onStepConfirmation: {}
+        )
+    )
 }

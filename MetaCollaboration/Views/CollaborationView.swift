@@ -15,7 +15,6 @@ struct CollaborationView: View {
     @State private var showStepSheet: Bool = false
     @State private var showStepListSheet: Bool = true
     @State private var showConfirmationView: Bool = false
-    //    @State private var showImagePopup = false
     
     private let progressHudBinding: ProgressHudBinding
     
@@ -36,7 +35,7 @@ struct CollaborationView: View {
         }
         .background(Color("backgroundColor")
             .ignoresSafeArea(.all, edges: .all))
-        .navigationTitle(viewModel.currentGuide?.name ?? "Upgrading old Prusa MK2s.")
+        .navigationTitle(viewModel.currentGuide.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbarBackground(Color("backgroundColor"), for: .navigationBar)
@@ -48,10 +47,18 @@ struct CollaborationView: View {
             }
         }
         .navigationDestination(isPresented: $showConfirmationView) {
-            ConfirmationView(guide: viewModel.currentGuide ?? nil)
-                .onDisappear {
+            ConfirmationView(
+                viewModel: ConfirmationViewModel(
+                    guide: viewModel.currentGuide,
+                    onStepConfirmation: { viewModel.getNextStep() },
+                    isLastStep: viewModel.isLastStep()
+                )
+            )
+            .onDisappear {
+                if !showConfirmationView {
                     showStepSheet.toggle()
                 }
+            }
         }
     }
 }
@@ -61,8 +68,8 @@ private extension CollaborationView {
     var arViewContainer: some View {
         #if !targetEnvironment(simulator)
         VStack(spacing: 0) {
-            //            ARViewContainer(showStepSheet: $showStepSheet)
-            //                .environmentObject(viewModel)
+            ARViewContainer(showStepSheet: $showStepSheet)
+                .environmentObject(viewModel)
             // .zIndex(1)
             // .id(viewModel.uniqueID)
             // .onAppear {
@@ -90,11 +97,9 @@ private extension CollaborationView {
     var stepListView: some View {
         StepListView(
             viewModel: StepListViewModel(
-                guide: viewModel.currentGuide ?? nil,
-                currentStepId: viewModel.currentStep?.id ?? "",
-                onSelectStep: {
-                    viewModel.getStepById(viewModel.currentGuide?.id ?? "", $0)
-                }
+                guide: viewModel.currentGuide,
+                stepOrder: viewModel.currentStep?.order ?? 1,
+                onSelectPreviousStep: { viewModel.getPreviousStep() }
             )
         )
         .onDisappear {
@@ -124,33 +129,3 @@ private extension CollaborationView {
         )
     )
 }
-
-//                    VStack {
-//                        Spacer()
-//                        HStack {
-//                            Spacer()
-//
-//                            if viewModel.currentGuide?.imageUrl != nil {
-//                                AsyncImage(url: URL(string: (viewModel.currentGuide?.imageUrl)!)){ image in
-//                                    image
-//                                        .resizable()
-//                                        .aspectRatio(contentMode: .fill)
-//                                } placeholder: { Color("secondaryColor") }
-//                                    .frame(width: 80, height: 80)
-//                                    .cornerRadius(8)
-//                                    .overlay(
-//                                        RoundedRectangle(cornerRadius: 11)
-//                                            .stroke(Color.accentColor, lineWidth: 1)
-//                                    )
-//                                    .padding()
-//                                    .padding(.bottom, 160)
-//                                    .onTapGesture {
-//                                        showImagePopup.toggle()
-//                                    }
-//                            }
-//                        }
-//                    }
-
-//                    if showImagePopup {
-//                        ImagePopupView(showImagePopup: $showImagePopup, imageUrl: viewModel.currentGuide?.imageUrl ?? "")
-//                    }

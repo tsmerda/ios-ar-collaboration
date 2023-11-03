@@ -19,11 +19,11 @@ extension ARView {
         static var collaborationViewModel = "collaborationViewModel"
     }
     
-    // TODO: -- Tohle by se melo predelat, obcas zpusobuje retain cycle
+    // TODO: -- Tohle by se melo predelat, obcas zpusobuje retain cycle!!!!
     var collaborationViewModel: CollaborationViewModel {
         get {
             guard let viewModel = objc_getAssociatedObject(self, &AssociatedKeys.collaborationViewModel) as? CollaborationViewModel else {
-                let viewModel = CollaborationViewModel(referenceObjects: [])
+                let viewModel = CollaborationViewModel(currentGuide: ExtendedGuideResponse(name: "", guideType: .manual), referenceObjects: [])
                 objc_setAssociatedObject(self, &AssociatedKeys.collaborationViewModel, viewModel, .OBJC_ASSOCIATION_RETAIN)
                 return viewModel
             }

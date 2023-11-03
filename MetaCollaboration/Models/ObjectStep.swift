@@ -11,33 +11,33 @@ import Foundation
 
 public struct ObjectStep: Identifiable, Codable {
     
-    public var id: String
+    public var id: String?
     public var modelId: Int?
     public var title: String?
     public var objectName: String?
+    public var coordinates: [Coordinates]?
     public var steps: [Step]?
     public var instruction: Instruction?
-    public var order: Int?
-    
-    public init(id: String? = nil, modelId: Int? = nil, title: String? = nil, objectName: String? = nil, steps: [Step]? = nil, instruction: Instruction? = nil, order: Int? = nil) {
-        self.id = id ?? UUID().uuidString
+    public var order: Decimal?
+
+    public init(
+        id: String? = nil,
+        modelId: Int? = nil,
+        title: String? = nil,
+        objectName: String? = nil,
+        coordinates: [Coordinates]? = nil,
+        steps: [Step]? = nil,
+        instruction: Instruction? = nil,
+        order: Decimal? = nil
+    ) {
+        self.id = id
         self.modelId = modelId
         self.title = title
         self.objectName = objectName
+        self.coordinates = coordinates
         self.steps = steps
         self.instruction = instruction
         self.order = order
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
-        modelId = try container.decodeIfPresent(Int.self, forKey: .modelId)
-        title = try container.decodeIfPresent(String.self, forKey: .title)
-        objectName = try container.decodeIfPresent(String.self, forKey: .objectName)
-        steps = try container.decodeIfPresent([Step].self, forKey: .steps)
-        instruction = try container.decodeIfPresent(Instruction.self, forKey: .instruction)
-        order = try container.decodeIfPresent(Int.self, forKey: .order)
     }
     
 }

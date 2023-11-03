@@ -9,19 +9,19 @@ import Foundation
 
 
 
-public struct Confirmation: Codable {
+public struct Confirmation: Hashable, Codable {
 
     public var comment: String?
     public var photoUrl: String?
     public var date: Int64?
     /** Whether the step was successfully finished by the user. */
-    public var done: Bool
+    public var done: Bool?
     
     public init(
-        comment: String? =  "",
-        photoUrl: String? = "",
-        date: Int64? = 0,
-        done: Bool = false
+        comment: String? = nil,
+        photoUrl: String? = nil,
+        date: Int64? = nil,
+        done: Bool? = nil
     ) {
         self.comment = comment
         self.photoUrl = photoUrl

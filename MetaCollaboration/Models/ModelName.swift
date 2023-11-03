@@ -9,15 +9,17 @@ import Foundation
 
 
 
-public struct ModelName: Codable {
+public struct ModelName: Hashable, Codable {
 
     public var ios: String?
     public var android: String?
 
-    public init(ios: String? = nil, android: String? = nil) {
+    public init(
+        ios: String? = nil,
+        android: String? = nil
+    ) {
         self.ios = ios
         self.android = android
     }
-
 
 }

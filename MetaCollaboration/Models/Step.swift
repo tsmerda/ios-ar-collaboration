@@ -9,17 +9,21 @@ import Foundation
 
 
 
-public struct Step: Identifiable, Codable {
+public struct Step: Hashable, Codable {
 
-    public var id: String
     public var objectName: String?
     public var coordinates: [Coordinates]?
-    public var contents: [Content]?
+    public var contents: [Content]
     public var confirmation: Confirmation?
-    public var order: Int?
+    public var order: Decimal?
 
-    public init(id: String? = nil, objectName: String? = nil, coordinates: [Coordinates]? = nil, contents: [Content], confirmation: Confirmation? = nil, order: Int? = nil) {
-        self.id = id ?? UUID().uuidString
+    public init(
+        objectName: String? = nil,
+        coordinates: [Coordinates]? = nil,
+        contents: [Content],
+        confirmation: Confirmation? = nil,
+        order: Decimal? = nil
+    ) {
         self.objectName = objectName
         self.coordinates = coordinates
         self.contents = contents
@@ -27,15 +31,4 @@ public struct Step: Identifiable, Codable {
         self.order = order
     }
     
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
-        objectName = try container.decodeIfPresent(String.self, forKey: .objectName)
-        coordinates = try container.decodeIfPresent([Coordinates].self, forKey: .coordinates)
-        contents = try container.decodeIfPresent([Content].self, forKey: .contents)
-        confirmation = try container.decodeIfPresent(Confirmation.self, forKey: .confirmation)
-        order = try container.decodeIfPresent(Int.self, forKey: .order)
-    }
-
-
 }

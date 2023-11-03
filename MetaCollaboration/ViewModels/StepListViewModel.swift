@@ -9,16 +9,16 @@ import Foundation
 
 final class StepListViewModel: ObservableObject {
     let guide: ExtendedGuideResponse?
-    let currentStepId: String
-    let onSelectStep: (Int) -> Void
+    let stepOrder: Decimal?
+    let onSelectPreviousStep: () -> Void
     
     init(
         guide: ExtendedGuideResponse?,
-        currentStepId: String,
-        onSelectStep: @escaping (Int) -> Void
+        stepOrder: Decimal,
+        onSelectPreviousStep: @escaping () -> Void
     ) {
         self.guide = guide
-        self.currentStepId = currentStepId
-        self.onSelectStep = onSelectStep
+        self.stepOrder = stepOrder
+        self.onSelectPreviousStep = onSelectPreviousStep
     }
 }

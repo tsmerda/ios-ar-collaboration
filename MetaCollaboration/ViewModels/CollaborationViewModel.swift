@@ -29,7 +29,7 @@ final class CollaborationViewModel: ObservableObject {
     @Published private(set) var progressHudState: ProgressHudState = .shouldHideProgress
     @Published var referenceObjects: Set<ARReferenceObject> = []
     @Published var currentStep: ObjectStep? /*= ObjectStep.example*/
-    @Published var currentGuide: ExtendedGuideResponse?
+    @Published var currentGuide: ExtendedGuideResponse
     //    @Published var uniqueID = UUID()
     
     // MARK: Collaboration properties
@@ -37,7 +37,7 @@ final class CollaborationViewModel: ObservableObject {
     @Published var arView: ARView!
     @Published var multipeerSession: MultipeerSession?
     @Published var sessionIDObservation: NSKeyValueObservation?
-        
+    
     // TODO: - je tohle potreba?
     var showStepSheet: Binding<Bool>?
     
@@ -47,12 +47,18 @@ final class CollaborationViewModel: ObservableObject {
     
     // MARK: - Initialization
     init(
-        currentGuide: ExtendedGuideResponse? = nil,
+        currentGuide: ExtendedGuideResponse,
         referenceObjects: Set<ARReferenceObject>
     ) {
         self.currentGuide = currentGuide
         self.referenceObjects = referenceObjects
         debugPrint(referenceObjects)
+        if let currentGuideId = currentGuide.id,
+           let firstStepOrder = currentGuide.objectSteps?.first?.order {
+            getStepById(currentGuideId, firstStepOrder)
+        } else {
+            debugPrint("Failed to get first step")
+        }
     }
     
     deinit {
@@ -66,8 +72,35 @@ final class CollaborationViewModel: ObservableObject {
     //    }
     
     func toggleStepDone(step: Step) {
-        if let index = currentStep?.steps?.firstIndex(where: { $0.id == step.id }) {
-            currentStep?.steps?[index].confirmation?.done.toggle()
+        //        if let index = currentStep?.steps?.firstIndex(where: { $0.id == step.id }) {
+        //            currentStep?.steps?[index].confirmation?.done.toggle()
+        //        }
+    }
+    
+    func getNextStep() {
+        if let currentGuideId = currentGuide.id,
+           let currentStepOrder = currentStep?.order {
+            getStepById(currentGuideId, currentStepOrder + 1)
+        } else {
+            debugPrint("Failed to get next step")
+        }
+    }
+    
+    func getPreviousStep() {
+        if let currentGuideId = currentGuide.id,
+           let currentStepOrder = currentStep?.order {
+            getStepById(currentGuideId, currentStepOrder - 1)
+        } else {
+            debugPrint("Failed to get previous step")
+        }
+    }
+    
+    func isLastStep() -> Bool {
+        if let currentStepOrder = currentStep?.order,
+           let stepCount = currentGuide.objectSteps?.count {
+            return currentStepOrder == Decimal(stepCount)
+        } else {
+            return false
         }
     }
 }
@@ -75,7 +108,7 @@ final class CollaborationViewModel: ObservableObject {
 // MARK: - Network methods
 
 extension CollaborationViewModel {
-    func getStepById(_ guideId: String, _ objectStepOrder: Int) {
+    func getStepById(_ guideId: String, _ objectStepOrder: Decimal) {
         Task { @MainActor in
             progressHudState = .shouldShowProgress
             do {

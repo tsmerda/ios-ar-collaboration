@@ -74,10 +74,9 @@ private extension GuideDetailView {
             AsyncImage(url: URL(string: imageUrl)){ image in
                 image
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    .aspectRatio(contentMode: .fit)
                     .cornerRadius(8)
             } placeholder: { Color("secondaryColor") }
-                .frame(width: .infinity, height: 200)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         }
     }

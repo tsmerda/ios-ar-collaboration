@@ -15,4 +15,14 @@ public struct Instruction: Codable {
     public var text: String?
     public var imageUrl: String?
 
+    public init(
+        title: String? = nil,
+        text: String? = nil,
+        imageUrl: String? = nil
+    ) {
+        self.title = title
+        self.text = text
+        self.imageUrl = imageUrl
+    }
+
 }

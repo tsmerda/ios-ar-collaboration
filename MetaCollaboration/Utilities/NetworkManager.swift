@@ -10,16 +10,16 @@ import Foundation
 protocol NetworkManagerProtocol {
     func getAllGuides() async throws -> [Guide]
     func getGuideById(guideId: String) async throws -> ExtendedGuideResponse
-    func getStepById(guideId: String, objectStepOrder: Int) async throws -> ObjectStep
+    func getStepById(guideId: String, objectStepOrder: Decimal) async throws -> ObjectStep
     func getAllAssets() async throws -> [Asset]
     func getAssetByName(assetName: String) async throws -> (URL, String)
     func putGuideConfirmation(guide: Guide) async throws
 }
 
+// TODO: -- For the local server, get the IP from the device instead of changing it every time
 class NetworkManager: NetworkManagerProtocol {
-    
     static let shared = NetworkManager()
-    private let baseURL = "http://192.168.1.14:8080/api/v3"
+    private let baseURL = "http://192.168.1.13:8080/api/v3"
     
     // MARK: - Get all guides
     func getAllGuides() async throws -> [Guide] {
@@ -32,7 +32,7 @@ class NetworkManager: NetworkManagerProtocol {
         config.waitsForConnectivity = true
         
         let (data, response) = try await URLSession(configuration: config).data(from: url)
-        print(String(decoding: data, as: UTF8.self))
+        // print(String(decoding: data, as: UTF8.self))
         
         guard (response as? HTTPURLResponse)?.statusCode == 200 else {
             throw NetworkError.serverError
@@ -55,7 +55,7 @@ class NetworkManager: NetworkManagerProtocol {
         }
         
         let (data, response) = try await URLSession.shared.data(from: url)
-        print(String(decoding: data, as: UTF8.self))
+        // print(String(decoding: data, as: UTF8.self))
         
         guard (response as? HTTPURLResponse)?.statusCode == 200 else {
             throw NetworkError.serverError
@@ -72,13 +72,13 @@ class NetworkManager: NetworkManagerProtocol {
     }
     
     // MARK: - Get object step by id and step order
-    func getStepById(guideId: String, objectStepOrder: Int) async throws -> ObjectStep {
+    func getStepById(guideId: String, objectStepOrder: Decimal) async throws -> ObjectStep {
         guard let url = URL(string: baseURL + "/guides/\(guideId)/\(objectStepOrder)") else {
             throw NetworkError.invalidURL
         }
         
         let (data, response) = try await URLSession.shared.data(from: url)
-        print(String(decoding: data, as: UTF8.self))
+        // print(String(decoding: data, as: UTF8.self))
         
         guard (response as? HTTPURLResponse)?.statusCode == 200 else {
             throw NetworkError.serverError
@@ -101,7 +101,7 @@ class NetworkManager: NetworkManagerProtocol {
         }
         
         let (data, response) = try await URLSession.shared.data(from: url)
-        print(String(decoding: data, as: UTF8.self))
+        // print(String(decoding: data, as: UTF8.self))
         
         guard (response as? HTTPURLResponse)?.statusCode == 200 else {
             throw NetworkError.serverError

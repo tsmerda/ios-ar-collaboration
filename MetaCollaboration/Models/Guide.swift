@@ -9,8 +9,24 @@ import Foundation
 
 
 
+//public struct Guide: Hashable, Identifiable, Codable {
+//    
+//    public enum GuideType: String, Codable {
+//        case manual = "manual"
+//        case tutorial = "tutorial"
+//        case wizard = "wizard"
+//        case witch = "witch"
+//    }
+//    public var id: String?
+//    public var name: String
+//    public var description: String?
+//    public var imageUrl: String?
+//    public var guideType: GuideType
+//    
+//}
+
 public struct Guide: Hashable, Identifiable, Codable {
-    
+
     public enum GuideType: String, Codable {
         case manual = "manual"
         case tutorial = "tutorial"
@@ -21,8 +37,25 @@ public struct Guide: Hashable, Identifiable, Codable {
     public var name: String
     public var description: String?
     public var imageUrl: String?
+    public var modelName: ModelName?
     public var guideType: GuideType
-    
+
+    public init(
+        id: String? = nil,
+        name: String,
+        description: String? = nil,
+        imageUrl: String? = nil,
+        modelName: ModelName? = nil,
+        guideType: GuideType
+    ) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.imageUrl = imageUrl
+        self.modelName = modelName
+        self.guideType = guideType
+    }
+
 }
 
 #if DEBUG

@@ -9,17 +9,20 @@ import Foundation
 
 
 
-public struct Coordinates: Codable {
+public struct Coordinates: Hashable, Codable {
 
     public var x: Int?
     public var y: Int?
     public var z: Int?
 
-    public init(x: Int? = nil, y: Int? = nil, z: Int? = nil) {
+    public init(
+        x: Int? = nil,
+        y: Int? = nil,
+        z: Int? = nil
+    ) {
         self.x = x
         self.y = y
         self.z = z
     }
-
 
 }

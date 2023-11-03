@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		B505025C299FDBF700121A5A /* ChooseModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B505025B299FDBF700121A5A /* ChooseModeView.swift */; };
 		B5134E542AB8402E0062447F /* ImagePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5134E532AB8402E0062447F /* ImagePopupView.swift */; };
+		B51A8E5A2AF4E88200BB088F /* FinalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51A8E592AF4E88200BB088F /* FinalView.swift */; };
+		B52E5B942AF2B5B900FA891E /* ConfirmationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52E5B932AF2B5B900FA891E /* ConfirmationViewModel.swift */; };
 		B5537B682A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */; };
 		B5537B6A2A0FABB7006F8102 /* ARView+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */; };
 		B5537B6C2A0FAC97006F8102 /* ARViewContainer+Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */; };
@@ -63,6 +65,8 @@
 /* Begin PBXFileReference section */
 		B505025B299FDBF700121A5A /* ChooseModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseModeView.swift; sourceTree = "<group>"; };
 		B5134E532AB8402E0062447F /* ImagePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePopupView.swift; sourceTree = "<group>"; };
+		B51A8E592AF4E88200BB088F /* FinalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalView.swift; sourceTree = "<group>"; };
+		B52E5B932AF2B5B900FA891E /* ConfirmationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationViewModel.swift; sourceTree = "<group>"; };
 		B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollaborationViewModel+MultipeerSession.swift"; sourceTree = "<group>"; };
 		B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARView+Gestures.swift"; sourceTree = "<group>"; };
 		B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARViewContainer+Session.swift"; sourceTree = "<group>"; };
@@ -248,6 +252,7 @@
 				B55E19772A6812F3000FD066 /* StepDetailView.swift */,
 				B55E19752A6812B1000FD066 /* ConfirmationView.swift */,
 				B581CF1D2A6E9B9B0084DDB2 /* SettingsView.swift */,
+				B51A8E592AF4E88200BB088F /* FinalView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -256,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				B59B595C2AE7FFDD00B4004B /* GuideListViewModel.swift */,
+				B52E5B932AF2B5B900FA891E /* ConfirmationViewModel.swift */,
 				B593B4DD2AEEB3CB009A88B8 /* StepListViewModel.swift */,
 				B593B4DF2AEEDF62009A88B8 /* StepDetailViewModel.swift */,
 				B59B595E2AE804B000B4004B /* GuideDetailViewModel.swift */,
@@ -359,6 +365,7 @@
 				B505025C299FDBF700121A5A /* ChooseModeView.swift in Sources */,
 				B581CF262A6EC5800084DDB2 /* ExtendedGuideResponse.swift in Sources */,
 				B59369E02A667D5000C3B9F2 /* CollaborationView.swift in Sources */,
+				B52E5B942AF2B5B900FA891E /* ConfirmationViewModel.swift in Sources */,
 				B56CE57729BCC928007D092F /* Confirmation.swift in Sources */,
 				B59B595F2AE804B000B4004B /* GuideDetailViewModel.swift in Sources */,
 				B59369DE2A65AE1C00C3B9F2 /* LoadingView.swift in Sources */,
@@ -381,6 +388,7 @@
 				B5537B6C2A0FAC97006F8102 /* ARViewContainer+Session.swift in Sources */,
 				B5537B682A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift in Sources */,
 				B59369DC2A65AA2500C3B9F2 /* NetworkManager.swift in Sources */,
+				B51A8E5A2AF4E88200BB088F /* FinalView.swift in Sources */,
 				B5134E542AB8402E0062447F /* ImagePopupView.swift in Sources */,
 				B55E19782A6812F3000FD066 /* StepDetailView.swift in Sources */,
 				B581CF1E2A6E9B9B0084DDB2 /* SettingsView.swift in Sources */,

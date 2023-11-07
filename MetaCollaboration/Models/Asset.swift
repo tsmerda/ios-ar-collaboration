@@ -7,9 +7,7 @@
 
 import Foundation
 
-
 public struct Asset: Codable {
-    
     public var assetName: Data?
     public var description: String?
 
@@ -20,5 +18,4 @@ public struct Asset: Codable {
         self.assetName = assetName
         self.description = description
     }
- 
 }

@@ -102,7 +102,7 @@ extension ARView {
     
     #if !targetEnvironment(simulator)
     func placeSceneObject(for anchor: ARObjectAnchor, _ viewModel: CollaborationViewModel) {
-        //    TODO: Opravit nacitani usdz modelu ARROW
+        //    TODO: Opravit nacitani usdz modelu
         //        guard let usdzModel = viewModel.usdzModel else {
         //            print("Error: No model URL provided")
         //            return
@@ -112,7 +112,7 @@ extension ARView {
             
             // Create and add entity to newAnchor
             // let entity = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
-            guard let entity = try? Entity.load(named: "arrow") else {
+            guard let entity = try? Entity.load(named: "CamelAnotation") else {
                 print("Error: No model URL provided")
                 return
             }
@@ -120,49 +120,19 @@ extension ARView {
             entity.generateCollisionShapes(recursive: true)
             entity.components[ObjectType.self] = ObjectType(kind: .inserted)
             
-            // TODO: -- Prehrat animaci USDZ modelu - treba sipka bude ukazovat na nejaky bod a bude jezdit dopredu a dozadu
-            // for anim in entity.availableAnimations {
-            //      entity.playAnimation(anim.repeat(duration: .infinity), transitionDuration: 1.25, startsPaused: false)
-            // }
+            /// Run USDZ animation
+            /// for anim in entity.availableAnimations {
+            ///      entity.playAnimation(anim.repeat(duration: .infinity), transitionDuration: 1.25, startsPaused: false)
+            /// }
             
-            // TODO: -- Z BE se budou tahat souradnice pozice modelu v zavislosti na bounding boxu Anchoru rozpoznaneho 3D objektu
-            // Insert next to detected object
-            let boundingBoxSize = anchor.referenceObject.extent
-            let modelTranslation = SIMD3<Float>(-boundingBoxSize.x / 2, boundingBoxSize.y / 2, boundingBoxSize.z)
-            let modelRotation = simd_quatf(angle: .pi/2, axis: SIMD3<Float>(0, 1, 0))
+            /// Bounding box of detected object
+            /// let boundingBoxSize = anchor.referenceObject.extent
+            /// let centerTranslation = SIMD3<Float>(boundingBoxCenter.x, boundingBoxCenter.y, boundingBoxCenter.z)
             
-            let modelTransform = Transform(rotation: modelRotation, translation: modelTranslation)
-            entity.transform = modelTransform
-            entity.transform.scale = simd_float3(0.00015, 0.00015, 0.00015)
+            let boundingBoxCenter = anchor.referenceObject.center
             modelAnchor.addChild(entity)
             
-            // TODO: -- Najit velikost sipky a souradnice a zpracovat
-            // ENTITY 2
-            //            let entity2 = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
-            guard let entity2 = try? Entity.load(named: "arrow") else {
-                print("Error: No model URL provided")
-                return
-            }
-            
-            entity2.generateCollisionShapes(recursive: true)
-            entity2.components[ObjectType.self] = ObjectType(kind: .inserted)
-            let modelTranslation2 = SIMD3<Float>(-boundingBoxSize.x / 2, boundingBoxSize.y / 2, -boundingBoxSize.z)
-            let modelRotation2 = simd_quatf(angle: -.pi/2, axis: SIMD3<Float>(0, 1, 0))
-            
-            let modelTransform2 = Transform(rotation: modelRotation2, translation: modelTranslation2)
-            entity2.transform = modelTransform2
-            entity2.transform.scale = simd_float3(0.00015, 0.00015, 0.00015)
-            modelAnchor.addChild(entity2)
-            
-            //            let modelTranslation = SIMD3<Float>(0.1, 0.05, 0)
-            //            let modelRotation = simd_quatf(angle: .pi, axis: SIMD3<Float>(0, 1, 0)) // Rotate by 180 degrees around Y-axis
-            //            let modelTransform = Transform(rotation: modelRotation, translation: modelTranslation)
-            //
-            //            entity.transform = modelTransform
-            //            entity.transform.scale = simd_float3(0.0002, 0.0002, 0.0002)
-            //            modelAnchor.addChild(entity)
-            
-            // self.installGestures([.all], for: entity)
+            /// self.installGestures([.all], for: entity)
             
             modelAnchor.synchronization?.ownershipTransferMode = .autoAccept
             modelAnchor.anchoring = AnchoringComponent(anchor)

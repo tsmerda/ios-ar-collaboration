@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-
 public struct Instruction: Codable {
-
     public var title: String?
     public var text: String?
     public var imageUrl: String?
@@ -24,5 +21,4 @@ public struct Instruction: Codable {
         self.text = text
         self.imageUrl = imageUrl
     }
-
 }

@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-
 public struct ExtendedGuideResponse: Hashable, Identifiable, Codable {
-    
     public enum GuideType: String, Codable {
         case manual = "manual"
         case tutorial = "tutorial"
@@ -42,7 +39,6 @@ public struct ExtendedGuideResponse: Hashable, Identifiable, Codable {
         self.guideType = guideType
         self.objectSteps = objectSteps
     }
-    
 }
 
 #if DEBUG

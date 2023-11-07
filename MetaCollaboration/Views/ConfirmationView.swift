@@ -11,16 +11,9 @@ import PhotosUI
 struct ConfirmationView: View {
     @StateObject private var viewModel: ConfirmationViewModel
     @Environment(\.dismiss) private var dismiss
-    @State private var selectedRating: Int = 0
-    @State private var notes: String = ""
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
     @State private var showFinalView: Bool = false
-    @FocusState private var focusedField: Field?
-    
-    private enum Field: Int, CaseIterable {
-        case notes
-    }
     private let progressHudBinding: ProgressHudBinding
     
     init(viewModel: ConfirmationViewModel) {
@@ -30,6 +23,34 @@ struct ConfirmationView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
+            rating
+            divider
+            comment
+            divider
+            uploadPhoto
+            Spacer()
+            buttonsStack
+        }
+        .ignoresSafeArea(.keyboard)
+        .padding()
+        .navigationTitle("Step 1 confirmation")
+        .navigationBarTitleDisplayMode(.large)
+        .background(
+            Color("backgroundColor")
+                .ignoresSafeArea(.all, edges: .all)
+                .onTapGesture {
+                    hideKeyboard()
+                }
+        )
+        .navigationDestination(isPresented: $showFinalView) {
+            FinalView()
+        }
+    }
+}
+
+private extension ConfirmationView {
+    var rating: some View {
+        VStack(alignment: .leading) {
             Text("Rating")
                 .font(.system(size: 15))
                 .foregroundColor(Color("disabledColor"))
@@ -37,38 +58,42 @@ struct ConfirmationView: View {
             
             HStack {
                 ForEach(0..<5, id: \.self) { index in
-                    Image(systemName: index < selectedRating ? "star.fill" : "star")
+                    Image(systemName: index < viewModel.selectedRating ? "star.fill" : "star")
                         .font(.system(size: 24, weight: .light))
                         .foregroundColor(.white)
-                        .onTapGesture { selectedRating = index + 1 }
+                        .onTapGesture { viewModel.selectedRating = index + 1 }
                 }
                 Spacer()
             }
-            
-            Divider()
-                .background(Color("dividerColor"))
-                .padding(.top, 16)
-                .padding(.bottom, 32)
-            
-            Text("Notes")
+        }
+    }
+    var divider: some View {
+        Divider()
+            .background(Color("dividerColor"))
+            .padding(.vertical, 24)
+    }
+    var comment: some View {
+        VStack(alignment: .leading) {
+            Text("Comment")
                 .font(.system(size: 15))
                 .foregroundColor(Color("disabledColor"))
                 .padding(.bottom, 8)
             
-            TextField("Text", text: $notes, axis: .vertical)
-                .focused($focusedField, equals: .notes)
-                .frame(width: .infinity, height: 100, alignment: .top)
-                .foregroundColor(.white)
-                .padding(.horizontal)
-                .padding(.vertical, 10)
-                .background(Color("dividerColor"))
-                .cornerRadius(8)
-            
-            Divider()
-                .background(Color("dividerColor"))
-                .padding(.top, 16)
-                .padding(.bottom, 32)
-            
+            TextField(
+                "Write some text",
+                text: $viewModel.comment,
+                axis: .vertical
+            )
+            .lineLimit(3...)
+            .foregroundColor(.white)
+            .padding(10)
+            .background(Color("dividerColor"))
+            .cornerRadius(8)
+            .foregroundColor(Color("disabledColor"))
+        }
+    }
+    var uploadPhoto: some View {
+        VStack(alignment: .leading) {
             Text("Photo")
                 .font(.system(size: 15))
                 .foregroundColor(Color("disabledColor"))
@@ -97,7 +122,6 @@ struct ConfirmationView: View {
                     }
                     .onChange(of: selectedItem) { newItem in
                         Task {
-                            // Retrieve selected asset in the form of Data
                             if let data = try? await newItem?.loadTransferable(type: Data.self) {
                                 selectedImageData = data
                             }
@@ -113,42 +137,24 @@ struct ConfirmationView: View {
                         .cornerRadius(8)
                 }
             }
-            
-            Spacer()
-            
-            HStack {
-                Button("Cancel"){
+        }
+    }
+    var buttonsStack: some View {
+        HStack {
+            Button("Cancel"){
+                dismiss()
+            }
+            .buttonStyle(ButtonStyledOutline())
+            Button("Confirm"){
+                if viewModel.isLastStep {
+                    viewModel.onConfirmationAction()
+                    showFinalView.toggle()
+                } else {
+                    viewModel.onConfirmationAction()
                     dismiss()
                 }
-                .buttonStyle(ButtonStyledOutline())
-                Button("Confirm"){
-                    if viewModel.isLastStep {
-                        showFinalView.toggle()
-                    } else {
-                        viewModel.onConfirmationAction()
-                        dismiss()
-                    }
-                }
-                .buttonStyle(ButtonStyledFill())
             }
-        }
-        .padding()
-        .navigationTitle("Step 1 confirmation")
-        .navigationBarTitleDisplayMode(.large)
-        .background(Color("backgroundColor")
-            .ignoresSafeArea(.all, edges: .all))
-        .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackground(Color("backgroundColor"), for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .keyboard) {
-                Button("Done") {
-                    focusedField = nil
-                }
-            }
-        }
-        .navigationDestination(isPresented: $showFinalView) {
-            FinalView()
+            .buttonStyle(ButtonStyledFill())
         }
     }
 }
@@ -156,7 +162,8 @@ struct ConfirmationView: View {
 #Preview {
     ConfirmationView(
         viewModel: ConfirmationViewModel(
-            guide: ExtendedGuideResponse.example,
+            guideId: "",
+            stepId: "",
             onStepConfirmation: {}
         )
     )

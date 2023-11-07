@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-
 public struct ModelName: Hashable, Codable {
-
     public var ios: String?
     public var android: String?
 
@@ -21,5 +18,4 @@ public struct ModelName: Hashable, Codable {
         self.ios = ios
         self.android = android
     }
-
 }

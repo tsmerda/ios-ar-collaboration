@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-enum SelectedMode {
-    case none
-    case online
-    case offline
-}
-
 struct ChooseModeView: View {
     @AppStorage("appMode") var appMode: ActiveAppMode = .none
     @State private var selectedMode: SelectedMode = .none

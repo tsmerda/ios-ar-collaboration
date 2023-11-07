@@ -9,15 +9,6 @@ import Foundation
 import ARKit
 import RealityKit
 
-struct ObjectType: Component {
-    enum ObjectKind {
-        case detected
-        case inserted
-    }
-    
-    let kind: ObjectKind
-}
-
 extension ARViewContainer {
     // Communicate changes from UIView to SwiftUI by updating the properties of your coordinator
     // Confrom the coordinator to ARSessionDelegate

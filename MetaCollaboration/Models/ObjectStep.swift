@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-
 public struct ObjectStep: Identifiable, Codable {
-    
     public var id: String?
     public var modelId: Int?
     public var title: String?
@@ -18,6 +15,7 @@ public struct ObjectStep: Identifiable, Codable {
     public var coordinates: [Coordinates]?
     public var steps: [Step]?
     public var instruction: Instruction?
+    public var confirmation: Confirmation?
     public var order: Decimal?
 
     public init(
@@ -28,6 +26,7 @@ public struct ObjectStep: Identifiable, Codable {
         coordinates: [Coordinates]? = nil,
         steps: [Step]? = nil,
         instruction: Instruction? = nil,
+        confirmation: Confirmation? = nil,
         order: Decimal? = nil
     ) {
         self.id = id
@@ -37,9 +36,9 @@ public struct ObjectStep: Identifiable, Codable {
         self.coordinates = coordinates
         self.steps = steps
         self.instruction = instruction
+        self.confirmation = confirmation
         self.order = order
     }
-    
 }
 
 

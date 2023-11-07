@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-
 public struct ExtendedGuide: Identifiable, Codable {
-    
     public enum GuideType: String, Codable {
         case manual = "manual"
         case tutorial = "tutorial"
@@ -42,5 +39,4 @@ public struct ExtendedGuide: Identifiable, Codable {
         self.guideType = guideType
         self.objectSteps = objectSteps
     }
-    
 }

@@ -16,13 +16,6 @@ import SwiftUI
 import RealityKit
 import MultipeerConnectivity
 
-
-enum ActiveAppMode: String {
-    case none
-    case onlineMode
-    case offlineMode
-}
-
 final class CollaborationViewModel: ObservableObject {
     // MARK: - Properties
     // TODO: - je @Published potreba?
@@ -52,11 +45,12 @@ final class CollaborationViewModel: ObservableObject {
     ) {
         self.currentGuide = currentGuide
         self.referenceObjects = referenceObjects
-        debugPrint(referenceObjects)
+        // TODO: -- Proc se zavola dvakrat ??
         if let currentGuideId = currentGuide.id,
            let firstStepOrder = currentGuide.objectSteps?.first?.order {
             getStepById(currentGuideId, firstStepOrder)
         } else {
+            print(currentGuide.id, currentGuide.objectSteps?.first?.order)
             debugPrint("Failed to get first step")
         }
     }
@@ -108,6 +102,7 @@ final class CollaborationViewModel: ObservableObject {
 // MARK: - Network methods
 
 extension CollaborationViewModel {
+    // Get step by ID
     func getStepById(_ guideId: String, _ objectStepOrder: Decimal) {
         Task { @MainActor in
             progressHudState = .shouldShowProgress
@@ -116,6 +111,23 @@ extension CollaborationViewModel {
                 progressHudState = .shouldHideProgress
             } catch {
                 progressHudState = .shouldShowFail(message: error.localizedDescription)
+            }
+        }
+    }
+    
+    // Get updated guide by ID
+    func getUpdatedGuideById() {
+        if let currentGuideId = currentGuide.id {
+            Task { @MainActor in
+                progressHudState = .shouldShowProgress
+                do {
+                    let updatedGuide = try await NetworkManager.shared.getGuideById(guideId: currentGuideId)
+                    currentGuide = updatedGuide
+                    PersistenceManager.shared.updateGuide(updatedGuide)
+                    progressHudState = .shouldHideProgress
+                } catch {
+                    progressHudState = .shouldShowFail(message: error.localizedDescription)
+                }
             }
         }
     }

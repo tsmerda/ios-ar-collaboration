@@ -12,9 +12,8 @@ final class GuideDetailViewModel: ObservableObject {
     @Published private(set) var progressHudState: ProgressHudState = .shouldHideProgress
     @Published var guide: Guide
     @Published var currentGuide: ExtendedGuideResponse?
-    private let onDownloadGuide: (ExtendedGuideResponse) -> Void
-    private var downloadedGuides: [ExtendedGuideResponse] = []
-    // DO NOT WORK ON SIMULATOR!
+    @Published var downloadedGuides: [ExtendedGuideResponse] = []
+    // referenceObjects DOESNT NOT WORK ON SIMULATOR!
     @Published var referenceObjects: Set<ARReferenceObject> = []
     var downloadedGuide: Bool {
         if let itemId = guide.id {
@@ -25,14 +24,8 @@ final class GuideDetailViewModel: ObservableObject {
         return false
     }
     
-    init(
-        guide: Guide,
-        downloadedGuides: [ExtendedGuideResponse],
-        onDownloadGuide: @escaping (ExtendedGuideResponse) -> Void
-    ) {
+    init(guide: Guide) {
         self.guide = guide
-        self.downloadedGuides = downloadedGuides
-        self.onDownloadGuide = onDownloadGuide
         // Check downloaded reference objects saved locally and insert into referenceObjects
         // TODO: -- init just reference objects that are for current guide
         initReferenceObjects()
@@ -70,7 +63,7 @@ extension GuideDetailViewModel {
             do {
                 let guide = try await NetworkManager.shared.getGuideById(guideId: id)
                 downloadedGuides.append(guide)
-                onDownloadGuide(guide)
+                PersistenceManager.shared.saveGuidesToJSON(downloadedGuides)
                 
                 // TODO: - Implementovat stazeni vsech modelu, ktere jsou v danym <guide>
                 getAssetByName(assetName: "camel")

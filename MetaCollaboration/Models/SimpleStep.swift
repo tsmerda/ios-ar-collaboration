@@ -10,27 +10,28 @@ import Foundation
 
 
 public struct SimpleStep: Hashable, Identifiable, Codable {
-    
     public var id: String?
     public var order: Decimal?
     public var title: String?
     public var objectName: String?
     public var coordinates: [Coordinates]?
+    public var confirmation: Confirmation?
 
     public init(
         id: String? = nil,
         order: Decimal? = nil,
         title: String? = nil,
         objectName: String? = nil,
-        coordinates: [Coordinates]? = nil
+        coordinates: [Coordinates]? = nil,
+        confirmation: Confirmation? = nil
     ) {
         self.id = id
         self.order = order
         self.title = title
         self.objectName = objectName
         self.coordinates = coordinates
+        self.confirmation = confirmation
     }
-
 }
 
 

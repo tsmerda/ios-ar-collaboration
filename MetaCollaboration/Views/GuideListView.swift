@@ -37,13 +37,13 @@ struct GuideListView: View {
         .navigationDestination(for: Guide.self) { guide in
             GuideDetailView(
                 viewModel: GuideDetailViewModel(
-                    guide: guide,
-                    downloadedGuides: viewModel.downloadedGuides,
-                    onDownloadGuide: { viewModel.downloadedGuides.append($0) }
+                    guide: guide
                 )
             )
         }
         .onAppear {
+            // Check downloaded guide saved in local storage
+            viewModel.downloadedGuides = PersistenceManager.shared.loadGuidesFromJSON()
             viewModel.getAllGuides()
         }
         .sheet(isPresented: $isShowingSettings) {
@@ -55,7 +55,8 @@ struct GuideListView: View {
 private extension GuideListView {
     var guideList: some View {
         VStack {
-            if let guideList = viewModel.guideList, !guideList.isEmpty {
+            if let guideList = viewModel.guideList,
+               !guideList.isEmpty {
                 ForEach(guideList, id: \.id) { guide in
                     Button(action: {
                         nav.goToGuideDetail(guide)

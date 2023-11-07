@@ -13,13 +13,14 @@ protocol NetworkManagerProtocol {
     func getStepById(guideId: String, objectStepOrder: Decimal) async throws -> ObjectStep
     func getAllAssets() async throws -> [Asset]
     func getAssetByName(assetName: String) async throws -> (URL, String)
-    func putGuideConfirmation(guide: Guide) async throws
+    func putObjectStepConfirmation(confirmation: Confirmation, guideId: String, objectStepId: String) async throws
+    func putStepConfirmation(confirmation: Confirmation, guideId: String, objectStepId: String, stepId: String) async throws
 }
 
 // TODO: -- For the local server, get the IP from the device instead of changing it every time
 class NetworkManager: NetworkManagerProtocol {
     static let shared = NetworkManager()
-    private let baseURL = "http://192.168.1.13:8080/api/v3"
+    private let baseURL = "http://192.168.1.15:8080/api/v3"
     
     // MARK: - Get all guides
     func getAllGuides() async throws -> [Guide] {
@@ -131,9 +132,9 @@ class NetworkManager: NetworkManagerProtocol {
         return (localURL, response.suggestedFilename ?? "no-assetname")
     }
     
-    // MARK: - Put guide confirmation by guide
-    func putGuideConfirmation(guide: Guide) async throws {
-        guard let url = URL(string: baseURL + "/guides/\(guide.id!)") else {
+    // MARK: - Update confirmation for object step by object step id
+    func putObjectStepConfirmation(confirmation: Confirmation, guideId: String, objectStepId: String) async throws {
+        guard let url = URL(string: baseURL + "/guides/\(guideId)/\(objectStepId)") else {
             throw NetworkError.invalidURL
         }
         
@@ -141,8 +142,38 @@ class NetworkManager: NetworkManagerProtocol {
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let encoded = try JSONEncoder().encode(guide)
-        let (_, response) = try await URLSession.shared.upload(for: request, from: encoded)
+        let encoded = try JSONEncoder().encode(confirmation)
+        let (data, response) = try await URLSession.shared.upload(for: request, from: encoded)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NetworkError.invalidData
+        }
+        
+        if httpResponse.statusCode != 200 {
+            if let errorDetail = try? JSONDecoder().decode(ServerErrorDetail.self, from: data) {
+                throw NetworkError.serverResponseError(errorDetail.detail ?? NetworkError.serverError.localizedDescription)
+            } else {
+                throw NetworkError.unknown(NetworkError.serverError)
+            }
+        }
+    }
+    
+    // MARK: - Update confirmation for object step by step id
+    func putStepConfirmation(confirmation: Confirmation, guideId: String, objectStepId: String, stepId: String) async throws {
+        guard let url = URL(string: baseURL + "/guides/\(guideId)/\(objectStepId)/\(stepId)") else {
+            throw NetworkError.invalidURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let encoded = try JSONEncoder().encode(confirmation)
+        let (data, response) = try await URLSession.shared.upload(for: request, from: encoded)
+        print("DATA_SMALL____")
+        print(String(decoding: data, as: UTF8.self))
+        print("RESPONSE_SMALL____")
+        print(response)
         
         guard let httpResponse = response as? HTTPURLResponse,
               200..<300 ~= httpResponse.statusCode else {

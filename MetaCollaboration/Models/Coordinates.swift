@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-
 public struct Coordinates: Hashable, Codable {
-
     public var x: Int?
     public var y: Int?
     public var z: Int?
@@ -24,5 +21,4 @@ public struct Coordinates: Hashable, Codable {
         self.y = y
         self.z = z
     }
-
 }

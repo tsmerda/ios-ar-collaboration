@@ -60,13 +60,12 @@ private extension StepListView {
                             .foregroundColor(.accentColor)
                             .padding(.trailing, 8)
                     }
-                    //  TODO: - Pridat az bude hotovy BE vypis stepu podle confirmation
-                    if true {
-                        Image(systemName: "circle")
-                            .font(.system(size: 24, weight: .light))
-                    } else {
+                    if step.confirmation?.done == true {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.accentColor)
+                            .font(.system(size: 24, weight: .light))
+                    } else {
+                        Image(systemName: "circle")
                             .font(.system(size: 24, weight: .light))
                     }
                 }

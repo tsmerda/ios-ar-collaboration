@@ -10,10 +10,6 @@ import SwiftUI
 struct StepDetailView: View {
     @StateObject private var viewModel: StepDetailViewModel
     
-    //    @Binding var guide: ExtendedGuide?
-    //    @State private var selectedStep: Int = 0
-    //    @State private var isConfirmed: Bool = false
-    
     init(viewModel: StepDetailViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }

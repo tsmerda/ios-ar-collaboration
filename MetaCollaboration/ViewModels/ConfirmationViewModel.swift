@@ -8,39 +8,61 @@
 import Foundation
 
 final class ConfirmationViewModel: ObservableObject {
-    let guide: ExtendedGuideResponse?
+    let guideId: String?
+    let stepId: String?
     let onStepConfirmation: () -> Void
     let isLastStep: Bool
+    @Published var selectedRating: Int = 0
+    @Published var comment: String = ""
+    @Published var photoUrl: String = ""
     @Published private(set) var progressHudState: ProgressHudState = .shouldHideProgress
     
     init(
-        guide: ExtendedGuideResponse?,
+        guideId: String?,
+        stepId: String?,
         onStepConfirmation: @escaping () -> Void,
         isLastStep: Bool = false
     ) {
-        self.guide = guide
+        self.guideId = guideId
+        self.stepId = stepId
         self.onStepConfirmation = onStepConfirmation
         self.isLastStep = isLastStep
     }
     
     func onConfirmationAction() {
-        // TODO: -- confirmation request implementation below
-        // putGuideConfirmation()
-        onStepConfirmation() // TODO: -- Remove after putGuideConfirmation request
+        onObjectStepConfirmation()
     }
 }
 
 private extension ConfirmationViewModel {
-//    func putGuideConfirmation() {
-//        Task { @MainActor in
-//            progressHudState = .shouldShowProgress
-//            do {
-//                try await NetworkManager.shared.putGuideConfirmation(guide: Guide)
-//                progressHudState = .shouldShowSuccess(message: "Successfully confirmed")
-//                onStepConfirmation()
-//            } catch {
-//                progressHudState = .shouldShowFail(message: error.localizedDescription)
-//            }
-//        }
-//    }
+    func onObjectStepConfirmation() {
+        Task { @MainActor in
+            progressHudState = .shouldShowProgress
+            guard let guideId = guideId, let stepId = stepId else {
+                progressHudState = .shouldShowFail(message: "Missing guide ID or step ID.")
+                return
+            }
+            var finalComment = comment
+            if selectedRating != 0 {
+                finalComment += ". Hodnocení \(selectedRating) \(selectedRating.ratingDescription)."
+            }
+            
+            do {
+                try await NetworkManager.shared.putObjectStepConfirmation(
+                    confirmation: Confirmation(
+                        comment: finalComment,
+                        photoUrl: "",
+                        date: Int64(Date().timeIntervalSince1970),
+                        done: true
+                    ),
+                    guideId: guideId,
+                    objectStepId: stepId
+                )
+                onStepConfirmation()
+                progressHudState = .shouldShowSuccess(message: "Successfully confirmed")
+            } catch {
+                progressHudState = .shouldShowFail(message: error.localizedDescription)
+            }
+        }
+    }
 }

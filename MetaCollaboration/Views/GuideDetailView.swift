@@ -28,6 +28,7 @@ struct GuideDetailView: View {
                 }
             }
             Spacer()
+            // TODO: -- add LOADING PROGRESS
             buttonsLabel
             buttonsStack
         }
@@ -41,6 +42,9 @@ struct GuideDetailView: View {
                     referenceObjects: viewModel.referenceObjects
                 )
             )
+        }
+        .onAppear {
+            viewModel.downloadedGuides = PersistenceManager.shared.loadGuidesFromJSON()
         }
     }
 }
@@ -68,6 +72,7 @@ private extension GuideDetailView {
             .multilineTextAlignment(.leading)
             .padding(.bottom, 8)
     }
+    // TODO: -- add loader while loading
     @ViewBuilder
     var guideImage: some View {
         if let imageUrl = viewModel.guide.imageUrl {
@@ -129,7 +134,7 @@ private extension GuideDetailView {
                 }
             }
             .buttonStyle(ButtonStyledFill())
-            .disabled(!viewModel.downloadedGuide)
+            .disabled(!viewModel.downloadedGuide || viewModel.referenceObjects.isEmpty)
         }
     }
 }
@@ -137,9 +142,7 @@ private extension GuideDetailView {
 #Preview {
     GuideDetailView(
         viewModel: GuideDetailViewModel(
-            guide: Guide.example,
-            downloadedGuides: [ExtendedGuideResponse.example],
-            onDownloadGuide: { _ in }
+            guide: Guide.example
         )
     )
 }

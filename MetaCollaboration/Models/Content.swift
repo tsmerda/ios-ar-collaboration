@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-
 public struct Content: Hashable, Codable {
-    
     public enum ContentType: String, Codable {
         case image = "image"
         case textblock = "textblock"
@@ -28,5 +25,4 @@ public struct Content: Hashable, Codable {
         self.order = order
         self.text = text
     }
-
 }

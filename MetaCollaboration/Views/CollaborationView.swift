@@ -49,8 +49,14 @@ struct CollaborationView: View {
         .navigationDestination(isPresented: $showConfirmationView) {
             ConfirmationView(
                 viewModel: ConfirmationViewModel(
-                    guide: viewModel.currentGuide,
-                    onStepConfirmation: { viewModel.getNextStep() },
+                    guideId: viewModel.currentGuide.id,
+                    stepId: viewModel.currentStep?.id,
+                    onStepConfirmation: {
+                        viewModel.getUpdatedGuideById()
+                        if !viewModel.isLastStep() {
+                            viewModel.getNextStep()
+                        }
+                    },
                     isLastStep: viewModel.isLastStep()
                 )
             )

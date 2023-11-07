@@ -7,26 +7,7 @@
 
 import Foundation
 
-
-
-//public struct Guide: Hashable, Identifiable, Codable {
-//    
-//    public enum GuideType: String, Codable {
-//        case manual = "manual"
-//        case tutorial = "tutorial"
-//        case wizard = "wizard"
-//        case witch = "witch"
-//    }
-//    public var id: String?
-//    public var name: String
-//    public var description: String?
-//    public var imageUrl: String?
-//    public var guideType: GuideType
-//    
-//}
-
 public struct Guide: Hashable, Identifiable, Codable {
-
     public enum GuideType: String, Codable {
         case manual = "manual"
         case tutorial = "tutorial"
@@ -55,13 +36,11 @@ public struct Guide: Hashable, Identifiable, Codable {
         self.modelName = modelName
         self.guideType = guideType
     }
-
 }
 
 #if DEBUG
 // MARK: - Example Guide
 extension Guide {
-
     static var example: Guide {
         Guide(name: "Upgrading old Prusa MK2s.",
               description: "How to upgrade the old MK2s to MK2s+ featuring the cool magnetic heatbed.",
@@ -69,6 +48,5 @@ extension Guide {
               guideType: .manual
         )
     }
-    
 }
 #endif

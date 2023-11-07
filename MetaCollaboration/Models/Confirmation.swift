@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-
 public struct Confirmation: Hashable, Codable {
-
     public var comment: String?
     public var photoUrl: String?
     public var date: Int64?
@@ -28,5 +25,11 @@ public struct Confirmation: Hashable, Codable {
         self.date = date
         self.done = done
     }
-
+    
+    public enum CodingKeys: String, CodingKey {
+        case comment
+        case photoUrl = "photo_url"
+        case date = "_date"
+        case done
+    }
 }

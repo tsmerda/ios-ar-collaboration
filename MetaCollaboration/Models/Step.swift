@@ -7,10 +7,8 @@
 
 import Foundation
 
-
-
-public struct Step: Hashable, Codable {
-
+public struct Step: Identifiable, Hashable, Codable {
+    public var id: String?
     public var objectName: String?
     public var coordinates: [Coordinates]?
     public var contents: [Content]
@@ -18,17 +16,18 @@ public struct Step: Hashable, Codable {
     public var order: Decimal?
 
     public init(
+        id: String? = nil,
         objectName: String? = nil,
         coordinates: [Coordinates]? = nil,
         contents: [Content],
         confirmation: Confirmation? = nil,
         order: Decimal? = nil
     ) {
+        self.id = id
         self.objectName = objectName
         self.coordinates = coordinates
         self.contents = contents
         self.confirmation = confirmation
         self.order = order
     }
-    
 }

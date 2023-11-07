@@ -35,6 +35,20 @@ struct GuideDetailView: View {
         .padding(.horizontal)
         .padding(.bottom)
         .background(Color("backgroundColor"))
+        .navigationBarTitle("", displayMode: .inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if viewModel.isGuideCompleted {
+                    Text("Completed")
+                        .font(.system(size: 10).weight(.bold))
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 11)
+                        .padding(.vertical, 3)
+                        .background(Color.accentColor)
+                        .cornerRadius(6)
+                }
+            }
+        }
         .navigationDestination(for: ExtendedGuideResponse.self) { guide in
             CollaborationView(
                 viewModel: CollaborationViewModel(
@@ -51,10 +65,14 @@ struct GuideDetailView: View {
 
 private extension GuideDetailView {
     var guideTitle: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .top) {
             Text(viewModel.guide.name)
-                .font(.system(size: 24).bold())
-                .foregroundColor(.white)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+            
             Spacer()
             Text(viewModel.guide.guideType.rawValue.capitalized)
                 .font(.system(size: 17))

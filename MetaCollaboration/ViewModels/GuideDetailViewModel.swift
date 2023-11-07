@@ -16,10 +16,16 @@ final class GuideDetailViewModel: ObservableObject {
     // referenceObjects DOESNT NOT WORK ON SIMULATOR!
     @Published var referenceObjects: Set<ARReferenceObject> = []
     var downloadedGuide: Bool {
-        if let itemId = guide.id {
-            return self.downloadedGuides.contains { item in
-                item.id == itemId
-            }
+        guard let itemId = guide.id else { return false }
+        return self.downloadedGuides.contains { item in
+            item.id == itemId
+        }
+    }
+    var isGuideCompleted: Bool {
+        guard let itemId = guide.id else { return false }
+        if let guide = downloadedGuides.first(where: { $0.id == itemId }),
+           let objectSteps = guide.objectSteps {
+            return objectSteps.allSatisfy { $0.confirmation?.done ?? false }
         }
         return false
     }

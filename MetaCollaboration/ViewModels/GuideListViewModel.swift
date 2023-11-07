@@ -17,12 +17,10 @@ final class GuideListViewModel: ObservableObject {
     // MARK: - Public methods
     
     func isGuideIdDownloaded(_ id: String?) -> Bool {
-        if let itemId = id {
-            return self.downloadedGuides.contains { item in
-                item.id == itemId
-            }
+        guard let itemId = id else { return false }
+        return self.downloadedGuides.contains { item in
+            item.id == itemId
         }
-        return false
     }
     
     // Remove guides and all downloaded models from device
@@ -32,6 +30,15 @@ final class GuideListViewModel: ObservableObject {
         downloadedGuides.removeAll()
         PersistenceManager.shared.deleteGuidesJSON()
         progressHudState = .shouldShowSuccess()
+    }
+    
+    func isGuideCompleted(_ id: String?) -> Bool {
+        guard let itemId = id else { return false }
+        if let guide = downloadedGuides.first(where: { $0.id == itemId }),
+           let objectSteps = guide.objectSteps {
+            return objectSteps.allSatisfy { $0.confirmation?.done ?? false }
+        }
+        return false
     }
 }
 

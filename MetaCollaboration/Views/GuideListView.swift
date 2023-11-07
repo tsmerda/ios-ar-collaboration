@@ -63,7 +63,8 @@ private extension GuideListView {
                     }) {
                         GuideRowView(
                             guide: guide,
-                            isDownloaded: viewModel.isGuideIdDownloaded(guide.id)
+                            isDownloaded: viewModel.isGuideIdDownloaded(guide.id),
+                            isCompleted: viewModel.isGuideCompleted(guide.id)
                         )
                     }
                     .listRowBackground(Color("secondaryColor"))

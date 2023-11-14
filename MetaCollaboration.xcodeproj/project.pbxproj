@@ -52,10 +52,8 @@
 		B593B4E02AEEDF62009A88B8 /* StepDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B593B4DF2AEEDF62009A88B8 /* StepDetailViewModel.swift */; };
 		B59B595D2AE7FFDD00B4004B /* GuideListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59B595C2AE7FFDD00B4004B /* GuideListViewModel.swift */; };
 		B59B595F2AE804B000B4004B /* GuideDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59B595E2AE804B000B4004B /* GuideDetailViewModel.swift */; };
-		B59B59612AE80EFC00B4004B /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59B59602AE80EFC00B4004B /* SettingsViewModel.swift */; };
 		B59B59642AE8160D00B4004B /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = B59B59632AE8160D00B4004B /* ProgressHUD */; };
 		B59B59662AE8162F00B4004B /* ProgressHUDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59B59652AE8162F00B4004B /* ProgressHUDHelper.swift */; };
-		B5A151A62AF9027E005F36FE /* CamelAnotation.usdz in Resources */ = {isa = PBXBuildFile; fileRef = B5A151A52AF9027E005F36FE /* CamelAnotation.usdz */; };
 		B5ABC2322ADFCFE4007082F8 /* ModelName.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ABC2312ADFCFE4007082F8 /* ModelName.swift */; };
 		B5ABC2342ADFD013007082F8 /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ABC2332ADFD013007082F8 /* Coordinates.swift */; };
 		B5BDA11E2AFA1D4400C637E9 /* View+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDA11D2AFA1D4400C637E9 /* View+Keyboard.swift */; };
@@ -117,9 +115,7 @@
 		B593B4DF2AEEDF62009A88B8 /* StepDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDetailViewModel.swift; sourceTree = "<group>"; };
 		B59B595C2AE7FFDD00B4004B /* GuideListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideListViewModel.swift; sourceTree = "<group>"; };
 		B59B595E2AE804B000B4004B /* GuideDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideDetailViewModel.swift; sourceTree = "<group>"; };
-		B59B59602AE80EFC00B4004B /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		B59B59652AE8162F00B4004B /* ProgressHUDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDHelper.swift; sourceTree = "<group>"; };
-		B5A151A52AF9027E005F36FE /* CamelAnotation.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = CamelAnotation.usdz; sourceTree = "<group>"; };
 		B5ABC2312ADFCFE4007082F8 /* ModelName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelName.swift; sourceTree = "<group>"; };
 		B5ABC2332ADFD013007082F8 /* Coordinates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
 		B5BDA11D2AFA1D4400C637E9 /* View+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Keyboard.swift"; sourceTree = "<group>"; };
@@ -179,7 +175,6 @@
 			children = (
 				B59369D32A6586AA00C3B9F2 /* Launch Screen.storyboard */,
 				B5576CE7297D94960069758E /* MetaCollaborationApp.swift */,
-				B59369E72A6701B400C3B9F2 /* Resources */,
 				B5537B662A0F9E8B006F8102 /* Extensions */,
 				B5673D0E2A15259B00EEA43D /* Utilities */,
 				B5BDA11F2AFA222400C637E9 /* Helpers */,
@@ -282,18 +277,9 @@
 				B593B4DD2AEEB3CB009A88B8 /* StepListViewModel.swift */,
 				B593B4DF2AEEDF62009A88B8 /* StepDetailViewModel.swift */,
 				B59B595E2AE804B000B4004B /* GuideDetailViewModel.swift */,
-				B59B59602AE80EFC00B4004B /* SettingsViewModel.swift */,
 				B5576D01297D9CE40069758E /* CollaborationViewModel.swift */,
 			);
 			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		B59369E72A6701B400C3B9F2 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				B5A151A52AF9027E005F36FE /* CamelAnotation.usdz */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		B5BDA11F2AFA222400C637E9 /* Helpers */ = {
@@ -372,7 +358,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5A151A62AF9027E005F36FE /* CamelAnotation.usdz in Resources */,
 				B59369D42A6586AA00C3B9F2 /* Launch Screen.storyboard in Resources */,
 				B5BDA1272AFA2DC100C637E9 /* guideTest.json in Resources */,
 				B56E4C312A7138CA006F5E97 /* README.md in Resources */,
@@ -404,7 +389,6 @@
 				B56CE57529BCC928007D092F /* ObjectStep.swift in Sources */,
 				B5BDA1252AFA22D600C637E9 /* ActiveAppMode.swift in Sources */,
 				B5576CEA297D94960069758E /* ContentView.swift in Sources */,
-				B59B59612AE80EFC00B4004B /* SettingsViewModel.swift in Sources */,
 				B59B595D2AE7FFDD00B4004B /* GuideListViewModel.swift in Sources */,
 				B581CF342A70527C0084DDB2 /* ButtonStyles.swift in Sources */,
 				B5BDA1212AFA224500C637E9 /* SelectedMode.swift in Sources */,
@@ -573,6 +557,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MetaCollaboration/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires camera access to allow AR experience";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app synchronises with other iOS devices on the same network.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app requires access to media library to allow upload photos";
@@ -609,6 +594,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MetaCollaboration/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires camera access to allow AR experience";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app synchronises with other iOS devices on the same network.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app requires access to media library to allow upload photos";

@@ -44,7 +44,6 @@ struct GuideListView: View {
         .onAppear {
             // Check downloaded guide saved in local storage
             viewModel.downloadedGuides = PersistenceManager.shared.loadGuidesFromJSON()
-            viewModel.getAllGuides()
         }
         .sheet(isPresented: $isShowingSettings) {
             settingsView
@@ -101,10 +100,7 @@ private extension GuideListView {
         LoadingView()
     }
     var settingsView: SettingsView {
-        let viewModel = SettingsViewModel(
-            removeAllFromLocalStorage: viewModel.removeAllFromLocalStorage
-        )
-        return SettingsView(viewModel: viewModel)
+        return SettingsView(removeAllFromLocalStorage: viewModel.removeAllFromLocalStorage)
     }
     var emptyView: EmptyView {
         EmptyView()

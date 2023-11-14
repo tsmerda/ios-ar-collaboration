@@ -15,19 +15,14 @@ class PersistenceManager {
     
     private let jsonDataFile = "guidesData.json"
     
-    func saveGuidesToJSON(_ guides: [ExtendedGuideResponse]) {
+    func saveGuidesToJSON(_ guides: [ExtendedGuideResponse]) throws {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
-        
-        do {
-            let jsonData = try encoder.encode(guides)
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(jsonDataFile)
-                try jsonString.write(to: fileURL, atomically: true, encoding: .utf8)
-                // print("Guide successfully written to file: \(fileURL)")
-            }
-        } catch {
-            debugPrint("Error writing guide to file: \(error)")
+        let jsonData = try encoder.encode(guides)
+        if let jsonString = String(data: jsonData, encoding: .utf8) {
+            let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(jsonDataFile)
+            try jsonString.write(to: fileURL, atomically: true, encoding: .utf8)
+            // print("Guide successfully written to file: \(fileURL)")
         }
     }
     
@@ -44,7 +39,7 @@ class PersistenceManager {
         }
     }
     
-    func updateGuide(_ updatedGuide: ExtendedGuideResponse) {
+    func updateGuide(_ updatedGuide: ExtendedGuideResponse) throws {
         // Read current guides from the JSON file
         var currentGuides = loadGuidesFromJSON()
         
@@ -53,23 +48,24 @@ class PersistenceManager {
             // Update the guide at the found index
             currentGuides[index] = updatedGuide
             // Write the updated guides array back to the JSON file
-            saveGuidesToJSON(currentGuides)
+            try saveGuidesToJSON(currentGuides)
         } else {
             // The guide was not found, handle the error as needed
             debugPrint("Guide to update not found")
         }
     }
     
-    func deleteGuidesJSON() {
+    func deleteGuidesJSON() throws {
         if guidesJSONExists() {
             let fileManager = FileManager.default
-            let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(jsonDataFile)
+            let fileURL = fileManager.urls(
+                for: .documentDirectory,
+                in: .userDomainMask
+            )[0].appendingPathComponent(jsonDataFile)
             
-            do {
+            if fileManager.fileExists(atPath: fileURL.path) {
                 try fileManager.removeItem(at: fileURL)
-                debugPrint("FILE \(jsonDataFile) DELETED SUCCESSFULLY.")
-            } catch {
-                debugPrint("Error deleting file \(jsonDataFile): \(error)")
+                debugPrint("FILE \(jsonDataFile): DELETED")
             }
         }
     }

@@ -10,13 +10,14 @@ import SwiftUI
 struct ContentView: View {
     @AppStorage("appMode") var appMode: ActiveAppMode = .none
     @StateObject var nav = NavigationStateManager()
+    @StateObject var guideListViewModel = GuideListViewModel()
     
     var body: some View {
         NavigationStack(path: $nav.path) {
             if appMode == .none {
                 ChooseModeView()
             } else {
-                GuideListView(viewModel: GuideListViewModel())
+                GuideListView(viewModel: guideListViewModel)
             }
         }
         .environmentObject(nav)

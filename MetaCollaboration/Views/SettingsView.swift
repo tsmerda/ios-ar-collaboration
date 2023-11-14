@@ -9,11 +9,11 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
+    private let removeAllFromLocalStorage: () -> Void
     //    @AppStorage("appMode") var appMode: ActiveAppMode = .none
-    @StateObject private var viewModel: SettingsViewModel
-    
-    init(viewModel: SettingsViewModel) {
-        self._viewModel = StateObject(wrappedValue: viewModel)
+
+    init(removeAllFromLocalStorage: @escaping () -> Void) {
+        self.removeAllFromLocalStorage = removeAllFromLocalStorage
     }
     
     var body: some View {
@@ -116,13 +116,13 @@ private extension SettingsView {
                 Text("Online mode activated")
                     .foregroundColor(.gray)
                 Spacer()
-                //                            if appMode == .onlineMode {
+                // if appMode == .onlineMode {
                 Image(systemName: "circle.inset.filled")
                     .foregroundColor(.accentColor)
-                //                            } else {
-                //                                Image(systemName: "circle")
-                //                                    .foregroundColor(.accentColor)
-                //                            }
+                // } else {
+                //      Image(systemName: "circle")
+                //      .foregroundColor(.accentColor)
+                // }
             }
             
             Divider().padding(.vertical, 4)
@@ -131,13 +131,13 @@ private extension SettingsView {
                 Text("Offline mode activated")
                     .foregroundColor(.gray)
                 Spacer()
-                //                            if appMode == .offlineMode {
-                //                                Image(systemName: "circle.inset.filled")
-                //                                    .foregroundColor(.accentColor)
-                //                            } else {
+                // if appMode == .offlineMode {
+                //    Image(systemName: "circle.inset.filled")
+                //      .foregroundColor(.accentColor)
+                // } else {
                 Image(systemName: "circle")
                     .foregroundColor(.accentColor)
-                //                            }
+                // }
             }
             
             Divider().padding(.vertical, 4)
@@ -150,13 +150,13 @@ private extension SettingsView {
                 .multilineTextAlignment(.leading)
             
             Button(action: {
-                viewModel.removeAllFromLocalStorageAction()
+                removeAllFromLocalStorage()
             }) {
                 Text("Remove all")
                     .fontWeight(.bold)
                     .foregroundColor(Color("errorColor"))
             }
-            //                    TODO: -- make button disabled if there are no assets
+            // TODO: -- make button disabled if there are no assets
             //                        .disabled(viewModel.downloadedAssets.isEmpty)
             .padding()
             .background(
@@ -169,9 +169,5 @@ private extension SettingsView {
 }
 
 #Preview {
-    SettingsView(
-        viewModel: SettingsViewModel(
-            removeAllFromLocalStorage: {}
-        )
-    )
+    SettingsView(removeAllFromLocalStorage: {})
 }

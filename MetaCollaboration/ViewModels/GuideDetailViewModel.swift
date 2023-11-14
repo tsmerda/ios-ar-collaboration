@@ -15,6 +15,7 @@ final class GuideDetailViewModel: ObservableObject {
     @Published var downloadedGuides: [ExtendedGuideResponse] = []
     // referenceObjects DOESNT NOT WORK ON SIMULATOR!
     @Published var referenceObjects: Set<ARReferenceObject> = []
+    @Published var usdzModels: Set<URL> = []
     var downloadedGuide: Bool {
         guard let itemId = guide.id else { return false }
         return self.downloadedGuides.contains { item in
@@ -34,7 +35,7 @@ final class GuideDetailViewModel: ObservableObject {
         self.guide = guide
         // Check downloaded reference objects saved locally and insert into referenceObjects
         // TODO: -- init just reference objects that are for current guide
-        initReferenceObjects()
+        initAssets()
     }
     
     func onSetCurrentGuideAction(_ id: String) {
@@ -44,15 +45,9 @@ final class GuideDetailViewModel: ObservableObject {
     }
     
     func insertReferenceObject(_ referenceObjectURL: URL) async throws {
-        // TODO: -- porovnat zda jiz existuje v Setu referenceObjects
         do {
-            // Check whether the file exists
-            if FileManager.default.fileExists(atPath: referenceObjectURL.path) {
-                let referenceObject = try ARReferenceObject(archiveURL: referenceObjectURL)
-                self.referenceObjects.insert(referenceObject)
-            } else {
-                debugPrint("File does not exist at \(referenceObjectURL.path)")
-            }
+            let referenceObject = try ARReferenceObject(archiveURL: referenceObjectURL)
+            self.referenceObjects.insert(referenceObject)
         } catch {
             debugPrint("Error loading reference object from \(referenceObjectURL.absoluteString): \(error)")
         }
@@ -69,20 +64,25 @@ extension GuideDetailViewModel {
             do {
                 let guide = try await NetworkManager.shared.getGuideById(guideId: id)
                 downloadedGuides.append(guide)
-                PersistenceManager.shared.saveGuidesToJSON(downloadedGuides)
+                try PersistenceManager.shared.saveGuidesToJSON(downloadedGuides)
                 
-                // TODO: - Implementovat stazeni vsech modelu, ktere jsou v danym <guide>
-                getAssetByName(assetName: "camel")
+                guard let referenceobjectName = guide.modelName?.ios else {
+                    throw NSError(domain: "GuideDetailViewModel", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to get guide reference model name for iOS."])
+                }
+                var assetDownloadTasks = [Task<(), Error>]()
+                assetDownloadTasks.append(Task { try await getAssetByName(assetName: referenceobjectName) })
                 
-                // Download all assets related to guide steps
-                //                if let objectSteps = value.objectSteps {
-                //                    for objectStep in objectSteps {
-                //                        if let objectName = objectStep.objectName {
-                //                            // Download models based on objectName from guideStep
-                //                            self.getAssetByName(assetName: objectName)
-                //                        }
-                //                    }
-                //                }
+                if let objectSteps = guide.objectSteps {
+                    for objectStep in objectSteps {
+                        if let objectName = objectStep.objectName {
+                            assetDownloadTasks.append(Task { try await getAssetByName(assetName: objectName) })
+                        }
+                    }
+                }
+                
+                for task in assetDownloadTasks {
+                    try await task.value
+                }
                 progressHudState = .shouldHideProgress
             } catch {
                 progressHudState = .shouldShowFail(message: error.localizedDescription)
@@ -91,19 +91,24 @@ extension GuideDetailViewModel {
     }
     
     // Download asset by name
-    func getAssetByName(assetName: String) {
-        Task { @MainActor in
-            progressHudState = .shouldShowProgress
-            do {
-                let (assetUrl, responseAssetName) = try await NetworkManager.shared.getAssetByName(assetName: assetName)
-                if let savedReferenceObjectURL = try await saveReferenceObjects(assetUrl, responseAssetName) {
-                    try await insertReferenceObject(savedReferenceObjectURL)
-                } else {
-                    debugPrint("Failed to save referenceObject locally")
-                }
-                progressHudState = .shouldHideProgress
-            } catch {
-                progressHudState = .shouldShowFail(message: error.localizedDescription)
+    func getAssetByName(assetName: String) async throws {
+        let (assetUrl, responseAssetName) = try await NetworkManager.shared.getAssetByName(assetName: assetName)
+        let assetExtension = URL(fileURLWithPath: responseAssetName).pathExtension
+        
+        if assetExtension == "arobject" {
+            if let savedReferenceObjectURL = try await saveAssetLocally(assetUrl, responseAssetName) {
+                try await insertReferenceObject(savedReferenceObjectURL)
+                // debugPrint(savedReferenceObjectURL)
+            } else {
+                // TODO: -- make class for this error
+                throw NSError(domain: "GuideDetailViewModel", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to save ARObject locally."])
+            }
+        } else if assetExtension == "usdz" {
+            if let savedUSDZURL = try await saveAssetLocally(assetUrl, responseAssetName) {
+                self.usdzModels.insert(savedUSDZURL)
+                // debugPrint(savedUSDZURL)
+            } else {
+                throw NSError(domain: "GuideDetailViewModel", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to save USDZ model locally."])
             }
         }
     }
@@ -112,37 +117,29 @@ extension GuideDetailViewModel {
 // MARK: - FileManager: handling assets and reference objects
 
 extension GuideDetailViewModel {
-    func saveReferenceObjects(_ assetUrl: URL, _ assetName: String) async throws -> URL? {
-        guard (assetUrl as NSURL).checkResourceIsReachableAndReturnError(nil) else {
-            // File is not reachable, deal with error and return
-            progressHudState = .shouldShowFail(message: "File is not reachable")
-            return nil
-        }
-        
+    func saveAssetLocally(_ assetUrl: URL, _ assetName: String) async throws -> URL? {
         let documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         let fileURL = documentsURL.appendingPathComponent(assetName)
-        
         if FileManager.default.fileExists(atPath: fileURL.path) {
-            debugPrint("Reference object is already downloaded")
+            debugPrint("\(assetName) is already downloaded")
             return fileURL
         }
-        
         try FileManager.default.moveItem(at: assetUrl, to: fileURL)
         return fileURL
     }
     
     // TODO: error hodit do alert modalu
-    func initReferenceObjects() {
+    func initAssets() {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        
         do {
             let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-            
             for fileURL in fileURLs {
                 // TODO: - Resolve: failed to setup referenceObjects nilError
                 if fileURL.pathExtension == "arobject" {
                     let referenceObject = try ARReferenceObject(archiveURL: fileURL)
                     self.referenceObjects.insert(referenceObject)
+                } else if fileURL.pathExtension == "usdz" {
+                    self.usdzModels.insert(fileURL)
                 }
             }
         } catch {

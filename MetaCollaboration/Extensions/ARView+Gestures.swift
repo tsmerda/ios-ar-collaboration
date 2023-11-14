@@ -14,31 +14,15 @@ extension ARView {
     // Extend ARView to implement tapGesture handler
     // Hybrid workaround between UIKit and SwiftUI
     
-    // TODO: -- Is this necessary???
-    private struct AssociatedKeys {
-        static var collaborationViewModel = "collaborationViewModel"
-    }
-    
-    // TODO: -- Tohle by se melo predelat, obcas zpusobuje retain cycle!!!!
-    var collaborationViewModel: CollaborationViewModel {
-        get {
-            guard let viewModel = objc_getAssociatedObject(self, &AssociatedKeys.collaborationViewModel) as? CollaborationViewModel else {
-                let viewModel = CollaborationViewModel(currentGuide: ExtendedGuideResponse(name: "", guideType: .manual), referenceObjects: [])
-                objc_setAssociatedObject(self, &AssociatedKeys.collaborationViewModel, viewModel, .OBJC_ASSOCIATION_RETAIN)
-                return viewModel
-            }
-            return viewModel
+//    func gestureSetup(showStepSheet: Binding<Bool>) {
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+//        self.addGestureRecognizer(tap)
+//        self.collaborationViewModel.showStepSheet = showStepSheet
+//    }
+        func gestureSetup() {
+            let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+            self.addGestureRecognizer(tap)
         }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.collaborationViewModel, newValue, .OBJC_ASSOCIATION_RETAIN)
-        }
-    }
-    
-    func gestureSetup(showStepSheet: Binding<Bool>) {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        self.addGestureRecognizer(tap)
-        self.collaborationViewModel.showStepSheet = showStepSheet
-    }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
         // TODO: - This function does sends a message "hello!" to all peers.
@@ -56,12 +40,12 @@ extension ARView {
             if let objectType = hitEntity.components[ObjectType.self] as? ObjectType {
                 switch objectType.kind {
                 case .detected:
-                    print("Tapped on a detected object")
-                    self.collaborationViewModel.showStepSheet?.wrappedValue = true
+                    debugPrint("Tapped on a detected object")
+//                    self.collaborationViewModel.showStepSheet?.wrappedValue = true
                     
                 case .inserted:
                     /// If you tap on an existing entity, it will run a scale up and down animation
-                    print("Tapped on an inserted object")
+                    debugPrint("Tapped on an inserted object")
                     
                     if hitEntity.isOwner {
                         //              let origTransform = Transform(scale: simd_float3(0.01, 0.01, 0.01), rotation: .init(), translation: .zero)
@@ -101,21 +85,16 @@ extension ARView {
     }
     
     #if !targetEnvironment(simulator)
-    func placeSceneObject(for anchor: ARObjectAnchor, _ viewModel: CollaborationViewModel) {
-        //    TODO: Opravit nacitani usdz modelu
-        //        guard let usdzModel = viewModel.usdzModel else {
-        //            print("Error: No model URL provided")
-        //            return
-        //        }
+    func placeSceneObject(for anchor: ARObjectAnchor, with modelURL: URL) {
         do {
             let modelAnchor = AnchorEntity(anchor: anchor)
             
             // Create and add entity to newAnchor
-            // let entity = try ModelEntity.loadModel(contentsOf: usdzModel, withName: usdzModel.lastPathComponent)
-            guard let entity = try? Entity.load(named: "CamelAnotation") else {
-                print("Error: No model URL provided")
-                return
-            }
+             let entity = try ModelEntity.loadModel(contentsOf: modelURL, withName: modelURL.lastPathComponent)
+//            guard let entity = try? Entity.load(named: "CamelAnotation") else {
+//                print("Error: No model URL provided")
+//                return
+//            }
             
             entity.generateCollisionShapes(recursive: true)
             entity.components[ObjectType.self] = ObjectType(kind: .inserted)
@@ -129,7 +108,6 @@ extension ARView {
             /// let boundingBoxSize = anchor.referenceObject.extent
             /// let centerTranslation = SIMD3<Float>(boundingBoxCenter.x, boundingBoxCenter.y, boundingBoxCenter.z)
             
-            let boundingBoxCenter = anchor.referenceObject.center
             modelAnchor.addChild(entity)
             
             /// self.installGestures([.all], for: entity)
@@ -145,18 +123,3 @@ extension ARView {
     }
     #endif
 }
-
-//            // Create and add model to newAnchor
-//            let cubeModel = ModelEntity(
-//                mesh: .generateBox(size: 0.05),
-//                materials: [SimpleMaterial(color: .red, isMetallic: false)]
-//            )
-//            cubeModel.generateCollisionShapes(recursive: false)
-//            //            self.installGestures([.all], for: cubeModel)
-//            // Insert next to detected object
-//            let translation = SIMD3<Float>(0.1, 0, 0)
-//            let transform = Transform(translation: translation)
-//            cubeModel.transform = transform
-//            modelAnchor.addChild(cubeModel)
-//
-//            modelAnchor.synchronization?.ownershipTransferMode = .autoAccept

@@ -32,6 +32,7 @@ extension ARViewContainer {
         #if !targetEnvironment(simulator)
         func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
             for anchor in anchors {
+                print("participantAnchor NOW discovered")
                 if let participantAnchor = anchor as? ARParticipantAnchor{
                     print("Established joint experience with a peer.")
                     
@@ -45,11 +46,40 @@ extension ARViewContainer {
                     
                     self.parent.viewModel.arView.scene.addAnchor(anchorEntity)
                 } else if let objectAnchor = anchor as? ARObjectAnchor {
-                    
                     // MARK: -- Detected 3D object
                     // Get Anchor of detected 3D object from scene and paste same Anchor to func placeSceneObject for handling USDZ models above 3D object
-                    
                     print("Detected object anchor")
+                    
+                    // Check if a model for this anchor already exists in the scene
+                    if isModelAlreadyAdded(for: objectAnchor) {
+                        print("Model for this anchor already exists, skipping...")
+                        continue // Skip adding a new model for this anchor
+                    }
+                    
+//                    guard let referenceObjectName = self.parent.viewModel.referenceObjects.first?.name else {
+//                        print("Žádný reference object nebyl nalezen.")
+//                        return
+//                    }
+//                    guard let frame = self.parent.viewModel.arView.session.currentFrame else {
+//                        print("Aktuální snímek není dostupný.")
+//                        return
+//                    }
+//                    for anchor in frame.anchors {
+//                        if let objectAnchor = anchor as? ARObjectAnchor,
+//                           objectAnchor.referenceObject.name == referenceObjectName {
+//                            return
+//                        }
+//                    }
+                    
+//                    guard let referenceObjectName = self.parent.viewModel.referenceObjects.first?.name else {
+//                        print("Žádný reference object nebyl nalezen.")
+//                        return
+//                    }
+//                    
+//                    guard objectAnchor.referenceObject.name == referenceObjectName else {
+//                        print("Reference object je již ve scéně")
+//                        return
+//                    }
                     
                     // Bounding box for detected object
                     let boundingBoxEntity = createBoundingBoxEntity(extent: objectAnchor.referenceObject.extent)
@@ -83,17 +113,46 @@ extension ARViewContainer {
                     self.parent.viewModel.arView.scene.addAnchor(anchorEntity)
                     
                     // Call function for handling USDZ models
-                    self.parent.viewModel.arView.placeSceneObject(for: objectAnchor, self.parent.viewModel)
+                    if let usdzModelURL = self.parent.viewModel.getUSDZModelForCurrentStep() {
+                        self.parent.viewModel.arView.placeSceneObject(for: objectAnchor, with: usdzModelURL)
+                    }
                 } else {
+                    print("some anchor NOW discovered")
                     // Kontrola, zda má anchor požadovaný název modelu
-                    //                    if let anchorName = anchor.name, anchorName == "cake" {
-                    //                        print("DIDADD \(anchor)")
-                    //                    self.parent.viewModel.arView.placeSceneObject(for: anchor)
-                    //                    }
+                    // if let anchorName = anchor.name, anchorName == "cake" {
+                    //    print("DIDADD \(anchor)")
+                    //    self.parent.viewModel.arView.placeSceneObject(for: anchor)
+                    // }
                 }
             }
         }
         #endif
+        
+//        private func isModelAlreadyAdded(for objectAnchor: ARObjectAnchor) -> Bool {
+//            // Iterate over all entities in the scene and check if any of them are associated with the given anchor
+//            for entity in self.parent.viewModel.arView.scene.anchors {
+//                print(isModelAlreadyAdded)
+//                print(objectAnchor)
+//                if entity.anchor?.identifier == objectAnchor.identifier,
+//                   entity.children.contains(where: { $0.components.has(ModelComponent.self) }) {
+//                    return true // Found a model entity associated with this anchor
+//                }
+//            }
+//            return false // No model entity found for this anchor
+//        }
+        
+        private func isModelAlreadyAdded(for objectAnchor: ARObjectAnchor) -> Bool {
+                    // Iterate over all entities in the scene and check if any of them are associated with the given anchor
+                    for entity in self.parent.viewModel.arView.scene.anchors {
+                        if let anchor = entity.anchor as? ARObjectAnchor, anchor == objectAnchor,
+                           entity.children.contains(where: { $0.components.has(ModelComponent.self) }) {
+                            print("isModelAlreadyAdded__YES")
+                            return true // Found a model entity associated with this anchor
+                        }
+                    }
+            print("isModelAlreadyAdded__NO")
+                    return false // No model entity found for this anchor
+                }
         
         //    TODO: -- FIX
         //        func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
@@ -114,9 +173,9 @@ extension ARViewContainer {
                 let dataIsCritical = data.priority == .critical
                 multipeerSession.sendToAllPeers(encodedData, reliably: dataIsCritical)
             }
-            //            else {
-            //                print("Deferred sending collaboration to later because there are no peers.")
-            //            }
+            // else {
+            //    debugPrint("Deferred sending collaboration to later because there are no peers.")
+            // }
         }
     }
     

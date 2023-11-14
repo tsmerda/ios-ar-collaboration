@@ -21,7 +21,9 @@ final class CollaborationViewModel: ObservableObject {
     // TODO: - je @Published potreba?
     @Published private(set) var progressHudState: ProgressHudState = .shouldHideProgress
     @Published var referenceObjects: Set<ARReferenceObject> = []
-    @Published var currentStep: ObjectStep? /*= ObjectStep.example*/
+    @Published var usdzModels: Set<URL> = []
+    @Published var currentStep: ObjectStep?
+//    @Published var currentUsdzModel: URL?
     @Published var currentGuide: ExtendedGuideResponse
     //    @Published var uniqueID = UUID()
     
@@ -38,19 +40,22 @@ final class CollaborationViewModel: ObservableObject {
     // This is useful for keeping track of which peer created which ARAnchors.
     var peerSessionIDs = [MCPeerID: String]()
     
+//    var csManager: CollaborationStateManager?
+    
     // MARK: - Initialization
     init(
         currentGuide: ExtendedGuideResponse,
-        referenceObjects: Set<ARReferenceObject>
+        referenceObjects: Set<ARReferenceObject>,
+        usdzModels: Set<URL>
     ) {
         self.currentGuide = currentGuide
         self.referenceObjects = referenceObjects
-        // TODO: -- Proc se zavola dvakrat ??
+        self.usdzModels = usdzModels
+
         if let currentGuideId = currentGuide.id,
            let firstStepOrder = currentGuide.objectSteps?.first?.order {
             getStepById(currentGuideId, firstStepOrder)
         } else {
-            print(currentGuide.id, currentGuide.objectSteps?.first?.order)
             debugPrint("Failed to get first step")
         }
     }
@@ -65,7 +70,7 @@ final class CollaborationViewModel: ObservableObject {
     //        self.uniqueID = UUID()
     //    }
     
-    func toggleStepDone(step: Step) {
+    func toggleStepDone(_ step: Step) {
         //        if let index = currentStep?.steps?.firstIndex(where: { $0.id == step.id }) {
         //            currentStep?.steps?[index].confirmation?.done.toggle()
         //        }
@@ -97,6 +102,11 @@ final class CollaborationViewModel: ObservableObject {
             return false
         }
     }
+    
+    func getUSDZModelForCurrentStep() -> URL? {
+        guard let objectName = currentStep?.objectName else { return nil }
+        return usdzModels.first { $0.lastPathComponent == objectName }
+    }
 }
 
 // MARK: - Network methods
@@ -107,7 +117,10 @@ extension CollaborationViewModel {
         Task { @MainActor in
             progressHudState = .shouldShowProgress
             do {
-                currentStep = try await NetworkManager.shared.getStepById(guideId: guideId, objectStepOrder: objectStepOrder)
+                let currentStepResponse = try await NetworkManager.shared.getStepById(guideId: guideId, objectStepOrder: objectStepOrder)
+                currentStep = currentStepResponse
+                // TODO: -- Tohle by melo byt jen v pripade kdy dokonci step, aby se to nevolalo hned na zacatku
+                replaceUSDZModel()
                 progressHudState = .shouldHideProgress
             } catch {
                 progressHudState = .shouldShowFail(message: error.localizedDescription)
@@ -123,7 +136,7 @@ extension CollaborationViewModel {
                 do {
                     let updatedGuide = try await NetworkManager.shared.getGuideById(guideId: currentGuideId)
                     currentGuide = updatedGuide
-                    PersistenceManager.shared.updateGuide(updatedGuide)
+                    try PersistenceManager.shared.updateGuide(updatedGuide)
                     progressHudState = .shouldHideProgress
                 } catch {
                     progressHudState = .shouldShowFail(message: error.localizedDescription)

@@ -4,7 +4,7 @@
   "id": "63ef73307b425e2daf8c908f",
   "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg",
   "modelName": {
-    "android": "model.zip",
+    "android": "camel",
     "ios": "model.zip"
   },
   "name": "Upgrading old Prusa MK2s.",
@@ -35,7 +35,7 @@
         "title": "Removing screw"
       },
       "model_id": 123,
-      "object_name": "heatbed",
+      "object_name": "CamelAnotation",
       "order": 1,
       "steps": [
         {
@@ -128,8 +128,8 @@
         "text": "Remove the M3 screw from the fan holder 2.",
         "title": "Removing screw 2."
       },
-      "model_id": 123,
-      "object_name": "heatbed",
+      "model_id": 234,
+      "object_name": "CamelAnotation2",
       "order": 2,
       "steps": [
         {

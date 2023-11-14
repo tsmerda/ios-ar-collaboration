@@ -28,7 +28,6 @@ struct GuideDetailView: View {
                 }
             }
             Spacer()
-            // TODO: -- add LOADING PROGRESS
             buttonsLabel
             buttonsStack
         }
@@ -53,7 +52,8 @@ struct GuideDetailView: View {
             CollaborationView(
                 viewModel: CollaborationViewModel(
                     currentGuide: guide,
-                    referenceObjects: viewModel.referenceObjects
+                    referenceObjects: viewModel.referenceObjects,
+                    usdzModels: viewModel.usdzModels
                 )
             )
         }
@@ -90,17 +90,29 @@ private extension GuideDetailView {
             .multilineTextAlignment(.leading)
             .padding(.bottom, 8)
     }
-    // TODO: -- add loader while loading
     @ViewBuilder
     var guideImage: some View {
         if let imageUrl = viewModel.guide.imageUrl {
-            AsyncImage(url: URL(string: imageUrl)){ image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .cornerRadius(8)
-            } placeholder: { Color("secondaryColor") }
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+            AsyncImage(url: URL(string: imageUrl)) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .cornerRadius(8)
+                case .failure:
+                    Image(systemName: "photo")
+                        .foregroundColor(.gray)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                @unknown default:
+                    EmptyView()
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
     }
     //    var guideDetail: some View {
@@ -139,12 +151,12 @@ private extension GuideDetailView {
             .buttonStyle(ButtonStyledOutline())
             .disabled(viewModel.downloadedGuide)
             
-            // TODO: -- Add loading until all of referenceObjects are downloaded
             Button("Begin guide") {
                 if let guideId = viewModel.guide.id {
                     viewModel.onSetCurrentGuideAction(guideId)
                     if let currentGuide = viewModel.currentGuide,
-                       !viewModel.referenceObjects.isEmpty {
+                       !viewModel.referenceObjects.isEmpty,
+                       !viewModel.usdzModels.isEmpty {
                         nav.goToCollaborationView(currentGuide)
                     } else {
                         nav.errorGoToView("Collaboration view")

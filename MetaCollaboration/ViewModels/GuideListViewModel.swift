@@ -11,8 +11,10 @@ final class GuideListViewModel: ObservableObject {
     @Published private(set) var progressHudState: ProgressHudState = .shouldHideProgress
     @Published var guideList: [Guide]?
     @Published var downloadedGuides: [ExtendedGuideResponse] = []
-        
-    init() {}
+    
+    init() {
+        getAllGuides()
+    }
     
     // MARK: - Public methods
     
@@ -25,11 +27,17 @@ final class GuideListViewModel: ObservableObject {
     
     // Remove guides and all downloaded models from device
     func removeAllFromLocalStorage() {
-        progressHudState = .shouldShowProgress
-        removeAssetsFromDevice()
-        downloadedGuides.removeAll()
-        PersistenceManager.shared.deleteGuidesJSON()
-        progressHudState = .shouldShowSuccess()
+        Task { @MainActor in
+            progressHudState = .shouldShowProgress
+            do {
+                try removeAssetsFromDevice()
+                downloadedGuides.removeAll()
+                try PersistenceManager.shared.deleteGuidesJSON()
+                self.progressHudState = .shouldShowSuccess(message: "All assets saved in local storage deleted")
+            } catch {
+                self.progressHudState = .shouldShowFail(message: "Failed to delete all assets: \(error.localizedDescription)")
+            }
+        }
     }
     
     func isGuideCompleted(_ id: String?) -> Bool {
@@ -68,18 +76,16 @@ extension GuideListViewModel {
 
 extension GuideListViewModel {
     // TODO: error hodit do alert modalu
-    func removeAssetsFromDevice() {
+    func removeAssetsFromDevice() throws {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsUrl,
-                                                                       includingPropertiesForKeys: nil,
-                                                                       options: .skipsHiddenFiles)
-            for fileURL in fileURLs {
-                if fileURL.pathExtension == "arobject" {
-                    try FileManager.default.removeItem(at: fileURL)
-                    debugPrint("MODEL \(fileURL) REMOVED")
-                }
-            }
-        } catch { debugPrint(error) }
+        let fileURLs = try FileManager.default.contentsOfDirectory(
+            at: documentsUrl,
+            includingPropertiesForKeys: nil,
+            options: .skipsHiddenFiles
+        )
+        for fileURL in fileURLs {
+            try FileManager.default.removeItem(at: fileURL)
+            debugPrint("\(fileURL.lastPathComponent): DELETED")
+        }
     }
 }

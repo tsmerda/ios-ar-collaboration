@@ -18,7 +18,11 @@ struct CollaborationView: View {
     
     private let progressHudBinding: ProgressHudBinding
     
-    init(viewModel: CollaborationViewModel) {
+    @Environment(\.horizontalSizeClass) var sizeClass
+    
+    init(
+        viewModel: CollaborationViewModel
+    ) {
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.progressHudBinding = ProgressHudBinding(state: viewModel.$progressHudState)
     }
@@ -26,6 +30,14 @@ struct CollaborationView: View {
     var body: some View {
         ZStack {
             arViewContainer
+            // TODO: -- fix ipad layout
+            if sizeClass != .compact {
+                VStack {
+                    Spacer()
+                    bottomStackViewForIpad
+                }
+                .edgesIgnoringSafeArea(.bottom)
+            }
         }
         .sheet(isPresented: $showStepSheet) {
             stepDetailView
@@ -61,7 +73,7 @@ struct CollaborationView: View {
                 )
             )
             .onDisappear {
-                if !showConfirmationView {
+                if !showConfirmationView && sizeClass == .compact {
                     showStepSheet.toggle()
                 }
             }
@@ -74,8 +86,10 @@ private extension CollaborationView {
     var arViewContainer: some View {
         #if !targetEnvironment(simulator)
         VStack(spacing: 0) {
-            ARViewContainer(showStepSheet: $showStepSheet)
-                .environmentObject(viewModel)
+            ARViewContainer(
+                //                showStepSheet: $showStepSheet
+            )
+            .environmentObject(viewModel)
             // .zIndex(1)
             // .id(viewModel.uniqueID)
             // .onAppear {
@@ -92,13 +106,28 @@ private extension CollaborationView {
                     showStepSheet.toggle()
                     showConfirmationView.toggle()
                 },
-                toggleStepDone: { viewModel.toggleStepDone(step: $0) }
+                toggleStepDone: { viewModel.toggleStepDone($0) }
             )
         )
         .presentationDetents([.height(180), .medium])
         .presentationBackgroundInteraction(.enabled(upThrough: .medium))
         .interactiveDismissDisabled()
         .presentationDragIndicator(.automatic)
+    }
+    // TODO: -- Fix this view initialization (use sheet?)
+    var bottomStackViewForIpad: some View {
+        StepDetailView(
+            viewModel: StepDetailViewModel(
+                currentStep: viewModel.currentStep,
+                onNavigateAction: {
+                    showStepSheet.toggle()
+                    showConfirmationView.toggle()
+                },
+                toggleStepDone: { viewModel.toggleStepDone($0) }
+            )
+        )
+        //        .frame(maxWidth: .infinity, maxHeight: 400)
+        //        .cornerRadius(8)
     }
     var stepListView: some View {
         StepListView(
@@ -109,8 +138,10 @@ private extension CollaborationView {
             )
         )
         .onDisappear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                showStepSheet.toggle()
+            if sizeClass == .compact {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    showStepSheet.toggle()
+                }
             }
         }
     }
@@ -131,7 +162,8 @@ private extension CollaborationView {
     CollaborationView(
         viewModel: CollaborationViewModel(
             currentGuide: ExtendedGuideResponse.example,
-            referenceObjects: []
+            referenceObjects: [],
+            usdzModels: []
         )
     )
 }

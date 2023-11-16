@@ -1,8 +1,8 @@
 {
   "description": "How to upgrade the old MK2s to MK2s+ featuring the cool magnetic heatbed.",
   "guideType": "manual",
-  "id": "63ef73307b425e2daf8c908f",
-  "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg",
+  "id": "62ef73307b425e2daf8c908f",
+  "image_url": "https://help.prusa3d.com/wp-content/uploads/prusuki/prusuki-images/hUHw6WAEARsxYtGM.jpg",
   "modelName": {
     "android": "camel",
     "ios": "model.zip"
@@ -110,6 +110,12 @@
       "title": "Tisková hlava"
     },
     {
+      "confirmation": {
+        "_date": 0,
+        "comment": "",
+        "done": false,
+        "photo_url": ""
+      },
       "coordinates": [
         {
           "x": 1,
@@ -122,7 +128,7 @@
           "z": 3
         }
       ],
-      "id": "63ef73307b425e2daf8c908f",
+      "id": "64ef73307b425e2daf8c908g",
       "instruction": {
         "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg",
         "text": "Remove the M3 screw from the fan holder 2.",

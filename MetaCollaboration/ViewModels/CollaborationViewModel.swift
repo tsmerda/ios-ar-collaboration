@@ -33,6 +33,8 @@ final class CollaborationViewModel: ObservableObject {
     @Published var multipeerSession: MultipeerSession?
     @Published var sessionIDObservation: NSKeyValueObservation?
     
+    private var isFirstLoad = true
+    
     // TODO: - je tohle potreba?
     var showStepSheet: Binding<Bool>?
     
@@ -119,8 +121,10 @@ extension CollaborationViewModel {
             do {
                 let currentStepResponse = try await NetworkManager.shared.getStepById(guideId: guideId, objectStepOrder: objectStepOrder)
                 currentStep = currentStepResponse
-                // TODO: -- Tohle by melo byt jen v pripade kdy dokonci step, aby se to nevolalo hned na zacatku
-                replaceUSDZModel()
+                if !isFirstLoad {
+                    replaceUSDZModel()
+                }
+                isFirstLoad = false
                 progressHudState = .shouldHideProgress
             } catch {
                 progressHudState = .shouldShowFail(message: error.localizedDescription)

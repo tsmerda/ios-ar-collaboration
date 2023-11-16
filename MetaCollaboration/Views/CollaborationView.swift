@@ -109,8 +109,8 @@ private extension CollaborationView {
                 toggleStepDone: { viewModel.toggleStepDone($0) }
             )
         )
-        .presentationDetents([.height(180), .medium])
-        .presentationBackgroundInteraction(.enabled(upThrough: .medium))
+        .presentationDetents([.height(180), .medium, .large])
+        .presentationBackgroundInteraction(.enabled(upThrough: .large))
         .interactiveDismissDisabled()
         .presentationDragIndicator(.automatic)
     }

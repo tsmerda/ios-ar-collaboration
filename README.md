@@ -17,3 +17,5 @@ Discover a cutting-edge iOS app for collaborative augmented reality experiences.
 ```
 private let baseURL = "http://192.168.1.13:8080/api/v3"
 ```
+
+<img width="1600" alt="ios-ar-collaboration-thumbnail" src="https://github.com/tsmerda/ios-ar-collaboration/assets/44585636/5c3c2b9f-ee3e-4524-aa84-b35a1e3e0a70">

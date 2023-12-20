@@ -23,8 +23,9 @@ final class CollaborationViewModel: ObservableObject {
     @Published var referenceObjects: Set<ARReferenceObject> = []
     @Published var usdzModels: Set<URL> = []
     @Published var currentStep: ObjectStep?
-//    @Published var currentUsdzModel: URL?
+    //    @Published var currentUsdzModel: URL?
     @Published var currentGuide: ExtendedGuideResponse
+    @Published private(set) var currentStepNumber: Int = 0
     //    @Published var uniqueID = UUID()
     
     // MARK: Collaboration properties
@@ -42,7 +43,7 @@ final class CollaborationViewModel: ObservableObject {
     // This is useful for keeping track of which peer created which ARAnchors.
     var peerSessionIDs = [MCPeerID: String]()
     
-//    var csManager: CollaborationStateManager?
+    //    var csManager: CollaborationStateManager?
     
     // MARK: - Initialization
     init(
@@ -53,7 +54,7 @@ final class CollaborationViewModel: ObservableObject {
         self.currentGuide = currentGuide
         self.referenceObjects = referenceObjects
         self.usdzModels = usdzModels
-
+        
         if let currentGuideId = currentGuide.id,
            let firstStepOrder = currentGuide.objectSteps?.first?.order {
             getStepById(currentGuideId, firstStepOrder)
@@ -82,6 +83,7 @@ final class CollaborationViewModel: ObservableObject {
         if let currentGuideId = currentGuide.id,
            let currentStepOrder = currentStep?.order {
             getStepById(currentGuideId, currentStepOrder + 1)
+            currentStepNumber += 1
         } else {
             debugPrint("Failed to get next step")
         }
@@ -91,6 +93,7 @@ final class CollaborationViewModel: ObservableObject {
         if let currentGuideId = currentGuide.id,
            let currentStepOrder = currentStep?.order {
             getStepById(currentGuideId, currentStepOrder - 1)
+            currentStepNumber -= 1
         } else {
             debugPrint("Failed to get previous step")
         }
@@ -103,6 +106,12 @@ final class CollaborationViewModel: ObservableObject {
         } else {
             return false
         }
+    }
+    
+    func isActuallyLastStep() -> Bool {
+        let totalSteps = currentGuide.objectSteps?.count ?? 0
+        print(currentStepNumber,totalSteps)
+        return currentStepNumber >= totalSteps
     }
     
     func getUSDZModelForCurrentStep() -> URL? {
@@ -132,17 +141,31 @@ extension CollaborationViewModel {
         }
     }
     
+    func onGetUpdatedGuideById(completion: @escaping () -> Void) async {
+        if isLastStep() {
+            currentStepNumber += 1
+        }
+        await getUpdatedGuideById()
+        completion()
+    }
+    
     // Get updated guide by ID
-    func getUpdatedGuideById() {
+    func getUpdatedGuideById() async {
         if let currentGuideId = currentGuide.id {
-            Task { @MainActor in
+            await MainActor.run {
                 progressHudState = .shouldShowProgress
-                do {
-                    let updatedGuide = try await NetworkManager.shared.getGuideById(guideId: currentGuideId)
+            }
+            do {
+                let updatedGuide = try await NetworkManager.shared.getGuideById(guideId: currentGuideId)
+                await MainActor.run {
                     currentGuide = updatedGuide
-                    try PersistenceManager.shared.updateGuide(updatedGuide)
+                }
+                try PersistenceManager.shared.updateGuide(updatedGuide)
+                await MainActor.run {
                     progressHudState = .shouldHideProgress
-                } catch {
+                }
+            } catch {
+                await MainActor.run {
                     progressHudState = .shouldShowFail(message: error.localizedDescription)
                 }
             }

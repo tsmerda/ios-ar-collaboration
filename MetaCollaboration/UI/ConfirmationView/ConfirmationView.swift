@@ -146,11 +146,14 @@ private extension ConfirmationView {
             .buttonStyle(ButtonStyledOutline())
             Button(L.Confirmation.confirm){
                 if viewModel.isLastStep {
-                    viewModel.onConfirmationAction()
+                    Task {
+                        await viewModel.onConfirmationAction()
+                    }
                     showFinalView.toggle()
                 } else {
-                    viewModel.onConfirmationAction()
-                    dismiss()
+                    Task {
+                        await viewModel.onConfirmationAction()
+                    }
                 }
             }
             .buttonStyle(ButtonStyledFill())

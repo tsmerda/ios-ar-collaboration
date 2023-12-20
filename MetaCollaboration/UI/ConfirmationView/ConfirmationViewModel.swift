@@ -30,40 +30,46 @@ final class ConfirmationViewModel: ObservableObject {
         self.isLastStep = isLastStep
     }
     
-    func onConfirmationAction() {
-        onObjectStepConfirmation()
+    func onConfirmationAction() async {
+        await onObjectStepConfirmation()
     }
 }
 
 private extension ConfirmationViewModel {
-    func onObjectStepConfirmation() {
-        Task { @MainActor in
+    func onObjectStepConfirmation() async {
+        await MainActor.run {
             progressHudState = .shouldShowProgress
-            guard let guideId = guideId, let stepId = stepId else {
+        }
+        guard let guideId = guideId, let stepId = stepId else {
+            await MainActor.run {
                 progressHudState = .shouldShowFail(message: L.Confirmation.missingIDs)
-                return
             }
-            var finalComment = comment
-            if selectedRating != 0 {
-                if !finalComment.isEmpty {
-                    finalComment += ". "
-                }
-                finalComment += "\(L.Confirmation.rating) \(selectedRating) \(selectedRating.ratingDescription)."
+            return
+        }
+        var finalComment = comment
+        if selectedRating != 0 {
+            if !finalComment.isEmpty {
+                finalComment += ". "
             }
-            do {
-                try await NetworkManager.shared.putObjectStepConfirmation(
-                    confirmation: Confirmation(
-                        comment: finalComment,
-                        photoUrl: "",
-                        date: Int64(Date().timeIntervalSince1970),
-                        done: true
-                    ),
-                    guideId: guideId,
-                    objectStepId: stepId
-                )
+            finalComment += "\(L.Confirmation.rating) \(selectedRating) \(selectedRating.ratingDescription)."
+        }
+        do {
+            try await NetworkManager.shared.putObjectStepConfirmation(
+                confirmation: Confirmation(
+                    comment: finalComment,
+                    photoUrl: "",
+                    date: Int64(Date().timeIntervalSince1970),
+                    done: true
+                ),
+                guideId: guideId,
+                objectStepId: stepId
+            )
+            await MainActor.run {
                 onStepConfirmation()
                 progressHudState = .shouldShowSuccess(message: L.Confirmation.confirmed)
-            } catch {
+            }
+        } catch {
+            await MainActor.run {
                 progressHudState = .shouldShowFail(message: error.localizedDescription)
             }
         }

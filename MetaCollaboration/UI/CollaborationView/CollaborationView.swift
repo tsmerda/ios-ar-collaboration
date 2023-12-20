@@ -64,7 +64,11 @@ struct CollaborationView: View {
                     guideId: viewModel.currentGuide.id,
                     stepId: viewModel.currentStep?.id,
                     onStepConfirmation: {
-                        viewModel.getUpdatedGuideById()
+                        Task {
+                            await viewModel.onGetUpdatedGuideById {
+                                showConfirmationView.toggle()
+                            }
+                        }
                         if !viewModel.isLastStep() {
                             viewModel.getNextStep()
                         }
@@ -73,7 +77,7 @@ struct CollaborationView: View {
                 )
             )
             .onDisappear {
-                if !showConfirmationView && sizeClass == .compact {
+                if !showConfirmationView && sizeClass == .compact && !viewModel.isActuallyLastStep() {
                     showStepSheet.toggle()
                 }
             }
@@ -109,12 +113,12 @@ private extension CollaborationView {
                 toggleStepDone: { viewModel.toggleStepDone($0) }
             )
         )
-        .presentationDetents([.height(180), .medium, .large])
+        .presentationDetents([.height(180), .large])
         .presentationBackgroundInteraction(.enabled(upThrough: .large))
         .interactiveDismissDisabled()
         .presentationDragIndicator(.automatic)
     }
-    // TODO: -- Fix this view initialization (use sheet?)
+    // TODO: -- Fix this view initialization for tablet? (use sheet?)
     var bottomStackViewForIpad: some View {
         StepDetailView(
             viewModel: StepDetailViewModel(

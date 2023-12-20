@@ -78,7 +78,7 @@
 "settings_online_mode" = "Online režim";
 "settings_offline_mode" = "Offline režim";
 "settings_remove_text" = "Pokud si přejete, můžete z tohoto zařízení odstranit všechny průvodce pomocí níže uvedeného tlačítka.";
-"settings_remove_text" = "Odstranit vše";
+"settings_remove_button" = "Odstranit vše";
 
 // MARK: - Final
 

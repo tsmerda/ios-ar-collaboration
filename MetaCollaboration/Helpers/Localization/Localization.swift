@@ -19,13 +19,13 @@ extension String {
 
 enum LocalizedString {
     enum Generic {
-        static let unknown = "generic_unknown";
+        static let unknown = "generic_unknown".tr;
     }
     
     enum Error {
-        static let invalidURL = "error_invalid_url";
-        static let serverError = "error_server_error";
-        static let invalidData = "error_invalid_data";
+        static let invalidURL = "error_invalid_url".tr;
+        static let serverError = "error_server_error".tr;
+        static let invalidData = "error_invalid_data".tr;
     }
     
     enum ChooseMode {
@@ -97,7 +97,7 @@ enum LocalizedString {
         static let onlineMode = "settings_online_mode".tr
         static let offlineMode = "settings_offline_mode".tr
         static let removeText = "settings_remove_text".tr
-        static let removeButton = "settings_remove_text".tr
+        static let removeButton = "settings_remove_button".tr
     }
     
     enum Final {

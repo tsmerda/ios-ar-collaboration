@@ -25,7 +25,6 @@ struct StepDetailView: View {
             }
             .padding()
             tasksWithPreview
-            Spacer()
             confirmButton
         }
         .scrollContentBackground(.hidden)
@@ -42,7 +41,7 @@ private extension StepDetailView {
             .padding(.top)
     }
     var titleRow: some View {
-        HStack {
+        HStack(alignment: .top) {
             Text(viewModel.currentStep?.instruction?.title ?? L.Generic.unknown)
                 .font(.system(size: 20).weight(.bold))
                 .foregroundColor(.accentColor)
@@ -110,6 +109,7 @@ private extension StepDetailView {
                     .font(.system(size: 24, weight: .light))
             }
         }
+        .padding(.vertical, 4)
     }
     var confirmButton: some View {
         Button(L.StepDetail.confirm) {
@@ -129,8 +129,8 @@ private extension StepDetailView {
             toggleStepDone: { _ in }
         )
     )
-    .presentationDetents([.height(180), .medium])
-    .presentationBackgroundInteraction(.enabled(upThrough: .medium))
+    .presentationDetents([.height(180), .large])
+    .presentationBackgroundInteraction(.enabled(upThrough: .large))
     .interactiveDismissDisabled()
     .presentationDragIndicator(.automatic)
 }

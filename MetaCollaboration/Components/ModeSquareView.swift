@@ -18,12 +18,12 @@ struct ModeSquareView: View {
                 .foregroundColor(isSelected ? .accentColor : .white)
                 .padding(.bottom, 2)
             
-            Text(mode == .online ? "Online" : "Offline")
+            Text(mode == .online ? L.ChooseMode.online : L.ChooseMode.online)
                 .font(.system(size: 17))
                 .foregroundColor(isSelected ? .accentColor : .white)
             
             if mode == .online {
-                Text("NOT IMPLEMENTED")
+                Text(L.ChooseMode.notImplemented)
                     .font(.system(size: 10).weight(.bold))
                     .foregroundColor(.gray)
                     .padding(.top, 4)

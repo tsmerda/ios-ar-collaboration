@@ -33,7 +33,7 @@ struct ConfirmationView: View {
         }
         .ignoresSafeArea(.keyboard)
         .padding()
-        .navigationTitle("Step 1 confirmation")
+        .navigationTitle(L.Confirmation.title)
         .navigationBarTitleDisplayMode(.large)
         .background(
             Color("backgroundColor")
@@ -51,7 +51,7 @@ struct ConfirmationView: View {
 private extension ConfirmationView {
     var rating: some View {
         VStack(alignment: .leading) {
-            Text("Rating")
+            Text(L.Confirmation.rating)
                 .font(.system(size: 15))
                 .foregroundColor(Color("disabledColor"))
                 .padding(.bottom, 8)
@@ -74,13 +74,12 @@ private extension ConfirmationView {
     }
     var comment: some View {
         VStack(alignment: .leading) {
-            Text("Comment")
+            Text(L.Confirmation.comment)
                 .font(.system(size: 15))
                 .foregroundColor(Color("disabledColor"))
                 .padding(.bottom, 8)
-            
             TextField(
-                "Write some text",
+                L.Confirmation.commentPlaceholder,
                 text: $viewModel.comment,
                 axis: .vertical
             )
@@ -94,7 +93,7 @@ private extension ConfirmationView {
     }
     var uploadPhoto: some View {
         VStack(alignment: .leading) {
-            Text("Photo")
+            Text(L.Confirmation.image)
                 .font(.system(size: 15))
                 .foregroundColor(Color("disabledColor"))
                 .padding(.bottom, 8)
@@ -115,7 +114,7 @@ private extension ConfirmationView {
                                     .foregroundColor(Color("disabledColor"))
                             }
                             
-                            Text("Upload photo")
+                            Text(L.Confirmation.uploadImage)
                                 .font(.system(size: 10))
                                 .foregroundColor(Color.white)
                         }
@@ -141,11 +140,11 @@ private extension ConfirmationView {
     }
     var buttonsStack: some View {
         HStack {
-            Button("Cancel"){
+            Button(L.Confirmation.cancel){
                 dismiss()
             }
             .buttonStyle(ButtonStyledOutline())
-            Button("Confirm"){
+            Button(L.Confirmation.confirm){
                 if viewModel.isLastStep {
                     viewModel.onConfirmationAction()
                     showFinalView.toggle()

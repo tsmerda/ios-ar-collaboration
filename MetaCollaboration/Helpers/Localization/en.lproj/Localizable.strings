@@ -1,0 +1,93 @@
+/*
+ Localizable.strings
+ MetaCollaboration
+ 
+ Created by Tomáš Šmerda on 18.12.2023.
+ 
+ */
+
+// MARK: - Generic
+"generic_unknown" = "N/A";
+
+// MARK: - Error
+"error_invalid_url" = "Invalid URL. Please check the URL and try again.";
+"error_server_error" = "There was an error with the server. Please try again later.";
+"error_invalid_data" = "Invalid data received from the server. Please try again.";
+
+// MARK: - ChooseMode
+"choose_mode_title" = "Please select the required mode";
+"choose_mode_info" = "Online mode provides recognition of scene objects on the server. In offline mode, you work with ML models downloaded to the device.";
+"choose_mode_button" = "Choose mode";
+"choose_mode_online" = "Online";
+"choose_mode_offline" = "Offline";
+"choose_mode_not_implemented" = "NOT IMPLEMENTED";
+
+// MARK: - GuideList
+"guide_list_title" = "Guides";
+"guide_list_no_datasets" = "There are currently no datasets available";
+"guide_list_all_assets_saved"= "All assets saved in local storage deleted";
+"guide_list_failed_to_delete" = "Failed to delete all assets: ";
+
+// MARK: - GuideDetail
+"guide_detail_completed" = "Completed";
+"guide_detail_already_downloaded" = "This guide is already downloaded";
+"guide_detail_not_downloaded" = "This guide is not downloaded yet";
+"guide_detail_download" = "Download guide";
+"guide_detail_begin" = "Begin guide";
+
+// MARK: - StepList
+"step_list_title" = "step list";
+"step_list_selected" = "Selected";
+"step_list_buttons_label" = "Click continue to show guide info & collaboration or select previous step";
+"step_list_button_previous" = "Previous";
+"step_list_button_continue" = "Continue";
+"step_list_exit" = "Exit guide";
+
+// MARK: - StepDetail
+"step_detail_instructions" = "Instructions";
+"step_detail_step" = "Step: ";
+"step_detail_tasks" = "Tasks";
+"step_detail_preview" = "Preview";
+"step_detail_confirm" = "Confirm step";
+
+// MARK: - Confirmation
+"confirmation_title" = "Step confirmation";
+"confirmation_rating" = "Rating";
+"confirmation_comment" = "Comment";
+"confirmation_comment_placeholder" = "Your comment";
+"confirmation_image" = "Image";
+"confirmation_upload_image" = "Upload image";
+"confirmation_cancel" = "Cancel";
+"confirmation_confirm" = "Confirm";
+"confirmation_missing_ids" = "Missing guide ID or step ID.";
+"confirmation_confirmed" = "Successfully confirmed";
+
+// MARK: - Settings
+
+"settings_title" = "Settings";
+"settings_app_name" = "MetaCollaboration";
+"settings_description" = "Experience our advanced iOS app, tailored for immersive augmented reality collaborations. Utilizing ARKit, RealityKit, and MultipeerConnectivity, it enables real-time sharing and interaction with AR scenes. This cutting-edge platform not only offers seamless usability but also opens doors to future expansions in the metaverse, marking a significant leap in AR technology.";
+"settings_author" = "Author";
+"settings_linkedin" = "LinkedIn";
+"settings_app" = "Application";
+"settings_compatibility" = "Compatibility";
+"settings_swiftui" = "SwiftUI";
+"settings_website" = "Website";
+"settings_version" = "Version";
+"settings_customization" = "Customization";
+"settings_online_mode" = "Online mode";
+"settings_offline_mode" = "Offline mode";
+"settings_remove_text" = "If you wish, you can remove all guides from this device using the button below.";
+"settings_remove_text" = "Remove all";
+
+// MARK: - Final
+
+"final_title" = "Congratulations!";
+"final_text" = "You have successfully passed the tutorial.";
+"final_button" = "Back to guide list";
+
+// MARK: - Stars
+
+"stars_one" = "star";
+"stars_two_to_four" = "stars";
+"stars_four_and_more" = "stars";

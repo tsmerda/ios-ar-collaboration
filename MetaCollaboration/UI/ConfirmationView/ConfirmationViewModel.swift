@@ -12,6 +12,7 @@ final class ConfirmationViewModel: ObservableObject {
     let stepId: String?
     let onStepConfirmation: () -> Void
     let isLastStep: Bool
+    
     @Published var selectedRating: Int = 0
     @Published var comment: String = ""
     @Published var photoUrl: String = ""
@@ -39,14 +40,16 @@ private extension ConfirmationViewModel {
         Task { @MainActor in
             progressHudState = .shouldShowProgress
             guard let guideId = guideId, let stepId = stepId else {
-                progressHudState = .shouldShowFail(message: "Missing guide ID or step ID.")
+                progressHudState = .shouldShowFail(message: L.Confirmation.missingIDs)
                 return
             }
             var finalComment = comment
             if selectedRating != 0 {
-                finalComment += ". Hodnocení \(selectedRating) \(selectedRating.ratingDescription)."
+                if !finalComment.isEmpty {
+                    finalComment += ". "
+                }
+                finalComment += "\(L.Confirmation.rating) \(selectedRating) \(selectedRating.ratingDescription)."
             }
-            
             do {
                 try await NetworkManager.shared.putObjectStepConfirmation(
                     confirmation: Confirmation(
@@ -59,7 +62,7 @@ private extension ConfirmationViewModel {
                     objectStepId: stepId
                 )
                 onStepConfirmation()
-                progressHudState = .shouldShowSuccess(message: "Successfully confirmed")
+                progressHudState = .shouldShowSuccess(message: L.Confirmation.confirmed)
             } catch {
                 progressHudState = .shouldShowFail(message: error.localizedDescription)
             }

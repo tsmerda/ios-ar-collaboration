@@ -22,18 +22,18 @@ struct FinalView: View {
                         .font(.system(size: 50).weight(.thin))
                         .foregroundColor(.secondary)
                         .padding(.bottom)
-                    Text("Congratulations!")
+                    Text(L.Final.title)
                         .font(.title)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.accentColor)
                         .padding(.bottom, 8)
-                    Text("You have successfully passed the tutorial.")
+                    Text(L.Final.text)
                         .font(.title3)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.primary)
                 }
                 Spacer()
-                Button("Back to guide list") {
+                Button(L.Final.button) {
                     nav.popToRoot()
                 }
                 .buttonStyle(ButtonStyledFill())

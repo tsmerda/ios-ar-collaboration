@@ -24,7 +24,7 @@ struct GuideListView: View {
                 .ignoresSafeArea(.all, edges: .all)
             guideList
         }
-        .navigationTitle("Guides")
+        .navigationTitle(L.GuideList.title)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 settingsButton
@@ -72,7 +72,7 @@ private extension GuideListView {
             } else {
                 HStack {
                     Spacer()
-                    Text("There are currently no datasets available")
+                    Text(L.GuideList.noDatasets)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.white)
                         .font(.title3)

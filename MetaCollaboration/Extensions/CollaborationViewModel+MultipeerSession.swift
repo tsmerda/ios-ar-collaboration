@@ -158,7 +158,9 @@ extension CollaborationViewModel {
             print("Failed to get new USDZ model URL.")
             return
         }
+        #if !targetEnvironment(simulator)
         replaceModel(for: anchorToReplace, withModelURL: newModelURL)
+        #endif
     }
     
     private func findAnchorToReplace() -> ARObjectAnchor? {

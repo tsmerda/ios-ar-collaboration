@@ -1,21 +1,21 @@
-{
-  "description": "How to upgrade the old MK2s to MK2s+ featuring the cool magnetic heatbed.",
-  "guideType": "manual",
-  "id": "62ef73307b425e2daf8c908f",
-  "image_url": "https://help.prusa3d.com/wp-content/uploads/prusuki/prusuki-images/hUHw6WAEARsxYtGM.jpg",
-  "modelName": {
-    "android": "camel",
-    "ios": "model.zip"
+[{
+  "_id": {
+    "$oid": "655a0282df69acee406b3d35"
   },
-  "name": "Upgrading old Prusa MK2s.",
-  "objectSteps": [
+  "name": "Výměna filamentu Prusa i3 MK2.5s.",
+  "description": "Tento průvodce poskytuje jednoduché a přesné instrukce pro výměnu filamentu na 3D tiskárně Prusa i3 MK2.5s. Naučíte se, jak bezpečně a efektivně odstranit starý filament a nainstalovat nový, abyste zajistili optimální kvalitu tisku. Dodržujte kroky v tomto manuálu pro správné a bezproblémové provedení výměny filamentu.",
+  "image_url": "https://help.prusa3d.com/wp-content/uploads/prusuki/prusuki-images/hUHw6WAEARsxYtGM.jpg",
+  "model_name": {
+    "ios": "prusa.arobject",
+    "android": ""
+  },
+  "guide_type": "manual",
+  "object_steps": [
     {
-      "confirmation": {
-        "_date": 0,
-        "comment": "",
-        "done": false,
-        "photo_url": ""
-      },
+      "_id": "655a0282df69acee406b3d28",
+      "model_id": 10,
+      "title": "Zapnutí 3D tiskárny Prusa",
+      "object_name": "prusa_switch.usdz",
       "coordinates": [
         {
           "x": 1,
@@ -28,35 +28,10 @@
           "z": 3
         }
       ],
-      "id": "63ef73307b425e2daf8c908f",
-      "instruction": {
-        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg",
-        "text": "Remove the M3 screw from the fan holder.",
-        "title": "Removing screw"
-      },
-      "model_id": 123,
-      "object_name": "CamelAnotation",
-      "order": 1,
       "steps": [
         {
-          "confirmation": {
-            "_date": 0,
-            "comment": "",
-            "done": false,
-            "photo_url": ""
-          },
-          "contents": [
-            {
-              "content_type": "textblock",
-              "order": 1,
-              "text": "First, check that you have a screwdriver."
-            },
-            {
-              "content_type": "textblock",
-              "order": 2,
-              "text": "Second, check that you have a screwdriver."
-            }
-          ],
+          "_id": "655a0282df69acee406b3d29",
+          "object_name": "",
           "coordinates": [
             {
               "x": 1,
@@ -69,53 +44,40 @@
               "z": 3
             }
           ],
-          "object_name": "heatbed",
+          "contents": [
+            {
+              "content_type": "textblock",
+              "order": 1,
+              "text": "Na pravém boku 3D tiskárny Prusa přepněte tlačítko do polohy zapnuto."
+            }
+          ],
+          "confirmation": {
+            "comment": "",
+            "photo_url": "",
+            "_date": 0,
+            "done": false
+          },
           "order": 1
-        },
-        {
-          "confirmation": {
-            "_date": 0,
-            "comment": "",
-            "done": false,
-            "photo_url": ""
-          },
-          "contents": [
-            {
-              "content_type": "textblock",
-              "order": 1,
-              "text": "First, check that you have a screwdriver."
-            },
-            {
-              "content_type": "textblock",
-              "order": 2,
-              "text": "Second, check that you have a screwdriver."
-            }
-          ],
-          "coordinates": [
-            {
-              "x": 1,
-              "y": 2,
-              "z": 3
-            },
-            {
-              "x": 1,
-              "y": 2,
-              "z": 3
-            }
-          ],
-          "object_name": "heatbed",
-          "order": 2
         }
       ],
-      "title": "Tisková hlava"
+      "instruction": {
+        "title": "Zapnutí 3D tiskárny Prusa",
+        "text": "V prvním kroku musí být tiskárna Prusa MK2 v zapnutém stavu. Pokud není zapněte ji.",
+        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"
+      },
+      "confirmation": {
+        "comment": "",
+        "photo_url": "",
+        "_date": 0,
+        "done": false
+      },
+      "order": 1
     },
     {
-      "confirmation": {
-        "_date": 0,
-        "comment": "",
-        "done": false,
-        "photo_url": ""
-      },
+      "_id": "655a0282df69acee406b3d2a",
+      "model_id": 11,
+      "title": "Nastavení hlavy pro vysunutí filamentu",
+      "object_name": "prusa_control_panel.usdz",
       "coordinates": [
         {
           "x": 1,
@@ -128,35 +90,10 @@
           "z": 3
         }
       ],
-      "id": "64ef73307b425e2daf8c908g",
-      "instruction": {
-        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg",
-        "text": "Remove the M3 screw from the fan holder 2.",
-        "title": "Removing screw 2."
-      },
-      "model_id": 234,
-      "object_name": "CamelAnotation2",
-      "order": 2,
       "steps": [
         {
-          "confirmation": {
-            "_date": 0,
-            "comment": "",
-            "done": false,
-            "photo_url": ""
-          },
-          "contents": [
-            {
-              "content_type": "textblock",
-              "order": 1,
-              "text": "First, check that you have a screwdriver."
-            },
-            {
-              "content_type": "textblock",
-              "order": 2,
-              "text": "Second, check that you have a screwdriver."
-            }
-          ],
+          "_id": "655a0282df69acee406b3d2b",
+          "object_name": "",
           "coordinates": [
             {
               "x": 1,
@@ -169,28 +106,29 @@
               "z": 3
             }
           ],
-          "object_name": "heatbed",
+          "contents": [
+            {
+              "content_type": "textblock",
+              "order": 1,
+              "text": "V menu ovládacího panelu vyberte Predehrev."
+            },
+            {
+              "content_type": "textblock",
+              "order": 2,
+              "text": "Vyberte požadovaný filament (například PLA)."
+            }
+          ],
+          "confirmation": {
+            "comment": "",
+            "photo_url": "",
+            "_date": 0,
+            "done": false
+          },
           "order": 1
         },
         {
-          "confirmation": {
-            "_date": 0,
-            "comment": "",
-            "done": false,
-            "photo_url": ""
-          },
-          "contents": [
-            {
-              "content_type": "textblock",
-              "order": 1,
-              "text": "First, check that you have a screwdriver."
-            },
-            {
-              "content_type": "textblock",
-              "order": 2,
-              "text": "Second, check that you have a screwdriver."
-            }
-          ],
+          "_id": "655a0282df69acee406b3d2c",
+          "object_name": "heatbed",
           "coordinates": [
             {
               "x": 1,
@@ -203,11 +141,285 @@
               "z": 3
             }
           ],
+          "contents": [
+            {
+              "content_type": "textblock",
+              "order": 1,
+              "text": "Vyčkejte dokud nebude hlava nahřátá na správnou teplotu uvedenou na displeji (vrchní hodnota u symbolu teploty)."
+            }
+          ],
+          "confirmation": {
+            "comment": "",
+            "photo_url": "",
+            "_date": 0,
+            "done": false
+          },
+          "order": 2
+        },
+        {
+          "_id": "655a0282df69acee406b3d2d",
           "object_name": "heatbed",
+          "coordinates": [
+            {
+              "x": 1,
+              "y": 2,
+              "z": 3
+            },
+            {
+              "x": 1,
+              "y": 2,
+              "z": 3
+            }
+          ],
+          "contents": [
+            {
+              "content_type": "textblock",
+              "order": 1,
+              "text": "Jakmile bude hlava zahřátá na správnout teplotu, vyberte na displeji uvolnit filament"
+            }
+          ],
+          "confirmation": {
+            "comment": "",
+            "photo_url": "",
+            "_date": 0,
+            "done": false
+          },
+          "order": 3
+        }
+      ],
+      "instruction": {
+        "title": "Nastavení hlavy pro vysunutí filamentu",
+        "text": "Přes ovládací panel nastavíme tiskovou hlavu tak, abychom z ní mohli bez problému vytáhnout starý filament.",
+        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"
+      },
+      "confirmation": {
+        "comment": "",
+        "photo_url": "",
+        "_date": 0,
+        "done": false
+      },
+      "order": 2
+    },
+    {
+      "_id": "655a0282df69acee466b3d2e",
+      "model_id": 12,
+      "title": "Vyjmutí filamentu z tiskové hlavy",
+      "object_name": "prusa_head.usdz",
+      "coordinates": [
+        {
+          "x": 1,
+          "y": 2,
+          "z": 3
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "z": 3
+        }
+      ],
+      "steps": [
+        {
+          "_id": "655a0282df69acee406b331f",
+          "object_name": "",
+          "coordinates": [
+            {
+              "x": 1,
+              "y": 2,
+              "z": 3
+            },
+            {
+              "x": 1,
+              "y": 2,
+              "z": 3
+            }
+          ],
+          "contents": [
+            {
+              "content_type": "textblock",
+              "order": 1,
+              "text": "Vytáhněte z hlavy filament. Můžete použít například malé kleště."
+            }
+          ],
+          "confirmation": {
+            "comment": "",
+            "photo_url": "",
+            "_date": 0,
+            "done": false
+          },
+          "order": 1
+        }
+      ],
+      "instruction": {
+        "title": "Vyjmutí filamentu z tiskové hlavy",
+        "text": "V tomto momentě je hlava nahřátá na správnou teplotu a můžeme tedy opatrně vysunout filament z tiskové hlavy.",
+        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"
+      },
+      "confirmation": {
+        "comment": "",
+        "photo_url": "",
+        "_date": 0,
+        "done": false
+      },
+      "order": 3
+    },
+    {
+      "_id": "655a6282df69aces406b3d30",
+      "model_id": 13,
+      "title": "Zasunutí filamentu do tiskové hlavy",
+      "object_name": "prusa_filament_head.usdz",
+      "coordinates": [
+        {
+          "x": 1,
+          "y": 2,
+          "z": 3
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "z": 3
+        }
+      ],
+      "steps": [
+        {
+          "_id": "825a0282df69acee406b3d31",
+          "object_name": "",
+          "coordinates": [
+            {
+              "x": 1,
+              "y": 2,
+              "z": 3
+            },
+            {
+              "x": 1,
+              "y": 2,
+              "z": 3
+            }
+          ],
+          "contents": [
+            {
+              "content_type": "textblock",
+              "order": 1,
+              "text": "Nasaďte nové balení filamentu na držák."
+            },
+            {
+              "content_type": "textblock",
+              "order": 2,
+              "text": "Zkontrolujte, zda není konec filamentu zahnutý. Pokud ano, vezměte kleště a ucvakněte konec, aby byl naprosto rovný"
+            }
+          ],
+          "confirmation": {
+            "comment": "",
+            "photo_url": "",
+            "_date": 0,
+            "done": false
+          },
+          "order": 1
+        },
+        {
+          "_id": "755a0282df69acee406b3d17",
+          "object_name": "",
+          "coordinates": [
+            {
+              "x": 1,
+              "y": 2,
+              "z": 3
+            },
+            {
+              "x": 1,
+              "y": 2,
+              "z": 3
+            }
+          ],
+          "contents": [
+            {
+              "content_type": "textblock",
+              "order": 1,
+              "text": "Zasuňte konec filamentu do tiskové hlavy"
+            }
+          ],
+          "confirmation": {
+            "comment": "",
+            "photo_url": "",
+            "_date": 0,
+            "done": false
+          },
           "order": 2
         }
       ],
-      "title": "Tisková hlava 2"
+      "instruction": {
+        "title": "Zasunutí filamentu do tiskové hlavy",
+        "text": "Nyní je potřeba nasadit nové balení filamentu na držák a zasunout filament do hlavy.",
+        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"
+      },
+      "confirmation": {
+        "comment": "",
+        "photo_url": "",
+        "_date": 0,
+        "done": false
+      },
+      "order": 4
+    },
+    {
+      "_id": "655a02s3df69acff406b3d33",
+      "model_id": 14,
+      "title": "Potvrzení zavedení filamentu",
+      "object_name": "prusa_control_panel.usdz",
+      "coordinates": [
+        {
+          "x": 1,
+          "y": 2,
+          "z": 3
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "z": 3
+        }
+      ],
+      "steps": [
+        {
+          "_id": "655a0280ef60acee406b3d34",
+          "object_name": "",
+          "coordinates": [
+            {
+              "x": 1,
+              "y": 2,
+              "z": 3
+            },
+            {
+              "x": 1,
+              "y": 2,
+              "z": 3
+            }
+          ],
+          "contents": [
+            {
+              "content_type": "textblock",
+              "order": 1,
+              "text": "Na displeji vyberte položku autozavedení filamentu"
+            }
+          ],
+          "confirmation": {
+            "comment": "",
+            "photo_url": "",
+            "_date": 0,
+            "done": false
+          },
+          "order": 1
+        }
+      ],
+      "instruction": {
+        "title": "Potvrzení zavedení filamentu",
+        "text": "Na ovládacím panelu Prusa stiskněte AutoZavedeni fil.",
+        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"
+      },
+      "confirmation": {
+        "comment": "",
+        "photo_url": "",
+        "_date": 0,
+        "done": false
+      },
+      "order": 5
     }
   ]
-}
+}]

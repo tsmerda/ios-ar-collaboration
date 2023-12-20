@@ -17,11 +17,11 @@ enum NetworkError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "Invalid URL. Please check the URL and try again."
+            return L.Error.invalidURL
         case .serverError:
-            return "There was an error with the server. Please try again later."
+            return L.Error.serverError
         case .invalidData:
-            return "Invalid data received from the server. Please try again."
+            return L.Error.invalidData
         case .serverResponseError(let detail):
             return detail
         case .unknown(let error):

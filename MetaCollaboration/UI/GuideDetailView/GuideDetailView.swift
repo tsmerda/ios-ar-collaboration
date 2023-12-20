@@ -38,7 +38,7 @@ struct GuideDetailView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if viewModel.isGuideCompleted {
-                    Text("Completed")
+                    Text(L.GuideDetail.completed)
                         .font(.system(size: 10).weight(.bold))
                         .foregroundColor(.black)
                         .padding(.horizontal, 11)
@@ -84,7 +84,7 @@ private extension GuideDetailView {
         }
     }
     var guideDescription: some View {
-        Text(viewModel.guide.description ?? "Guide description")
+        Text(viewModel.guide.description ?? L.Generic.unknown)
             .font(.subheadline)
             .foregroundColor(Color("disabledColor"))
             .multilineTextAlignment(.leading)
@@ -128,11 +128,11 @@ private extension GuideDetailView {
         HStack {
             Spacer()
             if viewModel.downloadedGuide {
-                Text("This guide is already downloaded")
+                Text(L.GuideDetail.alreadyDownloaded)
                     .font(.system(size: 13).bold())
                     .foregroundColor(.accentColor)
             } else {
-                Text("This guide is not downloaded yet")
+                Text(L.GuideDetail.notDownloaded)
                     .font(.system(size: 13).bold())
                     .foregroundColor(.accentColor)
             }
@@ -143,7 +143,7 @@ private extension GuideDetailView {
     }
     var buttonsStack: some View {
         HStack {
-            Button("Download guide") {
+            Button(L.GuideDetail.download) {
                 if let guideId = viewModel.guide.id {
                     viewModel.getGuideById(guideId)
                 }
@@ -151,7 +151,7 @@ private extension GuideDetailView {
             .buttonStyle(ButtonStyledOutline())
             .disabled(viewModel.downloadedGuide)
             
-            Button("Begin guide") {
+            Button(L.GuideDetail.begin) {
                 if let guideId = viewModel.guide.id {
                     viewModel.onSetCurrentGuideAction(guideId)
                     if let currentGuide = viewModel.currentGuide,

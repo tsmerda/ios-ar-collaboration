@@ -13,7 +13,7 @@ class PersistenceManager {
     static let shared = PersistenceManager()
     private init() {}
     
-    private let jsonDataFile = "guidesData.json"
+    private let jsonDataFile = GlobalConstants.jsonDataFile
     
     func saveGuidesToJSON(_ guides: [ExtendedGuideResponse]) throws {
         let encoder = JSONEncoder()

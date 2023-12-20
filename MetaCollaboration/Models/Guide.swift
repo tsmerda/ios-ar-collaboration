@@ -42,8 +42,8 @@ public struct Guide: Hashable, Identifiable, Codable {
 // MARK: - Example Guide
 extension Guide {
     static var example: Guide {
-        Guide(name: "Upgrading old Prusa MK2s.",
-              description: "How to upgrade the old MK2s to MK2s+ featuring the cool magnetic heatbed.",
+        Guide(name: "Výměna filamentu Prusa i3 MK2.5s",
+              description: "Tento průvodce poskytuje jednoduché a přesné instrukce pro výměnu filamentu na 3D tiskárně Prusa i3 MK2.5s. Naučíte se, jak bezpečně a efektivně odstranit starý filament a nainstalovat nový, abyste zajistili optimální kvalitu tisku. Dodržujte kroky v tomto manuálu pro správné a bezproblémové provedení výměny filamentu.",
               imageUrl: "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg",
               guideType: .manual
         )

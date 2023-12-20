@@ -9,9 +9,11 @@ import SwiftUI
 
 struct StepDetailView: View {
     @StateObject private var viewModel: StepDetailViewModel
+    private let progressHudBinding: ProgressHudBinding
     
     init(viewModel: StepDetailViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
+        self.progressHudBinding = ProgressHudBinding(state: viewModel.$progressHudState)
     }
     
     var body: some View {
@@ -34,18 +36,18 @@ struct StepDetailView: View {
 
 private extension StepDetailView {
     var instructionText: some View {
-        Text("Instructions".uppercased())
+        Text(L.StepDetail.instructions.uppercased())
             .font(.system(size: 10).weight(.bold))
             .foregroundColor(Color("disabledColor"))
             .padding(.top)
     }
     var titleRow: some View {
         HStack {
-            Text(viewModel.currentStep?.instruction?.title ?? "Current step title")
+            Text(viewModel.currentStep?.instruction?.title ?? L.Generic.unknown)
                 .font(.system(size: 20).weight(.bold))
                 .foregroundColor(.accentColor)
             Spacer()
-            Text("Step: \(String(describing: viewModel.currentStep?.order ?? 0))/2")
+            Text("\(L.StepDetail.step)\(String(describing: viewModel.currentStep?.order ?? 0))")
                 .font(.system(size: 12).weight(.medium))
                 .foregroundColor(.white)
                 .padding(.horizontal, 12)
@@ -55,7 +57,7 @@ private extension StepDetailView {
         }
     }
     var descriptionText: some View {
-        Text(viewModel.currentStep?.instruction?.text ?? "Current step text")
+        Text(viewModel.currentStep?.instruction?.text ?? L.Generic.unknown)
             .font(.system(size: 16))
             .foregroundColor(Color("disabledColor"))
     }
@@ -64,7 +66,7 @@ private extension StepDetailView {
         List {
             // Task Section
             if let steps = viewModel.currentStep?.steps {
-                Section(header: Text("Tasks")) {
+                Section(header: Text(L.StepDetail.tasks)) {
                     ForEach(steps, id: \.self) { step in
                         stepRow(step)
                     }
@@ -75,7 +77,7 @@ private extension StepDetailView {
         
             // Preview Image Section
             if let imageUrl = viewModel.currentStep?.instruction?.imageUrl {
-                Section(header: Text("Preview image")) {
+                Section(header: Text(L.StepDetail.preview)) {
                     AsyncImage(url: URL(string: imageUrl)){ image in
                         image
                             .resizable()
@@ -110,7 +112,7 @@ private extension StepDetailView {
         }
     }
     var confirmButton: some View {
-        Button("Confirm step") {
+        Button(L.StepDetail.confirm) {
             viewModel.onNavigateAction()
         }
         .buttonStyle(ButtonStyledFill())

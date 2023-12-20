@@ -33,9 +33,9 @@ final class GuideListViewModel: ObservableObject {
                 try removeAssetsFromDevice()
                 downloadedGuides.removeAll()
                 try PersistenceManager.shared.deleteGuidesJSON()
-                self.progressHudState = .shouldShowSuccess(message: "All assets saved in local storage deleted")
+                self.progressHudState = .shouldShowSuccess(message: L.GuideList.allAssetsSaved)
             } catch {
-                self.progressHudState = .shouldShowFail(message: "Failed to delete all assets: \(error.localizedDescription)")
+                self.progressHudState = .shouldShowFail(message: "\(L.GuideList.failedToDelete)\(error.localizedDescription)")
             }
         }
     }

@@ -1,0 +1,93 @@
+/*
+ Localizable.strings
+ MetaCollaboration
+ 
+ Created by Tomáš Šmerda on 18.12.2023.
+ 
+ */
+
+// MARK: - Generic
+"generic_unknown" = "N/A";
+
+// MARK: - Error
+"error_invalid_url" = "Neplatná URL adresa. Zkontrolujte prosím URL a zkuste to znovu.";
+"error_server_error" = "Na serveru došlo k chybě. Zkuste to prosím později.";
+"error_invalid_data" = "Neplatná data přijatá ze serveru. Zkuste to prosím znovu.";
+
+// MARK: - ChooseMode
+"choose_mode_title" = "Vyberte požadovaný režim";
+"choose_mode_info" = "Režim online umožňuje rozpoznávání objektů scény na serveru. V režimu offline pracujete s ML modely staženými do zařízení.";
+"choose_mode_button" = "Vyberte režim";
+"choose_mode_online" = "Online";
+"choose_mode_offline" = "Offline";
+"choose_mode_not_implemented" = "NEIMPLEMENTOVÁNO";
+
+// MARK: - GuideList
+"guide_list_title" = "Průvodci";
+"guide_list_no_datasets" = "V současné době nejsou k dispozici žádní průvodci";
+"guide_list_all_assets_saved" = "Všechny prostředky uložené v místním úložišti odstraněny";
+"guide_list_failed_to_delete" = "Nepodařilo se odstranit všechny položky: ";
+
+// MARK: - GuideDetail
+"guide_detail_completed" = "Kompletní";
+"guide_detail_already_downloaded" = "Tento průvodce je již stažen";
+"guide_detail_not_downloaded" = "Tento průvodce zatím není stažen";
+"guide_detail_download" = "Stáhnout průvodce";
+"guide_detail_begin" = "Začít průvodce";
+
+// MARK: - StepList
+"step_list_title" = "seznam kroků";
+"step_list_selected" = "Vybrané";
+"step_list_buttons_label" = "Kliknutím na tlačítko pokračovat zobrazíte informace o průvodci a kolaboraci nebo vyberete předchozí krok.";
+"step_list_button_previous" = "Předchozí";
+"step_list_button_continue" = "Pokračovat";
+"step_list_exit" = "Ukončit průvodce";
+
+// MARK: - StepDetail
+"step_detail_instructions" = "Instrukce";
+"step_detail_step" = "Krok: ";
+"step_detail_tasks" = "Úkoly";
+"step_detail_preview" = "Náhled";
+"step_detail_confirm" = "Potvrdit krok";
+
+// MARK: - Confirmation
+"confirmation_title" = "Potvrzení kroku";
+"confirmation_rating" = "Hodnocení";
+"confirmation_comment" = "Komentář";
+"confirmation_comment_placeholder" = "Váš komentář";
+"confirmation_image" = "Obrázek";
+"confirmation_upload_image" = "Nahrát obrázek";
+"confirmation_cancel" = "Zrušit";
+"confirmation_confirm" = "Potvrdit";
+"confirmation_missing_ids" = "Chybí ID průvodce nebo ID kroku.";
+"confirmation_confirmed" = "Úspěšně potvrzeno";
+
+// MARK: - Settings
+
+"settings_title" = "Nastavení";
+"settings_app_name" = "MetaCollaboration";
+"settings_description" = "Vyzkoušejte naši pokročilou aplikaci pro iOS, která je přizpůsobená pro spolupráci v rozšířené realitě. Využívá ARKit, RealityKit a MultipeerConnectivity a umožňuje sdílení a interakci s AR scénami v reálném čase. Tato špičková platforma nabízí nejen bezproblémovou použitelnost, ale také otevírá dveře budoucímu rozšíření v metaverzu, což znamená významný skok v technologii AR.";
+"settings_author" = "Autor";
+"settings_linkedin" = "LinkedIn";
+"settings_app" = "Aplikace";
+"settings_compatibility" = "Kompatibilita";
+"settings_swiftui" = "SwiftUI";
+"settings_website" = "Webová stránka";
+"settings_version" = "Verze";
+"settings_customization" = "Přizpůsobení";
+"settings_online_mode" = "Online režim";
+"settings_offline_mode" = "Offline režim";
+"settings_remove_text" = "Pokud si přejete, můžete z tohoto zařízení odstranit všechny průvodce pomocí níže uvedeného tlačítka.";
+"settings_remove_text" = "Odstranit vše";
+
+// MARK: - Final
+
+"final_title" = "Gratulujeme!";
+"final_text" = "Úspěšně jste absolvovali průvodce.";
+"final_button" = "Zpět na seznam průvodců";
+
+// MARK: - Stars
+
+"stars_one" = "hvězdička";
+"stars_two_to_four" = "hvězdičky";
+"stars_four_and_more" = "hvězdiček";

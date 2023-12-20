@@ -25,7 +25,7 @@ struct SettingsView: View {
                     appDetailedInfoView
                     appCustomizationView
                 }
-                .navigationTitle("Settings")
+                .navigationTitle(L.Settings.title)
                 .navigationBarTitleDisplayMode(.large)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -47,7 +47,7 @@ private extension SettingsView {
     var appDescriptionView: some View {
         GroupBox(
             label:
-                SettingsLabelView(labelText: "Meta Collaboration", labelImage: "info.circle")
+                SettingsLabelView(labelText: L.Settings.appName, labelImage: "info.circle")
         ) {
             Divider().padding(.vertical, 4)
             
@@ -55,10 +55,10 @@ private extension SettingsView {
                 Image("logo")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 80, height: 80)
+                    .frame(width: 60, height: 60)
                     .cornerRadius(9)
                 
-                Text("Discover a cutting-edge iOS app for collaborative augmented reality experiences. Share and manipulate scenes in real-time, leveraging ARKit, RealityKit, and MultipeerConnectivity. Experience the future of AR with seamless usability and potential for further development in the metaverse.")
+                Text(L.Settings.description)
                     .font(.footnote)
             }
         }
@@ -67,7 +67,7 @@ private extension SettingsView {
     var appAuthorView: some View {
         GroupBox(
             label:
-                SettingsLabelView(labelText: "Author", labelImage: "person")
+                SettingsLabelView(labelText: L.Settings.author, labelImage: "person")
         ) {
             Divider().padding(.vertical, 4)
             
@@ -82,7 +82,7 @@ private extension SettingsView {
                         .foregroundColor(.gray)
                         .bold()
                     HStack {
-                        Text("LinkedIn")
+                        Text(L.Settings.linkedin)
                             .foregroundColor(.gray)
                         Spacer()
                         Link("tomas-smerda", destination: URL(string: "https://linkedin.com/in/tomas-smerda")!)
@@ -97,23 +97,23 @@ private extension SettingsView {
     var appDetailedInfoView: some View {
         GroupBox(
             label:
-                SettingsLabelView(labelText: "Application", labelImage: "apps.iphone")
+                SettingsLabelView(labelText: L.Settings.app, labelImage: "apps.iphone")
         ) {
-            SettingsRowView(name: "Compatibility", content: "iOS 16")
-            SettingsRowView(name: "SwiftUI", content: "4.0")
-            SettingsRowView(name: "Website", linkLabel: "Spatial Hub @ MENDELU", linkDestination: "spatialhub.mendelu.cz")
-            SettingsRowView(name: "App version", content: "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)")
+            SettingsRowView(name: L.Settings.compatibility, content: "iOS 16")
+            SettingsRowView(name: L.Settings.swiftui, content: "4.0")
+            SettingsRowView(name: L.Settings.website, linkLabel: "Spatial Hub @ MENDELU", linkDestination: "spatialhub.mendelu.cz")
+            SettingsRowView(name: L.Settings.version, content: "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)")
         }
         .backgroundStyle(Color("secondaryColor"))
     }
     var appCustomizationView: some View {
         GroupBox(
-            label: SettingsLabelView(labelText: "Customization", labelImage: "paintbrush")
+            label: SettingsLabelView(labelText: L.Settings.customization, labelImage: "paintbrush")
         ) {
             Divider().padding(.vertical, 4)
             
             HStack(alignment: .center, spacing: 10) {
-                Text("Online mode activated")
+                Text(L.Settings.onlineMode)
                     .foregroundColor(.gray)
                 Spacer()
                 // if appMode == .onlineMode {
@@ -128,7 +128,7 @@ private extension SettingsView {
             Divider().padding(.vertical, 4)
             
             HStack(alignment: .center, spacing: 10) {
-                Text("Offline mode activated")
+                Text(L.Settings.offlineMode)
                     .foregroundColor(.gray)
                 Spacer()
                 // if appMode == .offlineMode {
@@ -142,7 +142,7 @@ private extension SettingsView {
             
             Divider().padding(.vertical, 4)
             
-            Text("If you wish, you can remove all guides from this device using the button below.")
+            Text(L.Settings.removeText)
                 .padding(.vertical, 8)
                 .frame(minHeight: 60)
                 .layoutPriority(1)
@@ -152,7 +152,7 @@ private extension SettingsView {
             Button(action: {
                 removeAllFromLocalStorage()
             }) {
-                Text("Remove all")
+                Text(L.Settings.removeButton)
                     .fontWeight(.bold)
                     .foregroundColor(Color("errorColor"))
             }

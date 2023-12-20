@@ -30,7 +30,6 @@ struct StepListView: View {
                 selection = stepOrder
             }
         }
-        .navigationTitle("Step list")
         .navigationBarTitleDisplayMode(.large)
         .background(Color("backgroundColor")
             .ignoresSafeArea(.all, edges: .all))
@@ -40,7 +39,7 @@ struct StepListView: View {
 private extension StepListView {
     var stepListTitle: some View {
         HStack {
-            Text("\(viewModel.guide?.name ?? "") step list")
+            Text("\(viewModel.guide?.name ?? L.Generic.unknown) \(L.StepList.title)")
                 .bold()
                 .font(.title)
             Spacer()
@@ -51,11 +50,11 @@ private extension StepListView {
         ScrollView {
             ForEach(viewModel.guide?.objectSteps ?? [], id: \.id) { step in
                 HStack(spacing: 8) {
-                    Text(step.title ?? "Unknown title")
+                    Text(step.title ?? L.Generic.unknown)
                         .font(.system(size: 16))
                     Spacer()
                     if selection == step.order {
-                        Text("Selected".uppercased())
+                        Text(L.StepList.selected.uppercased())
                             .font(.system(size: 11).weight(.bold))
                             .foregroundColor(.accentColor)
                             .padding(.trailing, 8)
@@ -79,7 +78,7 @@ private extension StepListView {
     var buttonsLabel: some View {
         HStack {
             Spacer()
-            Text("Click continue to show guide info & collaboration or select previous step")
+            Text(L.StepList.buttonsLabel)
                 .font(.system(size: 13).bold())
                 .foregroundColor(.accentColor)
                 .multilineTextAlignment(.center)
@@ -91,14 +90,14 @@ private extension StepListView {
     var buttonsStack: some View {
         VStack {
             HStack {
-                Button("Previous") {
+                Button(L.StepList.buttonPrevious) {
                     viewModel.onSelectPreviousStep()
                     dismiss()
                 }
                 .buttonStyle(ButtonStyledFill())
                 .disabled(viewModel.stepOrder == 1)
                 Spacer()
-                Button("Continue") {
+                Button(L.StepList.buttonContinue) {
                     dismiss()
                 }
                 .buttonStyle(ButtonStyledFill())
@@ -109,7 +108,7 @@ private extension StepListView {
                 }) {
                     HStack {
                         Image(systemName: "arrow.left")
-                        Text("Exit guide")
+                        Text(L.StepList.exit)
                     }
                 }
                 .buttonStyle(ButtonStyledOutline())
@@ -131,7 +130,7 @@ private extension StepListView {
     StepListView(
         viewModel: StepListViewModel(
             guide: ExtendedGuideResponse(
-                name: "Guide",
+                name: "Výměna filamentu Prusa i3 MK2.5s",
                 guideType: .tutorial,
                 objectSteps: SimpleStep.exampleArray
             ),

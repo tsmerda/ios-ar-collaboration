@@ -13,7 +13,7 @@ struct ChooseModeView: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Please select the required mode")
+            Text(L.ChooseMode.title)
                 .multilineTextAlignment(.center)
                 .font(.system(size: 32).bold())
                 .foregroundColor(.white)
@@ -26,7 +26,7 @@ struct ChooseModeView: View {
                 
                 Spacer()
                 
-                Text("Online mode provides recognition of scene objects on the server. In offline mode, you work with ML models downloaded to the device.")
+                Text(L.ChooseMode.info)
                     .font(.system(size: 12).weight(.light))
                     .multilineTextAlignment(.leading)
                     .foregroundColor(.gray)
@@ -56,7 +56,7 @@ struct ChooseModeView: View {
             
             HStack {
                 Spacer()
-                Button("Choose mode") {
+                Button(L.ChooseMode.button) {
                     appMode = selectedMode == .online ? .onlineMode : .offlineMode
                 }
                 .disabled(selectedMode == .none)

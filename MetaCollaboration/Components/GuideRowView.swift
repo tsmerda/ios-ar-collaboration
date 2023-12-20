@@ -29,11 +29,12 @@ struct GuideRowView: View {
                     Text("\(guide.name)")
                         .font(.system(size: 17).bold())
                         .foregroundColor(.white)
-                    
+                        .multilineTextAlignment(.leading)
                     Text("\(guide.description ?? "")")
                         .font(.subheadline)
                         .foregroundColor(Color("disabledColor"))
                         .multilineTextAlignment(.leading)
+                        .lineLimit(4)
                 }
                 Spacer()
                 VStack {

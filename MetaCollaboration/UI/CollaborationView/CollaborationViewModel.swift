@@ -26,7 +26,7 @@ final class CollaborationViewModel: ObservableObject {
     //    @Published var currentUsdzModel: URL?
     @Published var currentGuide: ExtendedGuideResponse
     @Published private(set) var currentStepNumber: Int = 0
-    //    @Published var uniqueID = UUID()
+    @Published var uniqueID = UUID()
     
     // MARK: Collaboration properties
     
@@ -68,15 +68,15 @@ final class CollaborationViewModel: ObservableObject {
     }
     
     // MARK: - Public Methods
-    //    func refreshCollaborationView() {
-    // TODO: - Opravit nastaveni UUID() -> zpusobovalo seknuti pri prejiti na ARView
-    //        self.uniqueID = UUID()
-    //    }
+    func refreshCollaborationView() {
+        // TODO: - Opravit nastaveni UUID() -> zpusobovalo seknuti pri prejiti na ARView
+        self.uniqueID = UUID()
+    }
     
     func toggleStepDone(_ step: Step) {
-        //        if let index = currentStep?.steps?.firstIndex(where: { $0.id == step.id }) {
-        //            currentStep?.steps?[index].confirmation?.done.toggle()
-        //        }
+//        if let index = currentStep?.steps?.firstIndex(where: { $0.id == step.id }) {
+//            currentStep?.steps?[index].confirmation?.done.toggle()
+//        }
     }
     
     func getNextStep() {
@@ -110,7 +110,6 @@ final class CollaborationViewModel: ObservableObject {
     
     func isActuallyLastStep() -> Bool {
         let totalSteps = currentGuide.objectSteps?.count ?? 0
-        print(currentStepNumber,totalSteps)
         return currentStepNumber >= totalSteps
     }
     

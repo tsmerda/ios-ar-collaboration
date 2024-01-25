@@ -22,7 +22,9 @@ struct GuideListView: View {
         ZStack {
             Color("backgroundColor")
                 .ignoresSafeArea(.all, edges: .all)
-            guideList
+            ScrollView {
+                guideList
+            }
         }
         .navigationTitle(L.GuideList.title)
         .toolbar {
@@ -53,7 +55,7 @@ struct GuideListView: View {
 
 private extension GuideListView {
     var guideList: some View {
-        VStack {
+        LazyVStack(spacing: 16) {
             if let guideList = viewModel.guideList,
                !guideList.isEmpty {
                 ForEach(guideList, id: \.id) { guide in
@@ -68,15 +70,12 @@ private extension GuideListView {
                     }
                     .listRowBackground(Color("secondaryColor"))
                 }
-                Spacer()
             } else {
                 HStack {
-                    Spacer()
                     Text(L.GuideList.noDatasets)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.white)
                         .font(.title3)
-                    Spacer()
                 }
                 .frame(maxWidth: 260)
             }

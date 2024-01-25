@@ -24,7 +24,7 @@ struct GuideRowView: View {
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 VStack(alignment: .leading, spacing: 14) {
                     Text("\(guide.name)")
                         .font(.system(size: 17).bold())
@@ -34,7 +34,7 @@ struct GuideRowView: View {
                         .font(.subheadline)
                         .foregroundColor(Color("disabledColor"))
                         .multilineTextAlignment(.leading)
-                        .lineLimit(4)
+                        .lineLimit(3)
                 }
                 Spacer()
                 VStack {
@@ -54,14 +54,14 @@ struct GuideRowView: View {
             .cornerRadius(8)
             
             if isCompleted {
-                Text("Completed")
+                Text(L.GuideDetail.completed)
                     .font(.system(size: 10).weight(.bold))
                     .foregroundColor(.black)
-                    .padding(.horizontal, 11)
-                    .padding(.vertical, 3)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
                     .background(Color.accentColor)
                     .cornerRadius(6)
-                    .padding([.top, .trailing], 10)
+                    .padding([.top, .trailing], 4)
             }
         }
     }

@@ -4,7 +4,7 @@
   },
   "name": "Výměna filamentu Prusa i3 MK2.5s.",
   "description": "Tento průvodce poskytuje jednoduché a přesné instrukce pro výměnu filamentu na 3D tiskárně Prusa i3 MK2.5s. Naučíte se, jak bezpečně a efektivně odstranit starý filament a nainstalovat nový, abyste zajistili optimální kvalitu tisku. Dodržujte kroky v tomto manuálu pro správné a bezproblémové provedení výměny filamentu.",
-  "image_url": "https://help.prusa3d.com/wp-content/uploads/prusuki/prusuki-images/hUHw6WAEARsxYtGM.jpg",
+  "image_url": "https://res.cloudinary.com/dnyauft0o/image/upload/v1704217576/ARManuals/eigsekc2so3b2qkxosti.jpg",
   "model_name": {
     "ios": "prusa.arobject",
     "android": ""
@@ -63,7 +63,7 @@
       "instruction": {
         "title": "Zapnutí 3D tiskárny Prusa",
         "text": "V prvním kroku musí být tiskárna Prusa MK2 v zapnutém stavu. Pokud není zapněte ji.",
-        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"
+        "image_url": "https://res.cloudinary.com/dnyauft0o/image/upload/v1704217240/ARManuals/cbbuoqhg7djr0tne4o13.jpg"
       },
       "confirmation": {
         "comment": "",
@@ -190,7 +190,7 @@
       "instruction": {
         "title": "Nastavení hlavy pro vysunutí filamentu",
         "text": "Přes ovládací panel nastavíme tiskovou hlavu tak, abychom z ní mohli bez problému vytáhnout starý filament.",
-        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"
+        "image_url": "https://res.cloudinary.com/dnyauft0o/image/upload/v1704217240/ARManuals/kfaanou6hr7jpp2nxr5j.jpg"
       },
       "confirmation": {
         "comment": "",
@@ -252,7 +252,7 @@
       "instruction": {
         "title": "Vyjmutí filamentu z tiskové hlavy",
         "text": "V tomto momentě je hlava nahřátá na správnou teplotu a můžeme tedy opatrně vysunout filament z tiskové hlavy.",
-        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"
+        "image_url": "https://res.cloudinary.com/dnyauft0o/image/upload/v1704217242/ARManuals/mnxuo1l0tmtw918prcg3.jpg"
       },
       "confirmation": {
         "comment": "",
@@ -349,7 +349,7 @@
       "instruction": {
         "title": "Zasunutí filamentu do tiskové hlavy",
         "text": "Nyní je potřeba nasadit nové balení filamentu na držák a zasunout filament do hlavy.",
-        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"
+        "image_url": "https://res.cloudinary.com/dnyauft0o/image/upload/v1704217248/ARManuals/ii15jt18harlmxm236co.jpg"
       },
       "confirmation": {
         "comment": "",
@@ -411,7 +411,7 @@
       "instruction": {
         "title": "Potvrzení zavedení filamentu",
         "text": "Na ovládacím panelu Prusa stiskněte AutoZavedeni fil.",
-        "image_url": "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"
+        "image_url": "https://res.cloudinary.com/dnyauft0o/image/upload/v1704217225/ARManuals/snjyemlo9y6x3jfl3dti.jpg"
       },
       "confirmation": {
         "comment": "",

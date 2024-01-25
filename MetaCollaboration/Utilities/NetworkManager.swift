@@ -140,7 +140,7 @@ class NetworkManager: NetworkManagerProtocol {
         
         let encoded = try JSONEncoder().encode(confirmation)
         let (data, response) = try await URLSession.shared.upload(for: request, from: encoded)
-        
+
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkError.invalidData
         }

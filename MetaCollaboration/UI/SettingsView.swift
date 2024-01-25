@@ -11,7 +11,7 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     private let removeAllFromLocalStorage: () -> Void
     //    @AppStorage("appMode") var appMode: ActiveAppMode = .none
-
+    
     init(removeAllFromLocalStorage: @escaping () -> Void) {
         self.removeAllFromLocalStorage = removeAllFromLocalStorage
     }
@@ -52,11 +52,18 @@ private extension SettingsView {
             Divider().padding(.vertical, 4)
             
             HStack(alignment: .top, spacing: 10) {
-                Image("logo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 60, height: 60)
-                    .cornerRadius(9)
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.accentColor)
+                    .frame(width: 65, height: 65)
+                    .overlay(
+                        Image("logoAR")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 60, height: 60)
+                            .cornerRadius(9)
+                    )
+                
+                
                 
                 Text(L.Settings.description)
                     .font(.footnote)

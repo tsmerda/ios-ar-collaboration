@@ -24,7 +24,9 @@ struct StepDetailView: View {
                 descriptionText
             }
             .padding()
+            Divider()
             tasksWithPreview
+            Spacer()
             confirmButton
         }
         .scrollContentBackground(.hidden)
@@ -62,33 +64,61 @@ private extension StepDetailView {
     }
     @ViewBuilder
     var tasksWithPreview: some View {
-        List {
-            // Task Section
-            if let steps = viewModel.currentStep?.steps {
-                Section(header: Text(L.StepDetail.tasks)) {
-                    ForEach(steps, id: \.self) { step in
-                        stepRow(step)
+        ScrollView {
+            VStack(spacing: 16) {
+                // Task Section
+                if let steps = viewModel.currentStep?.steps {
+                    VStack(alignment: .leading) {
+                        Text(L.StepDetail.tasks)
+                            .font(.title)
+                            .padding(.top)
+                        VStack {
+                            ForEach(steps, id: \.self) { step in
+                                stepRow(step)
+                                if step != steps.last {
+                                    Divider()
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 12)
+                        .background(Color("secondaryColor"))
+                        .cornerRadius(8)
                     }
-                    .listRowBackground(Color("secondaryColor"))
                 }
-                .headerProminence(.increased)
-            }
-        
-            // Preview Image Section
-            if let imageUrl = viewModel.currentStep?.instruction?.imageUrl {
-                Section(header: Text(L.StepDetail.preview)) {
-                    AsyncImage(url: URL(string: imageUrl)){ image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .cornerRadius(8)
-                    } placeholder: { Color("secondaryColor") }
+                // Preview Image Section
+                if let imageUrl = viewModel.currentStep?.instruction?.imageUrl {
+                    VStack(alignment: .leading) {
+                        Text(L.StepDetail.preview)
+                            .font(.title)
+                        AsyncImage(url: URL(string: imageUrl)) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
+                                    .frame(maxWidth: .infinity)
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .cornerRadius(8)
+                            case .failure:
+                                Image(systemName: "photo")
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: .infinity)
+                            @unknown default:
+                                EmptyView()
+                            }
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
+                    .padding(.bottom)
                 }
-                .headerProminence(.increased)
             }
+            .padding(.horizontal)
         }
     }
-
+    
     func stepRow(_ step: Step) -> some View {
         HStack(alignment: .top, spacing: 8) {
             LazyVStack(alignment: .leading, spacing: 12) {
@@ -130,7 +160,7 @@ private extension StepDetailView {
         )
     )
     .presentationDetents([.height(180), .large])
-    .presentationBackgroundInteraction(.enabled(upThrough: .large))
+    .presentationBackgroundInteraction(.enabled)
     .interactiveDismissDisabled()
     .presentationDragIndicator(.automatic)
 }

@@ -52,6 +52,10 @@ enum LocalizedString {
         static let begin = "guide_detail_begin".tr
     }
     
+    enum Collaboration {
+        static let info = "collaboration_info".tr
+    }
+    
     enum StepList {
         static let title = "step_list_title".tr
         static let selected = "step_list_selected".tr

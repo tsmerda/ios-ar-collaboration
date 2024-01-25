@@ -41,6 +41,8 @@ final class GuideDetailViewModel: ObservableObject {
     func onSetCurrentGuideAction(_ id: String) {
         if let guide = self.downloadedGuides.first(where: { $0.id == id }) {
             self.currentGuide = guide
+        } else {
+            self.currentGuide = nil
         }
     }
     

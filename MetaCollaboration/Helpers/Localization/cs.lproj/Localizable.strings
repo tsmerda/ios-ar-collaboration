@@ -35,6 +35,9 @@
 "guide_detail_download" = "Stáhnout průvodce";
 "guide_detail_begin" = "Začít průvodce";
 
+// MARK: - Collaboration
+"collaboration_info" = "Detekujte objekt a ujistěte se, že žlutá hranice kopíruje cílový objekt";
+
 // MARK: - StepList
 "step_list_title" = "seznam kroků";
 "step_list_selected" = "Vybrané";

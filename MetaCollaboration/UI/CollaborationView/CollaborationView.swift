@@ -30,15 +30,15 @@ struct CollaborationView: View {
     var body: some View {
         ZStack {
             arViewContainer
-            // TODO: -- fix ipad layout
-            if sizeClass != .compact {
-                VStack {
-                    Spacer()
-                    bottomStackViewForIpad
-                }
-                .edgesIgnoringSafeArea(.bottom)
-            }
         }
+        .overlay(alignment: .top, content: {
+            infoLabel
+        })
+        .overlay(alignment: .bottom, content: {
+            if sizeClass != .compact {
+                iPadInstructionButton
+            }
+        })
         .sheet(isPresented: $showStepSheet) {
             stepDetailView
         }
@@ -77,7 +77,7 @@ struct CollaborationView: View {
                 )
             )
             .onDisappear {
-                if !showConfirmationView && sizeClass == .compact && !viewModel.isActuallyLastStep() {
+                if !showConfirmationView && !viewModel.isActuallyLastStep() && sizeClass == .compact {
                     showStepSheet.toggle()
                 }
             }
@@ -88,19 +88,32 @@ struct CollaborationView: View {
 private extension CollaborationView {
     @ViewBuilder
     var arViewContainer: some View {
-        #if !targetEnvironment(simulator)
+    #if !targetEnvironment(simulator)
         VStack(spacing: 0) {
             ARViewContainer(
-                //                showStepSheet: $showStepSheet
+                // showStepSheet: $showStepSheet
             )
             .environmentObject(viewModel)
-            // .zIndex(1)
-            // .id(viewModel.uniqueID)
-            // .onAppear {
-            //   viewModel.refreshCollaborationView()
-            // }
+            .id(viewModel.uniqueID)
+            .onAppear {
+                viewModel.refreshCollaborationView()
+            }
         }
-        #endif
+    #endif
+    }
+    @ViewBuilder
+    var infoLabel: some View {
+        HStack {
+            Text(L.Collaboration.info)
+                .font(.system(size: 12))
+                .foregroundStyle(.white)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(.ultraThinMaterial)
+        .cornerRadius(6)
+        .padding()
     }
     var stepDetailView: some View {
         StepDetailView(
@@ -114,24 +127,47 @@ private extension CollaborationView {
             )
         )
         .presentationDetents([.height(180), .large])
-        .presentationBackgroundInteraction(.enabled(upThrough: .large))
-        .interactiveDismissDisabled()
-        .presentationDragIndicator(.automatic)
+        .presentationBackgroundInteraction(.enabled)
+        .interactiveDismissDisabled(sizeClass == .compact)
+        .presentationDragIndicator(.visible)
     }
-    // TODO: -- Fix this view initialization for tablet? (use sheet?)
-    var bottomStackViewForIpad: some View {
-        StepDetailView(
-            viewModel: StepDetailViewModel(
-                currentStep: viewModel.currentStep,
-                onNavigateAction: {
-                    showStepSheet.toggle()
-                    showConfirmationView.toggle()
-                },
-                toggleStepDone: { viewModel.toggleStepDone($0) }
+    var iPadInstructionButton: some View {
+        Button(action: {
+            showStepSheet.toggle()
+        }) {
+            VStack(alignment: .leading) {
+                Text(L.StepDetail.instructions.uppercased())
+                    .font(.system(size: 10).weight(.bold))
+                    .foregroundColor(Color("disabledColor"))
+                HStack(alignment: .top) {
+                    Text(viewModel.currentStep?.instruction?.title ?? L.Generic.unknown)
+                        .font(.system(size: 20).weight(.bold))
+                        .foregroundColor(.accentColor)
+                    Spacer()
+                    Text("\(L.StepDetail.step)\(String(describing: viewModel.currentStep?.order ?? 0))")
+                        .font(.system(size: 12).weight(.medium))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Color.accentColor.opacity(0.1))
+                        .cornerRadius(24)
+                }
+                Text(viewModel.currentStep?.instruction?.text ?? L.Generic.unknown)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(3)
+                    .font(.system(size: 16))
+                    .foregroundColor(Color("disabledColor"))
+            }
+            .padding()
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.accentColor, lineWidth: 1)
             )
-        )
-        //        .frame(maxWidth: .infinity, maxHeight: 400)
-        //        .cornerRadius(8)
+            .background(Color("backgroundColor"))
+            .frame(maxWidth: 500)
+            .cornerRadius(8)
+            .padding()
+        }
     }
     var stepListView: some View {
         StepListView(
@@ -151,7 +187,9 @@ private extension CollaborationView {
     }
     var stepListButton: some View {
         Button(action: {
-            showStepSheet.toggle()
+            if sizeClass == .compact {
+                showStepSheet.toggle()
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 showStepListSheet.toggle()
             }

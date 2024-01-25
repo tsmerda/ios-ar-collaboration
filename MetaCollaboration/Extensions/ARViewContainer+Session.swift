@@ -5,6 +5,22 @@
 //  Created by Tomáš Šmerda on 13.05.2023.
 //
 
+extension UIColor {
+    convenience init(hex: String, alpha: CGFloat = 1.0) {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
+        
+        var rgb: UInt64 = 0
+        Scanner(string: hexSanitized).scanHexInt64(&rgb)
+        
+        let r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
+        let g = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
+        let b = CGFloat(rgb & 0x0000FF) / 255.0
+        
+        self.init(red: r, green: g, blue: b, alpha: alpha)
+    }
+}
+
 import Foundation
 import ARKit
 import RealityKit
@@ -20,11 +36,60 @@ extension ARViewContainer {
             self.parent = parent
         }
         
+        //        func createBoundingBoxEntity(extent: SIMD3<Float>) -> ModelEntity {
+        //            let boxMesh = MeshResource.generateBox(size: extent)
+        //            let boxMaterial = SimpleMaterial(color: .red.withAlphaComponent(0.15), isMetallic: false)
+        //            let boundingBoxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
+        //            boundingBoxEntity.generateCollisionShapes(recursive: true)
+        //            return boundingBoxEntity
+        //        }
+        
         func createBoundingBoxEntity(extent: SIMD3<Float>) -> ModelEntity {
-            let boxMesh = MeshResource.generateBox(size: extent)
-            let boxMaterial = SimpleMaterial(color: .red.withAlphaComponent(0.15), isMetallic: false)
-            let boundingBoxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
-            boundingBoxEntity.generateCollisionShapes(recursive: true)
+            let boundingBoxEntity = ModelEntity()
+            
+            // Line properties
+            let lineThickness: Float = 0.001 // Thickness of the lines
+            
+            // Function to create a single line
+            func createLine(start: SIMD3<Float>, end: SIMD3<Float>) -> ModelEntity {
+                let lineLength = simd_distance(start, end)
+                let lineCenter = (start + end) / 2
+                let lineDirection = simd_normalize(end - start)
+                let orientation = simd_quatf(from: SIMD3<Float>(0, 0, 1), to: lineDirection)
+                
+                let hexColor = UIColor(hex: "#F2E900")
+                
+                let lineMesh = MeshResource.generateBox(size: SIMD3(lineThickness, lineThickness, lineLength))
+                let lineMaterial = UnlitMaterial(color: hexColor)
+                let line = ModelEntity(mesh: lineMesh, materials: [lineMaterial])
+                line.position = lineCenter
+                line.orientation = orientation
+                return line
+            }
+            
+            // Create lines for each edge of the bounding box
+            let vertices = [
+                SIMD3<Float>(-extent.x / 2, -extent.y / 2, -extent.z / 2),
+                SIMD3<Float>( extent.x / 2, -extent.y / 2, -extent.z / 2),
+                SIMD3<Float>(-extent.x / 2,  extent.y / 2, -extent.z / 2),
+                SIMD3<Float>( extent.x / 2,  extent.y / 2, -extent.z / 2),
+                SIMD3<Float>(-extent.x / 2, -extent.y / 2,  extent.z / 2),
+                SIMD3<Float>( extent.x / 2, -extent.y / 2,  extent.z / 2),
+                SIMD3<Float>(-extent.x / 2,  extent.y / 2,  extent.z / 2),
+                SIMD3<Float>( extent.x / 2,  extent.y / 2,  extent.z / 2)
+            ]
+            
+            let edges = [
+                (0, 1), (1, 3), (3, 2), (2, 0), // Bottom edges
+                (4, 5), (5, 7), (7, 6), (6, 4), // Top edges
+                (0, 4), (1, 5), (2, 6), (3, 7)  // Vertical edges
+            ]
+            
+            for edge in edges {
+                let line = createLine(start: vertices[edge.0], end: vertices[edge.1])
+                boundingBoxEntity.addChild(line)
+            }
+            
             return boundingBoxEntity
         }
         
@@ -56,30 +121,30 @@ extension ARViewContainer {
                         continue // Skip adding a new model for this anchor
                     }
                     
-//                    guard let referenceObjectName = self.parent.viewModel.referenceObjects.first?.name else {
-//                        print("Žádný reference object nebyl nalezen.")
-//                        return
-//                    }
-//                    guard let frame = self.parent.viewModel.arView.session.currentFrame else {
-//                        print("Aktuální snímek není dostupný.")
-//                        return
-//                    }
-//                    for anchor in frame.anchors {
-//                        if let objectAnchor = anchor as? ARObjectAnchor,
-//                           objectAnchor.referenceObject.name == referenceObjectName {
-//                            return
-//                        }
-//                    }
+                    //                    guard let referenceObjectName = self.parent.viewModel.referenceObjects.first?.name else {
+                    //                        print("Žádný reference object nebyl nalezen.")
+                    //                        return
+                    //                    }
+                    //                    guard let frame = self.parent.viewModel.arView.session.currentFrame else {
+                    //                        print("Aktuální snímek není dostupný.")
+                    //                        return
+                    //                    }
+                    //                    for anchor in frame.anchors {
+                    //                        if let objectAnchor = anchor as? ARObjectAnchor,
+                    //                           objectAnchor.referenceObject.name == referenceObjectName {
+                    //                            return
+                    //                        }
+                    //                    }
                     
-//                    guard let referenceObjectName = self.parent.viewModel.referenceObjects.first?.name else {
-//                        print("Žádný reference object nebyl nalezen.")
-//                        return
-//                    }
-//                    
-//                    guard objectAnchor.referenceObject.name == referenceObjectName else {
-//                        print("Reference object je již ve scéně")
-//                        return
-//                    }
+                    //                    guard let referenceObjectName = self.parent.viewModel.referenceObjects.first?.name else {
+                    //                        print("Žádný reference object nebyl nalezen.")
+                    //                        return
+                    //                    }
+                    //
+                    //                    guard objectAnchor.referenceObject.name == referenceObjectName else {
+                    //                        print("Reference object je již ve scéně")
+                    //                        return
+                    //                    }
                     
                     // Bounding box for detected object
                     let boundingBoxEntity = createBoundingBoxEntity(extent: objectAnchor.referenceObject.extent)
@@ -128,31 +193,31 @@ extension ARViewContainer {
         }
         #endif
         
-//        private func isModelAlreadyAdded(for objectAnchor: ARObjectAnchor) -> Bool {
-//            // Iterate over all entities in the scene and check if any of them are associated with the given anchor
-//            for entity in self.parent.viewModel.arView.scene.anchors {
-//                print(isModelAlreadyAdded)
-//                print(objectAnchor)
-//                if entity.anchor?.identifier == objectAnchor.identifier,
-//                   entity.children.contains(where: { $0.components.has(ModelComponent.self) }) {
-//                    return true // Found a model entity associated with this anchor
-//                }
-//            }
-//            return false // No model entity found for this anchor
-//        }
+        //        private func isModelAlreadyAdded(for objectAnchor: ARObjectAnchor) -> Bool {
+        //            // Iterate over all entities in the scene and check if any of them are associated with the given anchor
+        //            for entity in self.parent.viewModel.arView.scene.anchors {
+        //                print(isModelAlreadyAdded)
+        //                print(objectAnchor)
+        //                if entity.anchor?.identifier == objectAnchor.identifier,
+        //                   entity.children.contains(where: { $0.components.has(ModelComponent.self) }) {
+        //                    return true // Found a model entity associated with this anchor
+        //                }
+        //            }
+        //            return false // No model entity found for this anchor
+        //        }
         
         private func isModelAlreadyAdded(for objectAnchor: ARObjectAnchor) -> Bool {
-                    // Iterate over all entities in the scene and check if any of them are associated with the given anchor
-                    for entity in self.parent.viewModel.arView.scene.anchors {
-                        if let anchor = entity.anchor as? ARObjectAnchor, anchor == objectAnchor,
-                           entity.children.contains(where: { $0.components.has(ModelComponent.self) }) {
-                            print("isModelAlreadyAdded__YES")
-                            return true // Found a model entity associated with this anchor
-                        }
-                    }
-            print("isModelAlreadyAdded__NO")
-                    return false // No model entity found for this anchor
+            // Iterate over all entities in the scene and check if any of them are associated with the given anchor
+            for entity in self.parent.viewModel.arView.scene.anchors {
+                if let anchor = entity.anchor as? ARObjectAnchor, anchor == objectAnchor,
+                   entity.children.contains(where: { $0.components.has(ModelComponent.self) }) {
+                    print("isModelAlreadyAdded__YES")
+                    return true // Found a model entity associated with this anchor
                 }
+            }
+            print("isModelAlreadyAdded__NO")
+            return false // No model entity found for this anchor
+        }
         
         //    TODO: -- FIX
         //        func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {

@@ -35,6 +35,9 @@
 "guide_detail_download" = "Download guide";
 "guide_detail_begin" = "Begin guide";
 
+// MARK: - Collaboration
+"collaboration_info" = "Detect the object and make sure the yellow border follows the target object";
+
 // MARK: - StepList
 "step_list_title" = "step list";
 "step_list_selected" = "Selected";

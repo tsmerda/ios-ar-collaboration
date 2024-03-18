@@ -17,7 +17,7 @@ public struct ObjectStep: Identifiable, Codable {
     public var instruction: Instruction?
     public var confirmation: Confirmation?
     public var order: Decimal?
-
+    
     public init(
         id: String? = nil,
         modelId: Int? = nil,
@@ -53,6 +53,7 @@ extension ObjectStep {
             objectName: "toy_drummer_idle",
             steps: [
                 Step(
+                    id: "uid001",
                     contents: [
                         Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
                         Content(contentType: .textblock, order: 2, text: "Second, check that you have a screwdriver 2.")
@@ -66,6 +67,7 @@ extension ObjectStep {
                     order: 1
                 ),
                 Step(
+                    id: "uid002",
                     contents: [
                         Content(contentType: .textblock, order: 1, text: "Third, check that you have a screwdriver 3."),
                         Content(contentType: .textblock, order: 2, text: "Fourth, check that you have a screwdriver 4.")
@@ -88,32 +90,34 @@ extension ObjectStep {
                    title: "tiskova hlava",
                    objectName: "toy_drummer_idle",
                    steps: [
-                       Step(
-                           contents: [
-                               Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
-                               Content(contentType: .textblock, order: 2, text: "Second, check that you have a screwdriver 2.")
-                           ],
-                           confirmation: Confirmation(
-                               comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)",
-                               photoUrl: "photoUrl",
-                               date: 1676623885569,
-                               done: true
-                           ),
-                           order: 1
-                       ),
-                       Step(
-                           contents: [
-                               Content(contentType: .textblock, order: 1, text: "Third, check that you have a screwdriver 3."),
-                               Content(contentType: .textblock, order: 2, text: "Fourth, check that you have a screwdriver 4.")
-                           ],
-                           confirmation: Confirmation(
-                               comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)",
-                               photoUrl: "photoUrl",
-                               date: 1676623885569,
-                               done: false
-                           ),
-                           order: 2
-                       )
+                    Step(
+                        id: "uid001",
+                        contents: [
+                            Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
+                            Content(contentType: .textblock, order: 2, text: "Second, check that you have a screwdriver 2.")
+                        ],
+                        confirmation: Confirmation(
+                            comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)",
+                            photoUrl: "photoUrl",
+                            date: 1676623885569,
+                            done: true
+                        ),
+                        order: 1
+                    ),
+                    Step(
+                        id: "uid002",
+                        contents: [
+                            Content(contentType: .textblock, order: 1, text: "Third, check that you have a screwdriver 3."),
+                            Content(contentType: .textblock, order: 2, text: "Fourth, check that you have a screwdriver 4.")
+                        ],
+                        confirmation: Confirmation(
+                            comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)",
+                            photoUrl: "photoUrl",
+                            date: 1676623885569,
+                            done: false
+                        ),
+                        order: 2
+                    )
                    ],
                    instruction: Instruction(title: "Removing screw", text: "First. Remove the M3 screw from the fan holder.", imageUrl: "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"), order: 1),
         ObjectStep(id: "63ef73307b425e2daf8c9082",
@@ -121,32 +125,34 @@ extension ObjectStep {
                    title: "tiskova hlava 2",
                    objectName: "sneaker_airforce",
                    steps: [
-                       Step(
-                           contents: [
-                               Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
-                               Content(contentType: .textblock, order: 2, text: "Second, check that you have a screwdriver 2.")
-                           ],
-                           confirmation: Confirmation(
-                               comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)",
-                               photoUrl: "photoUrl",
-                               date: 1676623885569,
-                               done: true
-                           ),
-                           order: 1
-                       ),
-                       Step(
-                           contents: [
-                               Content(contentType: .textblock, order: 1, text: "Third, check that you have a screwdriver 3."),
-                               Content(contentType: .textblock, order: 2, text: "Fourth, check that you have a screwdriver 4.")
-                           ],
-                           confirmation: Confirmation(
-                               comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)",
-                               photoUrl: "photoUrl",
-                               date: 1676623885569,
-                               done: false
-                           ),
-                           order: 2
-                       )
+                    Step(
+                        id: "uid001",
+                        contents: [
+                            Content(contentType: .textblock, order: 1, text: "First, check that you have a screwdriver."),
+                            Content(contentType: .textblock, order: 2, text: "Second, check that you have a screwdriver 2.")
+                        ],
+                        confirmation: Confirmation(
+                            comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)",
+                            photoUrl: "photoUrl",
+                            date: 1676623885569,
+                            done: true
+                        ),
+                        order: 1
+                    ),
+                    Step(
+                        id: "uid002",
+                        contents: [
+                            Content(contentType: .textblock, order: 1, text: "Third, check that you have a screwdriver 3."),
+                            Content(contentType: .textblock, order: 2, text: "Fourth, check that you have a screwdriver 4.")
+                        ],
+                        confirmation: Confirmation(
+                            comment: "I managed to upgrade my Prusa to MK2.5S+, yahooo :)",
+                            photoUrl: "photoUrl",
+                            date: 1676623885569,
+                            done: false
+                        ),
+                        order: 2
+                    )
                    ],
                    instruction: Instruction(title: "Removing screw 2", text: "Second. Remove the M3 screw from the fan holder.", imageUrl: "https://c-3d.niceshops.com/upload/image/product/large/default/bondtech-prusa-i3-mk2-mk2s-extruder-upgrade-1-ks-252884-cs.jpg"), order: 1),
     ]

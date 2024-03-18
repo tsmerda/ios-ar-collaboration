@@ -132,7 +132,7 @@ private extension StepDetailView {
             }
             Spacer()
             Button(action: {
-                viewModel.toggleStepDone(step)
+                viewModel.onToggleStepDoneAction(step)
             }) {
                 Image(systemName: (step.confirmation?.done ?? false) ? "checkmark.circle" : "circle")
                     .foregroundColor(.accentColor)

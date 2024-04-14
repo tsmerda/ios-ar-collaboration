@@ -8,7 +8,7 @@
 import MultipeerConnectivity
 import RealityKit
 
-// MARK: -- MultipeerSession
+// MARK: - MultipeerSession
 class MultipeerSession: NSObject {
     static let serviceType = "ar-collab"
     

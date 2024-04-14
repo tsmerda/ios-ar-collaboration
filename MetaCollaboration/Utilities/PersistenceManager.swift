@@ -7,9 +7,15 @@
 
 import Foundation
 
-// TODO: -- create protocol for this
+protocol PersistenceManagerProtocol {
+    func saveGuidesToJSON(_ guides: [ExtendedGuideResponse]) throws
+    func loadGuidesFromJSON() -> [ExtendedGuideResponse]
+    func updateGuide(_ updatedGuide: ExtendedGuideResponse) throws
+    func deleteGuidesJSON() throws
+    func guidesJSONExists() -> Bool
+}
 
-class PersistenceManager {
+class PersistenceManager: PersistenceManagerProtocol {
     static let shared = PersistenceManager()
     private init() {}
     

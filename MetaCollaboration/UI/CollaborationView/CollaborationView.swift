@@ -91,7 +91,7 @@ private extension CollaborationView {
     #if !targetEnvironment(simulator)
         VStack(spacing: 0) {
             ARViewContainer(
-                // showStepSheet: $showStepSheet
+                /// showStepSheet: $showStepSheet
             )
             .environmentObject(viewModel)
             .id(viewModel.uniqueID)

@@ -18,12 +18,10 @@ import MultipeerConnectivity
 
 final class CollaborationViewModel: ObservableObject {
     // MARK: - Properties
-    // TODO: - je @Published potreba?
     @Published private(set) var progressHudState: ProgressHudState = .shouldHideProgress
     @Published var referenceObjects: Set<ARReferenceObject> = []
     @Published var usdzModels: Set<URL> = []
     @Published var currentStep: ObjectStep?
-    //    @Published var currentUsdzModel: URL?
     @Published var currentGuide: ExtendedGuideResponse
     @Published private(set) var currentStepNumber: Int = 0
     @Published var uniqueID = UUID()
@@ -36,15 +34,13 @@ final class CollaborationViewModel: ObservableObject {
     
     private var isFirstLoad = true
     
-    // TODO: - je tohle potreba?
+    // TODO: - Check if this variable is necessary
     var showStepSheet: Binding<Bool>?
     
     // A dictionary to map MultiPeer IDs to ARSession ID's.
     // This is useful for keeping track of which peer created which ARAnchors.
     var peerSessionIDs = [MCPeerID: String]()
-    
-    //    var csManager: CollaborationStateManager?
-    
+        
     // MARK: - Initialization
     init(
         currentGuide: ExtendedGuideResponse,
@@ -64,19 +60,19 @@ final class CollaborationViewModel: ObservableObject {
     }
     
     deinit {
-        debugPrint("CollaborationView DEINIT")
+        // debugPrint("CollaborationView DEINIT")
     }
     
     // MARK: - Public Methods
     func refreshCollaborationView() {
-        // TODO: - Opravit nastaveni UUID() -> zpusobovalo seknuti pri prejiti na ARView
+        // Without this implementation, it caused a crash when switching to ARView
         self.uniqueID = UUID()
     }
     
     func toggleStepDone(_ step: Step) {
-//        if let index = currentStep?.steps?.firstIndex(where: { $0.id == step.id }) {
-//            currentStep?.steps?[index].confirmation?.done.toggle()
-//        }
+        ///        if let index = currentStep?.steps?.firstIndex(where: { $0.id == step.id }) {
+        ///            currentStep?.steps?[index].confirmation?.done.toggle()
+        ///        }
     }
     
     func getNextStep() {

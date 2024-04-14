@@ -24,7 +24,7 @@ struct GuideDetailView: View {
                     guideTitle
                     guideDescription
                     guideImage
-                    // guideDetail
+                    /// guideDetail
                 }
             }
             Spacer()
@@ -115,15 +115,15 @@ private extension GuideDetailView {
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
     }
-    //    var guideDetail: some View {
-    //        if viewModel.downloadedGuide {
-    //            GuideDetailInfoView(objectSteps: viewModel.downloadedGuide?.objectSteps)
-    //        } else {
-    //            Text("To show the detailed steps, you need to download this guide.")
-    //                .font(.system(size: 13).bold())
-    //                .foregroundColor(.accentColor)
-    //        }
-    //    }
+    ///    var guideDetail: some View {
+    ///        if viewModel.downloadedGuide {
+    ///            GuideDetailInfoView(objectSteps: viewModel.downloadedGuide?.objectSteps)
+    ///        } else {
+    ///            Text("To show the detailed steps, you need to download this guide.")
+    ///                .font(.system(size: 13).bold())
+    ///                .foregroundColor(.accentColor)
+    ///        }
+    ///    }
     var buttonsLabel: some View {
         HStack {
             Spacer()

@@ -102,7 +102,7 @@ extension GuideDetailViewModel {
                 try await insertReferenceObject(savedReferenceObjectURL)
                 // debugPrint(savedReferenceObjectURL)
             } else {
-                // TODO: -- make class for this error
+                // TODO: - make class for this error
                 throw NSError(domain: "GuideDetailViewModel", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to save ARObject locally."])
             }
         } else if assetExtension == "usdz" {

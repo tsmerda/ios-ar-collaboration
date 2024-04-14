@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     private let removeAllFromLocalStorage: () -> Void
-    //    @AppStorage("appMode") var appMode: ActiveAppMode = .none
+    /// @AppStorage("appMode") var appMode: ActiveAppMode = .none
     
     init(removeAllFromLocalStorage: @escaping () -> Void) {
         self.removeAllFromLocalStorage = removeAllFromLocalStorage
@@ -163,8 +163,8 @@ private extension SettingsView {
                     .fontWeight(.bold)
                     .foregroundColor(Color("errorColor"))
             }
-            // TODO: -- make button disabled if there are no assets
-            //                        .disabled(viewModel.downloadedAssets.isEmpty)
+            // TODO: - Make button disabled if there are no assets
+            // .disabled(viewModel.downloadedAssets.isEmpty)
             .padding()
             .background(
                 Color("dividerColor")

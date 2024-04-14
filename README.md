@@ -5,6 +5,10 @@
 ## Author
 Tomáš Šmerda
 
+## Prototype disclaimer
+
+This application is a prototype developed as part of a Diploma thesis at Mendel University within the Open Informatics program. It serves as a proof of concept to assess market viability and user engagement, and is not intended for commercial use. The app is designed to demonstrate the potential for further development and integration into the metaverse, focusing on collaborative augmented reality experiences.
+
 ## Description
 Discover a cutting-edge iOS app for collaborative augmented reality experiences. Share and manipulate scenes in real-time, leveraging ARKit, RealityKit, and MultipeerConnectivity. Experience the future of AR with seamless usability and potential for further development in the metaverse.
 
@@ -15,6 +19,9 @@ Discover a cutting-edge iOS app for collaborative augmented reality experiences.
 ## Prerequisites
 * iOS 16
 * For proper functionality, you need to run the [AR Manuals Backend](https://git.pef.mendelu.cz/metaverse/ar-manuals-backend) locally and change the correct IP address in the NetworkManager file
+
+## Additional information and future work
+This prototype is intended as a starting point for further development. Future iterations could include more robust user interfaces, greater integration with metaverse standards, and improvements in object manipulation techniques to enhance user engagement and utility in professional settings.
 
 ```
 private let baseURL = "http://192.168.1.13:8080/api/v3"

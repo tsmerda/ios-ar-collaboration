@@ -75,7 +75,7 @@ extension GuideListViewModel {
 // MARK: - FileManager: Handling guides and assets
 
 extension GuideListViewModel {
-    // TODO: error hodit do alert modalu
+    // TODO: Error throw into alert modal
     func removeAssetsFromDevice() throws {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURLs = try FileManager.default.contentsOfDirectory(

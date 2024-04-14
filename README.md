@@ -1,5 +1,7 @@
 # AR Collaboration iOS
 
+![ar-ios-thumbnail](https://github.com/tsmerda/ios-ar-collaboration/assets/44585636/5b06c2f0-bcae-44e3-ba4e-34e7bdada1e9)
+
 ## Author
 Tomáš Šmerda
 

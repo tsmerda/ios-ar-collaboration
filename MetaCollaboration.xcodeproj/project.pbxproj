@@ -11,9 +11,13 @@
 		B5134E542AB8402E0062447F /* ImagePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5134E532AB8402E0062447F /* ImagePopupView.swift */; };
 		B51A8E5A2AF4E88200BB088F /* FinalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51A8E592AF4E88200BB088F /* FinalView.swift */; };
 		B52E5B942AF2B5B900FA891E /* ConfirmationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52E5B932AF2B5B900FA891E /* ConfirmationViewModel.swift */; };
-		B5537B682A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */; };
-		B5537B6A2A0FABB7006F8102 /* ARView+Gestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */; };
-		B5537B6C2A0FAC97006F8102 /* ARViewContainer+Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */; };
+		B53B12422BCBBD42005BBE0B /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = B53B12412BCBBD42005BBE0B /* ProgressHUD */; };
+		B53B12442BCBBD8C005BBE0B /* ARViewContainer+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B12432BCBBD8C005BBE0B /* ARViewContainer+Ext.swift */; };
+		B53B12462BCBBD93005BBE0B /* Int+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B12452BCBBD93005BBE0B /* Int+Ext.swift */; };
+		B53B12482BCBBD9C005BBE0B /* ARView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B12472BCBBD9C005BBE0B /* ARView+Ext.swift */; };
+		B53B124A2BCBBDA5005BBE0B /* CollaborationViewModel+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B12492BCBBDA5005BBE0B /* CollaborationViewModel+Ext.swift */; };
+		B53B124C2BCBBDB0005BBE0B /* View+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B124B2BCBBDB0005BBE0B /* View+Ext.swift */; };
+		B53B124E2BCBBE06005BBE0B /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B124D2BCBBE06005BBE0B /* UIColor+Ext.swift */; };
 		B5576CE8297D94960069758E /* MetaCollaborationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CE7297D94960069758E /* MetaCollaborationApp.swift */; };
 		B5576CEA297D94960069758E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5576CE9297D94960069758E /* ContentView.swift */; };
 		B5576CEC297D94970069758E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5576CEB297D94970069758E /* Assets.xcassets */; };
@@ -52,16 +56,13 @@
 		B593B4E02AEEDF62009A88B8 /* StepDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B593B4DF2AEEDF62009A88B8 /* StepDetailViewModel.swift */; };
 		B59B595D2AE7FFDD00B4004B /* GuideListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59B595C2AE7FFDD00B4004B /* GuideListViewModel.swift */; };
 		B59B595F2AE804B000B4004B /* GuideDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59B595E2AE804B000B4004B /* GuideDetailViewModel.swift */; };
-		B59B59642AE8160D00B4004B /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = B59B59632AE8160D00B4004B /* ProgressHUD */; };
 		B59B59662AE8162F00B4004B /* ProgressHUDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59B59652AE8162F00B4004B /* ProgressHUDHelper.swift */; };
 		B5ABC2322ADFCFE4007082F8 /* ModelName.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ABC2312ADFCFE4007082F8 /* ModelName.swift */; };
 		B5ABC2342ADFD013007082F8 /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ABC2332ADFD013007082F8 /* Coordinates.swift */; };
-		B5BDA11E2AFA1D4400C637E9 /* View+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDA11D2AFA1D4400C637E9 /* View+Keyboard.swift */; };
 		B5BDA1212AFA224500C637E9 /* SelectedMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDA1202AFA224500C637E9 /* SelectedMode.swift */; };
 		B5BDA1232AFA228800C637E9 /* ObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDA1222AFA228800C637E9 /* ObjectType.swift */; };
 		B5BDA1252AFA22D600C637E9 /* ActiveAppMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDA1242AFA22D600C637E9 /* ActiveAppMode.swift */; };
 		B5BDA1272AFA2DC100C637E9 /* guideTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B5BDA1262AFA2DC100C637E9 /* guideTest.json */; };
-		B5BDA1292AFA318000C637E9 /* Int+Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDA1282AFA318000C637E9 /* Int+Rating.swift */; };
 		B5BDA12B2AFA7B5900C637E9 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BDA12A2AFA7B5900C637E9 /* PersistenceManager.swift */; };
 		B5D4D9522985AD940087489B /* ARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D4D9512985AD940087489B /* ARViewContainer.swift */; };
 		B5D725242B308BA700C643EE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B5D725262B308BA700C643EE /* Localizable.strings */; };
@@ -75,9 +76,12 @@
 		B5134E532AB8402E0062447F /* ImagePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePopupView.swift; sourceTree = "<group>"; };
 		B51A8E592AF4E88200BB088F /* FinalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalView.swift; sourceTree = "<group>"; };
 		B52E5B932AF2B5B900FA891E /* ConfirmationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationViewModel.swift; sourceTree = "<group>"; };
-		B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollaborationViewModel+MultipeerSession.swift"; sourceTree = "<group>"; };
-		B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARView+Gestures.swift"; sourceTree = "<group>"; };
-		B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARViewContainer+Session.swift"; sourceTree = "<group>"; };
+		B53B12432BCBBD8C005BBE0B /* ARViewContainer+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARViewContainer+Ext.swift"; sourceTree = "<group>"; };
+		B53B12452BCBBD93005BBE0B /* Int+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Ext.swift"; sourceTree = "<group>"; };
+		B53B12472BCBBD9C005BBE0B /* ARView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARView+Ext.swift"; sourceTree = "<group>"; };
+		B53B12492BCBBDA5005BBE0B /* CollaborationViewModel+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollaborationViewModel+Ext.swift"; sourceTree = "<group>"; };
+		B53B124B2BCBBDB0005BBE0B /* View+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Ext.swift"; sourceTree = "<group>"; };
+		B53B124D2BCBBE06005BBE0B /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		B5576CE4297D94960069758E /* MetaCollaboration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaCollaboration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5576CE7297D94960069758E /* MetaCollaborationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaCollaborationApp.swift; sourceTree = "<group>"; };
 		B5576CE9297D94960069758E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -121,12 +125,10 @@
 		B59B59652AE8162F00B4004B /* ProgressHUDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDHelper.swift; sourceTree = "<group>"; };
 		B5ABC2312ADFCFE4007082F8 /* ModelName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelName.swift; sourceTree = "<group>"; };
 		B5ABC2332ADFD013007082F8 /* Coordinates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
-		B5BDA11D2AFA1D4400C637E9 /* View+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Keyboard.swift"; sourceTree = "<group>"; };
 		B5BDA1202AFA224500C637E9 /* SelectedMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedMode.swift; sourceTree = "<group>"; };
 		B5BDA1222AFA228800C637E9 /* ObjectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectType.swift; sourceTree = "<group>"; };
 		B5BDA1242AFA22D600C637E9 /* ActiveAppMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveAppMode.swift; sourceTree = "<group>"; };
 		B5BDA1262AFA2DC100C637E9 /* guideTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = guideTest.json; sourceTree = "<group>"; };
-		B5BDA1282AFA318000C637E9 /* Int+Rating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Rating.swift"; sourceTree = "<group>"; };
 		B5BDA12A2AFA7B5900C637E9 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		B5D4D9512985AD940087489B /* ARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewContainer.swift; sourceTree = "<group>"; };
 		B5D725252B308BA700C643EE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -141,7 +143,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B59B59642AE8160D00B4004B /* ProgressHUD in Frameworks */,
+				B53B12422BCBBD42005BBE0B /* ProgressHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,11 +153,12 @@
 		B5537B662A0F9E8B006F8102 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				B5537B6B2A0FAC97006F8102 /* ARViewContainer+Session.swift */,
-				B5BDA1282AFA318000C637E9 /* Int+Rating.swift */,
-				B5537B692A0FABB7006F8102 /* ARView+Gestures.swift */,
-				B5537B672A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift */,
-				B5BDA11D2AFA1D4400C637E9 /* View+Keyboard.swift */,
+				B53B124D2BCBBE06005BBE0B /* UIColor+Ext.swift */,
+				B53B12432BCBBD8C005BBE0B /* ARViewContainer+Ext.swift */,
+				B53B12452BCBBD93005BBE0B /* Int+Ext.swift */,
+				B53B12472BCBBD9C005BBE0B /* ARView+Ext.swift */,
+				B53B12492BCBBDA5005BBE0B /* CollaborationViewModel+Ext.swift */,
+				B53B124B2BCBBDB0005BBE0B /* View+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -385,7 +388,7 @@
 			);
 			name = MetaCollaboration;
 			packageProductDependencies = (
-				B59B59632AE8160D00B4004B /* ProgressHUD */,
+				B53B12412BCBBD42005BBE0B /* ProgressHUD */,
 			);
 			productName = MetaCollaboration;
 			productReference = B5576CE4297D94960069758E /* MetaCollaboration.app */;
@@ -417,7 +420,7 @@
 			);
 			mainGroup = B5576CDB297D94960069758E;
 			packageReferences = (
-				B59B59622AE8160D00B4004B /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+				B53B12402BCBBD42005BBE0B /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 			);
 			productRefGroup = B5576CE5297D94960069758E /* Products */;
 			projectDirPath = "";
@@ -456,6 +459,7 @@
 				B505025C299FDBF700121A5A /* ChooseModeView.swift in Sources */,
 				B581CF262A6EC5800084DDB2 /* ExtendedGuideResponse.swift in Sources */,
 				B59369E02A667D5000C3B9F2 /* CollaborationView.swift in Sources */,
+				B53B12462BCBBD93005BBE0B /* Int+Ext.swift in Sources */,
 				B5D725292B308BB500C643EE /* Localization.swift in Sources */,
 				B52E5B942AF2B5B900FA891E /* ConfirmationViewModel.swift in Sources */,
 				B56CE57729BCC928007D092F /* Confirmation.swift in Sources */,
@@ -466,13 +470,14 @@
 				B56CE57529BCC928007D092F /* ObjectStep.swift in Sources */,
 				B5BDA1252AFA22D600C637E9 /* ActiveAppMode.swift in Sources */,
 				B5576CEA297D94960069758E /* ContentView.swift in Sources */,
+				B53B12442BCBBD8C005BBE0B /* ARViewContainer+Ext.swift in Sources */,
 				B59B595D2AE7FFDD00B4004B /* GuideListViewModel.swift in Sources */,
 				B581CF342A70527C0084DDB2 /* ButtonStyles.swift in Sources */,
+				B53B124E2BCBBE06005BBE0B /* UIColor+Ext.swift in Sources */,
 				B5BDA1212AFA224500C637E9 /* SelectedMode.swift in Sources */,
 				B59369D82A659C3E00C3B9F2 /* NetworkError.swift in Sources */,
 				B5BDA1232AFA228800C637E9 /* ObjectType.swift in Sources */,
-				B5BDA1292AFA318000C637E9 /* Int+Rating.swift in Sources */,
-				B5537B6A2A0FABB7006F8102 /* ARView+Gestures.swift in Sources */,
+				B53B12482BCBBD9C005BBE0B /* ARView+Ext.swift in Sources */,
 				B59B59662AE8162F00B4004B /* ProgressHUDHelper.swift in Sources */,
 				B581CF2F2A7051A60084DDB2 /* GuideRowView.swift in Sources */,
 				B5ABC2322ADFCFE4007082F8 /* ModelName.swift in Sources */,
@@ -480,10 +485,9 @@
 				B5D7252C2B32E13500C643EE /* GlobalConstants.swift in Sources */,
 				B581CF202A6E9F0E0084DDB2 /* SettingsLabelView.swift in Sources */,
 				B581CF282A6EC5930084DDB2 /* SimpleStep.swift in Sources */,
+				B53B124A2BCBBDA5005BBE0B /* CollaborationViewModel+Ext.swift in Sources */,
 				B5E680E229F6F53D00E98737 /* MultipeerSession.swift in Sources */,
 				B55E19762A6812B1000FD066 /* ConfirmationView.swift in Sources */,
-				B5537B6C2A0FAC97006F8102 /* ARViewContainer+Session.swift in Sources */,
-				B5537B682A0F9F88006F8102 /* CollaborationViewModel+MultipeerSession.swift in Sources */,
 				B59369DC2A65AA2500C3B9F2 /* NetworkManager.swift in Sources */,
 				B51A8E5A2AF4E88200BB088F /* FinalView.swift in Sources */,
 				B5134E542AB8402E0062447F /* ImagePopupView.swift in Sources */,
@@ -492,7 +496,7 @@
 				B5576D02297D9CE40069758E /* CollaborationViewModel.swift in Sources */,
 				B581CF222A6E9F1A0084DDB2 /* SettingsRowView.swift in Sources */,
 				B56CE57929BCC928007D092F /* Step.swift in Sources */,
-				B5BDA11E2AFA1D4400C637E9 /* View+Keyboard.swift in Sources */,
+				B53B124C2BCBBDB0005BBE0B /* View+Ext.swift in Sources */,
 				B59369E42A66CBED00C3B9F2 /* GuideDetailView.swift in Sources */,
 				B5576CE8297D94960069758E /* MetaCollaborationApp.swift in Sources */,
 				B56CE57629BCC928007D092F /* Asset.swift in Sources */,
@@ -733,20 +737,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B59B59622AE8160D00B4004B /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+		B53B12402BCBBD42005BBE0B /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/relatedcode/ProgressHUD.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 14.1.0;
+				minimumVersion = 14.1.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B59B59632AE8160D00B4004B /* ProgressHUD */ = {
+		B53B12412BCBBD42005BBE0B /* ProgressHUD */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B59B59622AE8160D00B4004B /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			package = B53B12402BCBBD42005BBE0B /* XCRemoteSwiftPackageReference "ProgressHUD" */;
 			productName = ProgressHUD;
 		};
 /* End XCSwiftPackageProductDependency section */

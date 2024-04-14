@@ -1,8 +1,8 @@
 //
-//  CollaborationViewModel+MultipeerSession.swift
+//  CollaborationViewModel+Ext.swift
 //  MetaCollaboration
 //
-//  Created by Tomáš Šmerda on 13.05.2023.
+//  Created by Tomáš Šmerda on 14.04.2024.
 //
 
 import Foundation
@@ -10,7 +10,7 @@ import ARKit
 import MultipeerConnectivity
 import RealityKit
 
-// MARK: -- MultipeerSession handlers
+// MARK: - MultipeerSession handlers
 
 extension CollaborationViewModel {
     private func sendARSessionIDTo(peers: [MCPeerID]) {
@@ -82,7 +82,7 @@ extension CollaborationViewModel {
     }
 }
 
-// MARK: -- Initialize collaboration ARView
+// MARK: - Initialize collaboration ARView
 
 extension CollaborationViewModel {
     func initializeARViewContainer() {
@@ -99,10 +99,10 @@ extension CollaborationViewModel {
         // Enable a collaborative session.
         config.isCollaborationEnabled = true
         
-        // Object detection - set up reference on objects (.arobject) that should be detected in a scene
-        //        guard let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "ARResources", bundle: nil) else {
-        //            fatalError("Missing expected asset catalog resources.")
-        //        }
+        /// Object detection - set up reference on objects (.arobject) that should be detected in a scene
+        ///        guard let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "ARResources", bundle: nil) else {
+        ///            fatalError("Missing expected asset catalog resources.")
+        ///        }
         
         guard !referenceObjects.isEmpty else {
             fatalError("No ARReferenceObjects loaded.")
@@ -146,7 +146,7 @@ extension CollaborationViewModel {
     }
 }
 
-// MARK: -- Replace USDZ models in ARView
+// MARK: - Replace USDZ models in ARView
 
 extension CollaborationViewModel {
     func replaceUSDZModel() {
@@ -158,9 +158,9 @@ extension CollaborationViewModel {
             print("Failed to get new USDZ model URL.")
             return
         }
-        #if !targetEnvironment(simulator)
+    #if !targetEnvironment(simulator)
         replaceModel(for: anchorToReplace, withModelURL: newModelURL)
-        #endif
+    #endif
     }
     
     private func findAnchorToReplace() -> ARObjectAnchor? {

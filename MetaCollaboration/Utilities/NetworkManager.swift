@@ -17,7 +17,6 @@ protocol NetworkManagerProtocol {
     func putStepConfirmation(confirmation: Confirmation, guideId: String, objectStepId: String, stepId: String) async throws
 }
 
-// TODO: -- For the local server, get the IP from the device instead of changing it every time
 class NetworkManager: NetworkManagerProtocol {
     static let shared = NetworkManager()
     private let baseURL = "http://192.168.1.14:8080/api/v3"

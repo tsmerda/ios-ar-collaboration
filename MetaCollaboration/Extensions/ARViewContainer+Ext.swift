@@ -1,25 +1,9 @@
 //
-//  ARViewContainer+Session.swift
+//  ARViewContainer+Ext.swift
 //  MetaCollaboration
 //
-//  Created by Tomáš Šmerda on 13.05.2023.
+//  Created by Tomáš Šmerda on 14.04.2024.
 //
-
-extension UIColor {
-    convenience init(hex: String, alpha: CGFloat = 1.0) {
-        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
-        
-        var rgb: UInt64 = 0
-        Scanner(string: hexSanitized).scanHexInt64(&rgb)
-        
-        let r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
-        let g = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
-        let b = CGFloat(rgb & 0x0000FF) / 255.0
-        
-        self.init(red: r, green: g, blue: b, alpha: alpha)
-    }
-}
 
 import Foundation
 import ARKit
@@ -35,14 +19,6 @@ extension ARViewContainer {
         init(_ parent: ARViewContainer) {
             self.parent = parent
         }
-        
-        //        func createBoundingBoxEntity(extent: SIMD3<Float>) -> ModelEntity {
-        //            let boxMesh = MeshResource.generateBox(size: extent)
-        //            let boxMaterial = SimpleMaterial(color: .red.withAlphaComponent(0.15), isMetallic: false)
-        //            let boundingBoxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
-        //            boundingBoxEntity.generateCollisionShapes(recursive: true)
-        //            return boundingBoxEntity
-        //        }
         
         func createBoundingBoxEntity(extent: SIMD3<Float>) -> ModelEntity {
             let boundingBoxEntity = ModelEntity()
@@ -93,7 +69,7 @@ extension ARViewContainer {
             return boundingBoxEntity
         }
         
-        // Kontrola a správa nově přidaných anchors
+        // Check and manage newly added anchors
         #if !targetEnvironment(simulator)
         func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
             for anchor in anchors {
@@ -111,7 +87,7 @@ extension ARViewContainer {
                     
                     self.parent.viewModel.arView.scene.addAnchor(anchorEntity)
                 } else if let objectAnchor = anchor as? ARObjectAnchor {
-                    // MARK: -- Detected 3D object
+                    // Detected 3D object
                     // Get Anchor of detected 3D object from scene and paste same Anchor to func placeSceneObject for handling USDZ models above 3D object
                     print("Detected object anchor")
                     
@@ -120,31 +96,6 @@ extension ARViewContainer {
                         print("Model for this anchor already exists, skipping...")
                         continue // Skip adding a new model for this anchor
                     }
-                    
-                    //                    guard let referenceObjectName = self.parent.viewModel.referenceObjects.first?.name else {
-                    //                        print("Žádný reference object nebyl nalezen.")
-                    //                        return
-                    //                    }
-                    //                    guard let frame = self.parent.viewModel.arView.session.currentFrame else {
-                    //                        print("Aktuální snímek není dostupný.")
-                    //                        return
-                    //                    }
-                    //                    for anchor in frame.anchors {
-                    //                        if let objectAnchor = anchor as? ARObjectAnchor,
-                    //                           objectAnchor.referenceObject.name == referenceObjectName {
-                    //                            return
-                    //                        }
-                    //                    }
-                    
-                    //                    guard let referenceObjectName = self.parent.viewModel.referenceObjects.first?.name else {
-                    //                        print("Žádný reference object nebyl nalezen.")
-                    //                        return
-                    //                    }
-                    //
-                    //                    guard objectAnchor.referenceObject.name == referenceObjectName else {
-                    //                        print("Reference object je již ve scéně")
-                    //                        return
-                    //                    }
                     
                     // Bounding box for detected object
                     let boundingBoxEntity = createBoundingBoxEntity(extent: objectAnchor.referenceObject.extent)
@@ -183,43 +134,28 @@ extension ARViewContainer {
                     }
                 } else {
                     print("some anchor NOW discovered")
-                    // Kontrola, zda má anchor požadovaný název modelu
-                    // if let anchorName = anchor.name, anchorName == "cake" {
-                    //    print("DIDADD \(anchor)")
-                    //    self.parent.viewModel.arView.placeSceneObject(for: anchor)
-                    // }
+                    /// Check if the anchor has the required model name
+                    /// if let anchorName = anchor.name, anchorName == "cake" {
+                    ///    print("DIDADD \(anchor)")
+                    ///    self.parent.viewModel.arView.placeSceneObject(for: anchor)
+                    /// }
                 }
             }
         }
         #endif
-        
-        //        private func isModelAlreadyAdded(for objectAnchor: ARObjectAnchor) -> Bool {
-        //            // Iterate over all entities in the scene and check if any of them are associated with the given anchor
-        //            for entity in self.parent.viewModel.arView.scene.anchors {
-        //                print(isModelAlreadyAdded)
-        //                print(objectAnchor)
-        //                if entity.anchor?.identifier == objectAnchor.identifier,
-        //                   entity.children.contains(where: { $0.components.has(ModelComponent.self) }) {
-        //                    return true // Found a model entity associated with this anchor
-        //                }
-        //            }
-        //            return false // No model entity found for this anchor
-        //        }
         
         private func isModelAlreadyAdded(for objectAnchor: ARObjectAnchor) -> Bool {
             // Iterate over all entities in the scene and check if any of them are associated with the given anchor
             for entity in self.parent.viewModel.arView.scene.anchors {
                 if let anchor = entity.anchor as? ARObjectAnchor, anchor == objectAnchor,
                    entity.children.contains(where: { $0.components.has(ModelComponent.self) }) {
-                    print("isModelAlreadyAdded__YES")
                     return true // Found a model entity associated with this anchor
                 }
             }
-            print("isModelAlreadyAdded__NO")
             return false // No model entity found for this anchor
         }
         
-        //    TODO: -- FIX
+        //    TODO: - Fix
         //        func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         //            for anchor in anchors {
         //                guard let anchorEntity = self.parent.viewModel.arView.scene.anchors.first(where: { $0.anchor == anchor }) else { continue }
@@ -238,9 +174,9 @@ extension ARViewContainer {
                 let dataIsCritical = data.priority == .critical
                 multipeerSession.sendToAllPeers(encodedData, reliably: dataIsCritical)
             }
-            // else {
-            //    debugPrint("Deferred sending collaboration to later because there are no peers.")
-            // }
+            /// else {
+            ///    debugPrint("Deferred sending collaboration to later because there are no peers.")
+            /// }
         }
     }
     
